@@ -17,27 +17,28 @@ class Dono(commands.Cog):
 
         if member is None:
             if result is None:
-                embed = discord.Embed(title='Donation Stats', description=f'{member}s donation stats', color=0x00ff00)
+                embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
                 embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
-                embed.add_field(name='Donations:', value=f'{result} donated in {ctx.guild.name}')
+                embed.add_field(name='Donations:', value=f'**{result} donated in {ctx.guild.name}**')
+
                 await ctx.send(embed=embed)
 
                 dbase.commit()
                 dbase.close()
 
             else:
-                embed = discord.Embed(title='Donation Stats', description=f'{member}s donation stats', color=0x00ff00)
+                embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
                 embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
-                embed.add_field(name='Donations:', value=f'{result} donated in {ctx.guild.name}')
+                embed.add_field(name='Donations:', value=f'**{result[0]}** donated in **{ctx.guild.name}**')
                 await ctx.send(embed=embed)
 
                 dbase.commit()
                 dbase.close()
 
         else: 
-            embed = discord.Embed(title='Donation Stats', description=f'{member}s donation stats', color=0x00ff00)
+            embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
             embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
-            embed.add_field(name='Donations:', value=f'{result} donated in {ctx.guild.name}')
+            embed.add_field(name='Donations:', value=f'**{result[0]}** donated in **{ctx.guild.name}**')
             await ctx.send(embed=embed)
 
             dbase.commit()
@@ -45,7 +46,7 @@ class Dono(commands.Cog):
 
     #Dono Add
     @commands.command(aliases=['da'])
-    @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164) 
+    @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
     async def dono_add(self, ctx, member: discord.Member, amount):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -56,11 +57,12 @@ class Dono(commands.Cog):
 
         cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
-        await ctx.send(f"Donation note added for **{member}**\nThe amount added was {amount}")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
         dbase.commit()
         dbase.close()
 
+    #Dono Remove
     @commands.command(aliases=['dr'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164) 
     async def dono_remove(self, ctx, member: discord.Member, amount):
@@ -73,7 +75,7 @@ class Dono(commands.Cog):
 
         cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
-        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was {amount}")
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
 
         dbase.commit()
         dbase.close()
