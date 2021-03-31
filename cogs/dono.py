@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import sqlite3
 
 class Dono(commands.Cog):
 
@@ -7,7 +8,7 @@ class Dono(commands.Cog):
         self.client = client
 
     #Dono Check
-    @client.command(aliases=['d'])
+    @commands.command(aliases=['d'])
     async def dono(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
