@@ -20,14 +20,16 @@ client = commands.AutoShardedBot(
     )
 client.remove_command('help')
 
+###Help###
+@client.command()
+async def help(ctx, command=None):
+    help_embed = discord.Embed(title='Brunis Utilities', description='This bot is for [](Dank Merchants)', color=0x00ff00)
+    await ctx.send(embed=embed)
+
 ###On Ready###
 @client.event
 async def on_ready():
     print('Bot Online!')
-
-roles = [
-    'giveaways'
-]
 
 #Dono Check
 @client.command(aliases=['d'])
@@ -83,6 +85,11 @@ async def dono_add(ctx, member: discord.Member, amount):
 
     dbase.commit()
     dbase.close()
+    
+###Cog Loader###
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        client.load_extension(f'cogs.{filename[:-3]}')
 
 ###Run Bot###
 load_dotenv()
