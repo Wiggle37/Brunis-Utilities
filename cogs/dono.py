@@ -7,6 +7,11 @@ class Dono(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    @commands.command()
+    async def test(self, ctx):
+        num = 10000000
+        await ctx.send(f"{num:,}")
+
     #Dono Check
     @commands.command(aliases=['d'])
     async def dono(self, ctx, member: discord.Member):
@@ -17,7 +22,7 @@ class Dono(commands.Cog):
 
         embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
         embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
-        embed.add_field(name='Donations:', value=f'**{result[0]} donated in {ctx.guild.name}**')
+        embed.add_field(name='Donations:', value=f'`{result[0]}` donated in {ctx.guild.name}**')
         await ctx.send(embed=embed)
 
         dbase.commit()
