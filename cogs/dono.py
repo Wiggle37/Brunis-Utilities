@@ -93,7 +93,7 @@ class Dono(commands.Cog):
 
         new_amount = f'{amount}'
 
-        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount;", [guild, user, new_amount])
+        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + amount;", [guild, user, new_amount])
 
         await ctx.send(f"Donation note set for **{member}**\nThe amount set was **{amount}**")
 
