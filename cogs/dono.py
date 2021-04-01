@@ -101,13 +101,13 @@ class Dono(commands.Cog):
     #Dono Reset
     @commands.command(aliases=['drs'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
-    async def dono_reset(self, ctx, member: discord.Member, amount: int):
+    async def dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
 
         guild = int(ctx.guild.id)
         user = int(f'{member.id}')
-        amount = int(f'{amount}')
+        amount = 0
 
         cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
