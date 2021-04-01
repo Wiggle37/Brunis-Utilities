@@ -80,10 +80,10 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
-    #Dono Set
-    @commands.command(aliases=['ds'])
+    #Dono Reset
+    @commands.command(aliases=['drs'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
-    async def dono_set(self, ctx, member: discord.Member, amount):
+    async def dono_reset(self, ctx, member: discord.Member, amount):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
 
