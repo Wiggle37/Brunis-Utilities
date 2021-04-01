@@ -21,7 +21,7 @@ class Help(commands.Cog):
             help_embed.add_field(name='Dono_add', value='Add to someones donations(must have the giveaway manager or heist manger role)```b!da <@member / id> <amount(int)>```', inline=False)
             help_embed.add_field(name='Dono_remove', value='Removes from someones donation amount```b!dr <@member / id> <amount(int)>```', inline=False)
             help_embed.add_field(name='Dono_set', value='Sets the exact value for the specified member```b!ds <@member /id> <amount(int)>```', inline=False)
-            help_embed.add_field(name='Dono_reset', value='Restes the donation amount for the specified number```b!drs <@member /id> <0>```', inline=False)
+            help_embed.add_field(name='Dono_reset', value='Restes the donation amount for the specified number```b!drs <@member /id>```', inline=False)
             await ctx.send(embed=help_embed)
 
 def setup(client):
