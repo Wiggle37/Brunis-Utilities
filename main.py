@@ -23,8 +23,8 @@ client.remove_command('help')
 ###Help###
 @client.command()
 async def help(ctx, cog=None):
-    help_embed = discord.Embed(title='Brunis Utilities', description='This bot is for [](Dank Merchants)', color=0x00ff00)
-    await ctx.send(embed=embed)
+    help_embed = discord.Embed(title='Brunis Utilities', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+    await ctx.send(embed=help_embed)
 
 ###On Ready###
 @client.event
