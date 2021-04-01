@@ -8,7 +8,7 @@ class Settings(commands.Cog):
 
     @commands.command()
     async def set_permissions(self, ctx, role: discord.Role):
-        
+        pass
 
 def setup(client):
     client.add_cog(Settings(client))
