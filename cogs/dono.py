@@ -10,7 +10,7 @@ class Dono(commands.Cog):
     #Dono Check
     @commands.command(aliases=['d'])
     async def dono(self, ctx, member: discord.Member):
-        dbase = sqlite3.connect('dono.db')
+        dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
         cursor.execute(f"SELECT amount FROM dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result = cursor.fetchone()
@@ -48,7 +48,7 @@ class Dono(commands.Cog):
     @commands.command(aliases=['da'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
     async def dono_add(self, ctx, member: discord.Member, amount: int):
-        dbase = sqlite3.connect('dono.db')
+        dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
         guild = int(ctx.guild.id)
@@ -66,7 +66,7 @@ class Dono(commands.Cog):
     @commands.command(aliases=['dr'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
     async def dono_remove(self, ctx, member: discord.Member, amount: int):
-        dbase = sqlite3.connect('dono.db')
+        dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
         guild = int(ctx.guild.id)
@@ -84,14 +84,16 @@ class Dono(commands.Cog):
     @commands.command(aliases=['ds'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
     async def Dono_set(self, ctx, member: discord.Member, amount: int):
-        dbase = sqlite3.connect('dono.db')
+        dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
         guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount;", [guild, user, amount])
+        new_amount = f'{amount}'
+
+        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount;", [guild, user, new_amount])
 
         await ctx.send(f"Donation note set for **{member}**\nThe amount set was **{amount}**")
 
@@ -102,7 +104,7 @@ class Dono(commands.Cog):
     @commands.command(aliases=['drs'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
     async def dono_reset(self, ctx, member: discord.Member):
-        dbase = sqlite3.connect('dono.db')
+        dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
         guild = int(ctx.guild.id)
