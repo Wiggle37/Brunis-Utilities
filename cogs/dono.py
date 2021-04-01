@@ -64,7 +64,7 @@ class Dono(commands.Cog):
 
     #Dono Remove
     @commands.command(aliases=['dr'])
-    @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164) 
+    @commands.has_any_role(785198646731604008, 785631914010214410, 784527745539375164, 810233857768554506) 
     async def dono_remove(self, ctx, member: discord.Member, amount):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
