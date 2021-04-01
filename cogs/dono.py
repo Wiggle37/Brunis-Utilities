@@ -15,34 +15,13 @@ class Dono(commands.Cog):
         cursor.execute(f"SELECT amount FROM dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result = cursor.fetchone()
 
-        if member is None:
-            if result is None:
-                embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
-                embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
-                embed.add_field(name='Donations:', value=f'**{result} donated in {ctx.guild.name}**')
+        embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
+        embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
+        embed.add_field(name='Donations:', value=f'**{result[0]} donated in {ctx.guild.name}**')
+        await ctx.send(embed=embed)
 
-                await ctx.send(embed=embed)
-
-                dbase.commit()
-                dbase.close()
-
-            else:
-                embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
-                embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
-                embed.add_field(name='Donations:', value=f'**{result[0]}** donated in **{ctx.guild.name}**')
-                await ctx.send(embed=embed)
-
-                dbase.commit()
-                dbase.close()
-
-        else: 
-            embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
-            embed.add_field(name='User:', value=f'{member.mention}({member.id})', inline=False)
-            embed.add_field(name='Donations:', value=f'**{result[0]}** donated in **{ctx.guild.name}**')
-            await ctx.send(embed=embed)
-
-            dbase.commit()
-            dbase.close()
+        dbase.commit()
+        dbase.close()
 
     #Dono Add
     @commands.command(aliases=['da'])
@@ -55,7 +34,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) WHEN(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
