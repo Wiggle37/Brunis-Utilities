@@ -12,7 +12,7 @@ class Dono(commands.Cog):
     async def dono(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
-        cursor.execute(f"SELECT amount FROM dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+        cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result = cursor.fetchone()
 
         embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
@@ -34,7 +34,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) WHEN(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) (user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
@@ -52,7 +52,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
 
@@ -71,7 +71,7 @@ class Dono(commands.Cog):
 
         amount = 0
 
-        cursor.execute("INSERT INTO dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
 
