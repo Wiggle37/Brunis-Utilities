@@ -14,6 +14,7 @@ class Help(commands.Cog):
             help_embed.add_field(name='Giveaway Donation', value='Track how much someone has donated for giveaways', inline=False)
             help_embed.add_field(name='Heist Donations', value='Track how much someone has donated for heists', inline=False)
             help_embed.add_field(name='Event Donations', value='Track how much someone has donated for events', inline=False)
+            help_embed.set_footer(text='If you have any questions or bugs please DM **<@765322777329664089>** and we will get back to you as soon as possible!')
             await ctx.send(embed=help_embed)
 
         if cog == 'giveaway' or cog == 'gaw':

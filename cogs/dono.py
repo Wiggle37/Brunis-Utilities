@@ -27,7 +27,7 @@ class Dono(commands.Cog):
             cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}')
+            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
 
         else:
             pass
@@ -76,9 +76,13 @@ class Dono(commands.Cog):
 
         embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
         embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
+        
+        embed.add_field(name='__**Normal Donations:**__', value=None)
         embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways in **{ctx.guild.name}**', inline=False)
         embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists in **{ctx.guild.name}**', inline=False)
         embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events in **{ctx.guild.name}**', inline=False)
+
+        embed.add_field(name='__**Special Event Donations:**__', value=None)
         embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total for **{ctx.guild.name}**', inline=False)
         await ctx.send(embed=embed)
 
