@@ -7,10 +7,22 @@ class Dono(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command()
-    async def test(self, ctx):
-        num = 10000000
-        await ctx.send(f"{num:,}")
+    @commands.Cog.listener()
+    async def on_message(self, message, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = int(ctx.guild.id)
+        user = int(ctx.message.author)
+
+        amount = 0
+
+        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+
+        dbase.commit()
+        dbase.close()
 
     '''
     DONATIONS CHECK
@@ -23,19 +35,19 @@ class Dono(commands.Cog):
         cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result1 = cursor.fetchone()
         if result1 is None:
-            await ctx.send('You havent donated anything!')
+            await ctx.send('You havent donated anything for giveaways!')
 
         #Get Heist Amount
         cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result2 = cursor.fetchone()
         if result2 is None:
-            await ctx.send('Test')
+            await ctx.send('You havent donated anything for heists!')
 
         #Get Event Amount
         cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result3 = cursor.fetchone()
         if result3 is None:
-            await ctx.send('test')
+            await ctx.send('You havent donated anything for events!')
 
         embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
         embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)

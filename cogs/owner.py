@@ -11,6 +11,7 @@ class Owner(commands.Cog):
         client = self.client
 
         await client.get_channel(827293945003376650).send(msg)
+        await client.get_channel(827293945003376650).send(f'\nMSG sent by: **{ctx.message.author}**')
         await ctx.send('Annoucement sent to <#827293945003376650>')
 
 def setup(client):
