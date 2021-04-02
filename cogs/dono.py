@@ -7,29 +7,6 @@ class Dono(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.Cog.listener()
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    async def on_message(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-
-        cursor.execute(f"SELECT user_id FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
-        result = cursor.fetchall()
-
-        if result is None:
-            guild = int(ctx.guild.id)
-            user = int(ctx.author.id)
-
-            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
-
-        else:
-            pass
-        
-        dbase.commit()
-        dbase.close()
-
     '''
     DONATIONS CHECK
     '''
