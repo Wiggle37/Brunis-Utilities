@@ -13,17 +13,20 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
-        user = int(ctx.author.id)
+        cursor.execute(f"SELECT user_id FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+        result = cursor.fetchall()
 
-        amount = 0
+        if result is None:
+            guild = int(ctx.guild.id)
+            user = int(ctx.author.id)
 
-        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
-        cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
-        print('Member added to db')
-
+        else:
+            pass
+        
         dbase.commit()
         dbase.close()
 
@@ -183,7 +186,7 @@ class Dono(commands.Cog):
     '''
     #Giveaway Dono Add
     @commands.command(aliases=['eda'])
-    @commands.has_any_role(791516116710064159, 785202756641619999) #Event Manger, Bruni
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
     async def event_dono_add(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
@@ -201,7 +204,7 @@ class Dono(commands.Cog):
 
     #Dono Remove
     @commands.command(aliases=['edr'])
-    @commands.has_any_role(791516116710064159, 785202756641619999) #Event Manger, Bruni
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
     async def event_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
@@ -219,7 +222,7 @@ class Dono(commands.Cog):
 
     #Dono Reset
     @commands.command(aliases=['edrs'])
-    @commands.has_any_role(791516116710064159, 785202756641619999) #Event Manger, Bruni
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
     async def event_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
