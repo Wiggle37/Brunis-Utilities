@@ -8,7 +8,7 @@ class Dono(commands.Cog):
         self.client = client
 
     @commands.Cog.listener()
-    @commands.cooldown(1, 60, commands.BucketType.user)
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def on_message(self, ctx):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()

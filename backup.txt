@@ -1,0 +1,17 @@
+CREATE TABLE "gaw_dono_logs" (
+	"guild_id"	INTEGER,
+	"user_id"	INTEGER UNIQUE,
+	"amount"	INTEGER DEFAULT 0
+)
+
+CREATE TABLE "heist_dono_logs" (
+	"guild_id"	INTEGER,
+	"user_id"	INTEGER UNIQUE,
+	"amount"	INTEGER DEFAULT 0
+)
+
+CREATE TABLE "event_dono_logs" (
+	"guild_id"	INTEGER,
+	"user_id"	INTEGER UNIQUE,
+	"amount"	INTEGER DEFAULT 0
+)
