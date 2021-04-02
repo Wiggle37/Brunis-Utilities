@@ -40,10 +40,5 @@ class Help(commands.Cog):
             help_embed.add_field(name='Event Dono Reset', value='Restes the donation amount for the specified number```b!edrs <@member /id>```', inline=False)
             await ctx.send(embed=help_embed)
 
-        if cog == 'settings' or cog == 'config':
-            help_embed = discord.Embed(title='Donations', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
-            help_embed.add_field(name='Coming Soon!...', value=None)
-            await ctx.send(embed=help_embed)
-
 def setup(client):
     client.add_cog(Help(client))

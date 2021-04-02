@@ -22,20 +22,26 @@ class Dono(commands.Cog):
         #Get Gaw Amount
         cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result1 = cursor.fetchone()
+        if result1 is None:
+            await ctx.send('You havent donated anything!')
 
         #Get Heist Amount
         cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result2 = cursor.fetchone()
+        if result2 is None:
+            await ctx.send('Test')
 
         #Get Event Amount
         cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result3 = cursor.fetchone()
+        if result3 is None:
+            await ctx.send('test')
 
         embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
         embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
         embed.add_field(name='Giveaway Donations:', value=f'`{result1[0]}` donated for giveaways in **{ctx.guild.name}**', inline=False)
-        embed.add_field(name='Heist Donations:', value=f'`Coming Soon...` donated for heists in **{ctx.guild.name}**', inline=False)
-        embed.add_field(name='Event Donations:', value=f'`Coming Soon...` donated for events in **{ctx.guild.name}**')
+        embed.add_field(name='Heist Donations:', value=f'`{result2[0]}` donated for heists in **{ctx.guild.name}**', inline=False)
+        embed.add_field(name='Event Donations:', value=f'`{result3[0]}` donated for events in **{ctx.guild.name}**')
         await ctx.send(embed=embed)
 
         dbase.commit()
