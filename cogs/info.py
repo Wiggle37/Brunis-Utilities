@@ -136,10 +136,10 @@ class Info(commands.Cog):
     #Booster Perks
     @commands.command()
     async def booster(self, ctx):
-        inv_embed = discord.Embed(title='__**Dank Merchants Booster Perks:**__', description='The Booster Perks Of Dank Merchants', color=0x00ff00)
-        inv_embed.add_field(name='__Single Booster Perks:__', value='<@&797486130844663829>\n<a:shiny_boost:802975176194129950> Receive all <@&787734881563705354> perks as long as your boost lasts\n<a:shiny_boost:802975176194129950> `pls snipe` and `?afk` access\n<a:shiny_boost:802975176194129950> Bypass all giveaways', inline=False)
-        inv_embed.add_field(name='__Double Booster Perks:__', value='<@&786610856308768768>\n', inline=False)
-        inv_embed.add_field(name='__Multi Booster Perks:__', value='<@&797486130844663829>\n', inline=False)
+        inv_embed = discord.Embed(title='__**Dank Merchants Booster Perks:**__', description='The Booster Perks Of Dank Merchants', color=0xf47fff)
+        inv_embed.add_field(name='__Single Booster Perks:__', value='<@&797486130844663829>\n<a:shiny_boost:802975176194129950> Receive all <@&787734881563705354> perks as long as your boost lasts\n<a:shiny_boost:802975176194129950> `pls snipe` and `?afk` access\n<a:shiny_boost:802975176194129950> Bypass all giveaways\n<a:shiny_boost:802975176194129950> Your own auto-response in animated letters\n<a:shiny_boost:802975176194129950> Access to exclusive <#801287649309884447>\n<a:shiny_boost:802975176194129950> All boosters are pinged in silent giveaways', inline=False)
+        inv_embed.add_field(name='__Double Booster Perks:__', value='<@&786610856308768768>\n<a:Boost:800379805367402496> Your own dank memer channel (can invite up to 5 friends)\n<a:Boost:800379805367402496> 6 hour claim time for nitro giveaways (normies get 10 minutes)\n<a:Boost:800379805367402496> `pls esnipe` access\n<a:Boost:800379805367402496> List of robbing servers\n<a:Boost:800379805367402496> Auto reaction when your name is pingedn\n<a:Boost:800379805367402496> Carl-bot `*hl` access (when key word is said in chat youll be notified)\n<a:Boost:800379805367402496> booster perks last one more week if you boost a whole month', inline=False)
+        inv_embed.add_field(name='__Multi Booster Perks:__', value='<@&797486130844663829>\n<a:NR_Boost:800379946647420989> Custom trigger\n<a:NR_Boost:800379946647420989> Up to 10 friends can join you in your private channel\n<a:NR_Boost:800379946647420989> Add two emotes of your choice to the server\n <a:NR_Boost:800379946647420989> Promote your content in <#784887859143507978> with <@&785930653665067038> ping\n<a:NR_Boost:800379946647420989> Booster perks last two more weeks if you boost a whole month', inline=False)
         await ctx.send(embed=inv_embed)
 
 def setup(client):
