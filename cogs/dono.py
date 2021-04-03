@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
+
 import sqlite3
+
+import random
 
 class Dono(commands.Cog):
 
@@ -70,21 +73,46 @@ class Dono(commands.Cog):
         result3 = (result3[0])
         new_result3 = ('{:,}'.format(result3))
 
-
         all = result1 + result2 + result3
         new_all = ('{:,}'.format(all))
 
-        embed = discord.Embed(title='Donation Stats', description=None, color=0x00ff00)
-        embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
-        
-        embed.add_field(name='__**Normal Donations:**__', value=None)
-        embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways in **{ctx.guild.name}**', inline=False)
-        embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists in **{ctx.guild.name}**', inline=False)
-        embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events in **{ctx.guild.name}**', inline=False)
+        embed = discord.Embed(title='Donation Stats', description=None, color=0x7008C2)
 
-        embed.add_field(name='__**Special Event Donations:**__', value=None)
-        embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total for **{ctx.guild.name}**', inline=False)
+        embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
+        embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
+        embed.add_field(name=f'Money Donations:', value='`$coming soon...`')
+
+        embed.add_field(name='__**Normal Donations**__', value='Dank Memer Dontations', inline=False)
+        embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
+        embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
+        embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
+
+        embed.add_field(name='__**Special Event Donations**__', value='Special Event Donations', inline=False)
+        embed.add_field(name='2.5k Event Donations:', value=f'`Event coming soon...`')
+
+        embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total', inline=False)
         await ctx.send(embed=embed)
+
+        dbase.commit()
+        dbase.close()
+
+    '''
+    MONEY DONATIONS
+    '''
+    #Money Dono Add
+    @commands.command(aliases=['mda'])
+    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    async def money_dono_add(self, ctx, member: discord.Member, amount: int):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = int(ctx.guild.id)
+        user = int(f'{member.id}')
+        amount = int(f'{amount}')
+
+        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
         dbase.commit()
         dbase.close()

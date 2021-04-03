@@ -46,6 +46,12 @@ async def on_ready():
 	"amount"	INTEGER DEFAULT 0
     )""")
 
+    cursor.execute("""CREATE TABLE "money_dono_logs" (
+	"guild_id"	INTEGER,
+	"user_id"	INTEGER,
+	"amount"	INTEGER DEFAULT 0
+    )""")
+
     dbase.commit()
     dbase.close()
     
