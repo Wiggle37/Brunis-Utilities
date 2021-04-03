@@ -6,6 +6,7 @@ class Events(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    #on Member Join
     @commands.Cog.listener()
     async def on_member_join(self, member):
         client = self.client
@@ -14,8 +15,6 @@ class Events(commands.Cog):
         join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for some info about how to get certain thing in the server and <#784547669619507201> for some self roles!')
         join_embed.add_field(name=f'__**User Info:**__', value=f'Date created: {member.created_at}\nUser ID: {member.id}', inline=False)
         await client.get_channel(784491141022220312).send(embed=join_embed)
-        await ctx.send(ctx.author.created_at)
-
 
 def setup(client):
     client.add_cog(Events(client))
