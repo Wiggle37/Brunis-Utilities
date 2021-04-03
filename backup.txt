@@ -21,3 +21,9 @@ CREATE TABLE "money_dono_logs" (
 	"user_id"	INTEGER,
 	"amount"	INTEGER
 )
+
+CREATE TABLE "2.5k_event_dono_logs" (
+	"guild_id"	INTEGER,
+	"user_id"	INTEGER UNIQUE,
+	"amount"	INTEGER DEFAULT 0
+)
