@@ -22,7 +22,7 @@ client.remove_command('help')
 async def on_ready():
     print(f'{client.user} is online!')
 
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'over {ctx.guild.name}'))
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'over Dank Merchants'))
 
     dbase = sqlite3.connect('bruni.db')
     cursor = dbase.cursor()
