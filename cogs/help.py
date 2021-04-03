@@ -17,6 +17,7 @@ class Help(commands.Cog):
             help_embed.add_field(name='Heist Donations', value='Track how much someone has donated for heists', inline=False)
             help_embed.add_field(name='Event Donations', value='Track how much someone has donated for events', inline=False)
             help_embed.add_field(name='Utility', value='Utility commands to make life much more easier', inline=False)
+            help_embed.add_field(name='Info', value='Some commands that show info about the server', inline=False)
             help_embed.set_footer(text='If you have any questions or bugs please DM Wiggle and we will get back to you as soon as possible!')
             await ctx.send(embed=help_embed)
 
@@ -70,6 +71,12 @@ class Help(commands.Cog):
         #Utility Help
         if cog == 'utility' or cog == 'utils' or cog == 'util':
             help_embed = discord.Embed(title='Utility', description='Commands that will probally be useful\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.add_field(name='<a:loading:802974837395292200>Coming Soon...', value='<a:loading:802974837395292200>Coming soon...')
+            await ctx.send(embed=help_embed)
+
+        #Info Help
+        if cog == 'info':
+            help_embed = discord.Embed(title='Info', description='Info commands\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='<a:loading:802974837395292200>Coming Soon...', value='<a:loading:802974837395292200>Coming soon...')
             await ctx.send(embed=help_embed)
 
