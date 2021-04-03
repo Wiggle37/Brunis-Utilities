@@ -44,38 +44,71 @@ class Dono(commands.Cog):
     DONATIONS CHECK
     '''
     @commands.command(aliases=['d'])
-    async def dono(self, ctx, member: discord.Member):
+    async def dono(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+        
+        #No Member Provided
+        if member is None:
+            #Get Gaw Amount
+            cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            result1 = cursor.fetchone()
+            if result1 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+            #Get Heist Amount
+            cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            result2 = cursor.fetchone()
+            if result2 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
 
-        #Get Gaw Amount
-        cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
-        result1 = cursor.fetchone()
-        if result1 is None:
-            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
-        #Get Heist Amount
-        cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
-        result2 = cursor.fetchone()
-        if result2 is None:
-            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+            #Get Event Amount
+            cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            result3 = cursor.fetchone()
+            if result3 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
 
-        #Get Event Amount
-        cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
-        result3 = cursor.fetchone()
-        if result3 is None:
-            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+            #Get Money Amount
+            cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            result4 = cursor.fetchone()
+            if result4 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
 
-        #Get Money Amount
-        cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
-        result4 = cursor.fetchone()
-        if result4 is None:
-            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+            #Get Special Event Amount
+            cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            result5 = cursor.fetchone()
+            if result5 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
 
-        #Get Special Event Amount
-        cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
-        result5 = cursor.fetchone()
-        if result5 is None:
-            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+        #Member Provided
+        else:
+            #Get Gaw Amount
+            cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            result1 = cursor.fetchone()
+            if result1 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+            #Get Heist Amount
+            cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            result2 = cursor.fetchone()
+            if result2 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+
+            #Get Event Amount
+            cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            result3 = cursor.fetchone()
+            if result3 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+
+            #Get Money Amount
+            cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            result4 = cursor.fetchone()
+            if result4 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+
+            #Get Special Event Amount
+            cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            result5 = cursor.fetchone()
+            if result5 is None:
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
 
         result1 = (result1[0])
         new_result1 = ('{:,}'.format(result1))
@@ -95,20 +128,37 @@ class Dono(commands.Cog):
         all = result1 + result2 + result3 + result5
         new_all = ('{:,}'.format(all))
 
-        embed = discord.Embed(title='Donation Stats', description=None, color=0x7008C2)
+        if member is None:
+            embed = discord.Embed(title='Donation Stats', description=None, color=0x7008C2)
 
-        embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
-        embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
-        embed.add_field(name=f'Money Donations:', value=f'`${new_result4} donated in real money`')
+            embed.add_field(name='User:', value=f'{ctx.author.mention}(User id: {ctx.author.id})', inline=False)
+            embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
+            embed.add_field(name=f'Money Donations:', value=f'`${new_result4} donated in real money`')
 
-        embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
-        embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
-        embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
-        embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
-        embed.add_field(name='Special Event Donations:', value=f'`{new_result5}`')
+            embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
+            embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
+            embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
+            embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
+            embed.add_field(name='Special Event Donations:', value=f'`{new_result5}`')
 
-        embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total', inline=False)
-        await ctx.send(embed=embed)
+            embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total', inline=False)
+            await ctx.send(embed=embed)
+
+        else:
+            embed = discord.Embed(title='Donation Stats', description=None, color=0x7008C2)
+
+            embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
+            embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
+            embed.add_field(name=f'Money Donations:', value=f'`${new_result4} donated in real money`')
+
+            embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
+            embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
+            embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
+            embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
+            embed.add_field(name='Special Event Donations:', value=f'`{new_result5}`')
+
+            embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total', inline=False)
+            await ctx.send(embed=embed)
 
         dbase.commit()
         dbase.close()
