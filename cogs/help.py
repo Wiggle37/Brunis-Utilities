@@ -50,10 +50,26 @@ class Help(commands.Cog):
             help_embed.add_field(name='Event Dono Reset', value='Restes the donation amount for the specified number```b!edrs <@member /id>```', inline=False)
             await ctx.send(embed=help_embed)
 
+        #Special Event Help
+        if cog == 'special':
+            help_embed = discord.Embed(title='Special Event Donations', description='Must have Event Manager role\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.add_field(name='Special Event Dono Add', value='Add to someones donations```b!sda <@member / id> <amount(int)>```', inline=False)
+            help_embed.add_field(name='Special Event Dono Remove', value='Removes from someones donation amount```b!sdr <@member / id> <amount(int)>```', inline=False)
+            help_embed.add_field(name='Special Event Dono Reset', value='Restes the donation amount for the specified number```b!sdrs <@member /id>```', inline=False)
+            await ctx.send(embed=help_embed)
+
+        #Money Help
+        if cog == 'money':
+            help_embed = discord.Embed(title='Money Donations', description='Must have Event Manager role\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.add_field(name='Money Dono Add', value='Add to someones donations```b!mda <@member / id> <amount(int)>```', inline=False)
+            help_embed.add_field(name='Money Dono Remove', value='Removes from someones donation amount```b!mdr <@member / id> <amount(int)>```', inline=False)
+            help_embed.add_field(name='Money Dono Reset', value='Restes the donation amount for the specified number```b!mdrs <@member /id>```', inline=False)
+            await ctx.send(embed=help_embed)
+
         #Utility Help
         if cog == 'utility' or cog == 'utils' or cog == 'util':
-            help_embed = discord.Embed(title='Event Donations', description='Must have Event Manager role\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
-            help_embed.add_field(name='Coming Soon...', value='Coming soon')
+            help_embed = discord.Embed(title='Utility', description='Commands that will probally be useful\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.add_field(name='<a:loading:802974837395292200>Coming Soon...', value='<a:loading:802974837395292200>Coming soon...')
             await ctx.send(embed=help_embed)
 
 def setup(client):
