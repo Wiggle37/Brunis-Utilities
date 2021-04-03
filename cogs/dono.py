@@ -133,15 +133,15 @@ class Dono(commands.Cog):
 
             embed.add_field(name='User:', value=f'{ctx.author.mention}(User id: {ctx.author.id})', inline=False)
             embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
-            embed.add_field(name=f'Money Donations:', value=f'`${new_result4} donated in real money`')
+            embed.add_field(name=f'Money Donations:', value=f'$`{new_result4} donated in real money`')
 
             embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
-            embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
-            embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
-            embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
-            embed.add_field(name='Special Event Donations:', value=f'`{new_result5}`')
+            embed.add_field(name='Giveaway Donations:', value=f'⏣`{new_result1}` donated for giveaways', inline=False)
+            embed.add_field(name='Heist Donations:', value=f'⏣`{new_result2}` donated for heists', inline=False)
+            embed.add_field(name='Event Donations:', value=f'⏣`{new_result3}` donated for events', inline=False)
+            embed.add_field(name='Special Event Donations:', value=f'⏣`{new_result5}`')
 
-            embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total', inline=False)
+            embed.add_field(name='Total Donations:', value=f'⏣`{new_all}` donated in total', inline=False)
             await ctx.send(embed=embed)
 
         else:
@@ -152,12 +152,12 @@ class Dono(commands.Cog):
             embed.add_field(name=f'Money Donations:', value=f'`${new_result4} donated in real money`')
 
             embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
-            embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
-            embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
-            embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
-            embed.add_field(name='Special Event Donations:', value=f'`{new_result5}`')
+            embed.add_field(name='Giveaway Donations:', value=f'⏣`{new_result1}` donated for giveaways', inline=False)
+            embed.add_field(name='Heist Donations:', value=f'⏣`{new_result2}` donated for heists', inline=False)
+            embed.add_field(name='Event Donations:', value=f'⏣`{new_result3}` donated for events', inline=False)
+            embed.add_field(name='Special Event Donations:', value=f'⏣`{new_result5}`')
 
-            embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total', inline=False)
+            embed.add_field(name='Total Donations:', value=f'⏣`{new_all}` donated in total', inline=False)
             await ctx.send(embed=embed)
 
         dbase.commit()
