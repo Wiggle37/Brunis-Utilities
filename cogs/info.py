@@ -64,7 +64,7 @@ class Info(commands.Cog):
     #Special Roles
     @commands.command()
     async def specroles(self, ctx):
-        specroles_embed = discord.Embed(title='__**Dank Merchants Special Roles:**__', description='The Special Roles Of Dank Merchants And How To Obtain Them', color=0x00ff00)
+        specroles_embed = discord.Embed(title='__**Dank Merchants Special Roles:**__', description='The Special Roles Of Dank Merchants', color=0x00ff00)
         specroles_embed.add_field(name='__Member Of The Week:__', value='<@&786610856158429204>\nBe the highest hoisted member (higher than owner) in the server followed by a week of premium. The person who sends the most messages in a week gets this role.', inline=False)
         specroles_embed.add_field(name='__Premium:__', value='Premium users have this', inline=False)
         specroles_embed.add_field(name='__Trusted Trader:__', value='<@&787731702755754014>\nWith level 10 and 60 vouches, you may request to obtain this role to be more trusted in trades and gain reaction perms in trading channels as well as access to <#788864230220103780> and <#788864304786047026>', inline=False)
@@ -82,7 +82,7 @@ class Info(commands.Cog):
     #Exlusive Roles
     @commands.command()
     async def eroles(self, ctx):
-        eroles_embed = discord.Embed(title='__**Dank Merchants Exlusive Roles:**__', description='The Exlusive Roles Of Dank Merchants And How To Obtain Them', color=0x00ff00)
+        eroles_embed = discord.Embed(title='__**Dank Merchants Exlusive Roles:**__', description='The Exlusive Roles Of Dank Merchants', color=0x00ff00)
         eroles_embed.add_field(name='__Dank Harbor Veteran:__', value='<@&784560843890753577>\nFor those who survived Dank Harbor', inline=False)
         eroles_embed.add_field(name='__Server Bot Developer:__', value='<@&788738308879941633>\nDevelope a bot for the server(already taken by <@765322777329664089>)', inline=False)
         eroles_embed.add_field(name='__Christmas 2020:__', value='<@&791229305320767510>\nFor those who won in Chrismas 2020', inline=False)
@@ -109,6 +109,38 @@ class Info(commands.Cog):
     #Invites
     @commands.command()
     async def invperks(self, ctx):
+        inv_embed = discord.Embed(title='__**Dank Merchants Invite Perks:**__', description='The Invite Perks Of Dank Merchants', color=0x00ff00)
+        inv_embed.add_field(name='__2 Invites:__', value='<@&787342156611321857>\nGain access to some inviter-exclusive giveaways', inline=False)
+        inv_embed.add_field(name='__5 Invites:__', value='<@&787342156846727188>\nAbility to add reactions in giveaway channels and unlock <#787349373448880128>', inline=False)
+        inv_embed.add_field(name='__10 Invites:__', value='<@&787348338004590612>\nGuild-wide ability to embed links ', inline=False)
+        inv_embed.add_field(name='__15 Invites:__', value='<@&787348339733168179>\nAdvertise your server in <#784887859143507978> with <@&785930653665067038> ping and Dyno ?afk access', inline=False)
+        inv_embed.add_field(name='__30 Invites:__', value='<@&787348339791233045>\nLife time exclusive giveaway pass + your private text and voice channel (can invite 3 friends) and 1 month premium', inline=False)
+        inv_embed.add_field(name='__75+ Invites:__', value='<@&787348341675393025>\n**LIFE TIME PREMIUM**', inline=False)
+        await ctx.send(embed=inv_embed)
+
+    #Levels
+    @commands.command()
+    async def lvlperks(self, ctx):
+        lvl_embed = discord.Embed(title='__**Dank Merchants Level Perks:**__', description='The Level Perks Of Dank Merchants', color=0x00ff00)
+        lvl_embed.add_field(name='__Level 5:__', value='<@&785676777585639464>\n`pls weekly/monthly` access', inline=False)
+        lvl_embed.add_field(name='__Level 10:__', value='<@&785725155561308171>\nUnlock all color roles at <#784547669619507201>', inline=False)
+        lvl_embed.add_field(name='__Level 15:__', value='<@&785676889736871946>\nAll channels Reaction perms', inline=False)
+        lvl_embed.add_field(name='__Level 20:__', value='<@&785725154373271594>\nGuild-wide image perms', inline=False)
+        lvl_embed.add_field(name='__Level 25:__', value='<@&785725155762372608>\nAbility to embed links and unlock <#787352549622546464>', inline=False)
+        lvl_embed.add_field(name='__Level 30:__', value='<@&785676961904852992>\n`pls snipe` access and 1 week of premium', inline=False)
+        lvl_embed.add_field(name='__Level 40:__', value='<@&785676992481329182>\nAbility to upload an emote of your choice(no NSFW) ', inline=False)
+        lvl_embed.add_field(name='__Level 50:__', value='<@&785726480092626945>\nCustom role with color of your choice', inline=False)
+        lvl_embed.add_field(name='__Level 69:__', value='<@&799844364976259082>\nThe "<a:pepeeggplant:828020469286436864>" emote reaction when you are pinged!', inline=False)
+        await ctx.send(embed=lvl_embed)
+
+    #Booster Perks
+    @commands.command()
+    async def booster(self, ctx):
+        inv_embed = discord.Embed(title='__**Dank Merchants Booster Perks:**__', description='The Booster Perks Of Dank Merchants', color=0x00ff00)
+        inv_embed.add_field(name='__Single Booster Perks:__', value='<@&797486130844663829>\n<a:shiny_boost:802975176194129950> Receive all <@&787734881563705354> perks as long as your boost lasts\n<a:shiny_boost:802975176194129950> `pls snipe` and `?afk` access\n<a:shiny_boost:802975176194129950> Bypass all giveaways', inline=False)
+        inv_embed.add_field(name='__Double Booster Perks:__', value='<@&786610856308768768>\n', inline=False)
+        inv_embed.add_field(name='__Multi Booster Perks:__', value='<@&797486130844663829>\n', inline=False)
+        await ctx.send(embed=inv_embed)
 
 def setup(client):
     client.add_cog(Info(client))
