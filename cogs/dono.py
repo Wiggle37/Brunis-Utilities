@@ -22,7 +22,7 @@ class Dono(commands.Cog):
         user = f'{ctx.author.id}'
         guild = f'{ctx.guild.id}'
 
-        cursor.execute(f"SELECT user_id FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
         result = cursor.fetchone()
 
         if result is None:
@@ -31,6 +31,7 @@ class Dono(commands.Cog):
             cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
 
         else:
@@ -70,6 +71,12 @@ class Dono(commands.Cog):
         if result4 is None:
             await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm Wiggle for assistance')
 
+        #Get Special Event Amount
+        cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+        result5 = cursor.fetchone()
+        if result5 is None:
+            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm Wiggle for assistance')
+
         result1 = (result1[0])
         new_result1 = ('{:,}'.format(result1))
 
@@ -95,9 +102,7 @@ class Dono(commands.Cog):
         embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
         embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
         embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
-
-        embed.add_field(name='__**Special Event Donations**__', value='Special Event Donations', inline=False)
-        embed.add_field(name='2.5k Event Donations:', value=f'`Event coming soon...`')
+        embed.add_field(name='Special Event Donations:', value=f'<a:loading:802974837395292200>`Coming soon...`')
 
         embed.add_field(name='Total Donations:', value=f'`{new_all}` donated in total', inline=False)
         await ctx.send(embed=embed)
@@ -338,12 +343,12 @@ class Dono(commands.Cog):
         dbase.close()
 
     '''
-    2.5K SPECIAL EVENT
+    SPECIAL EVENT
     '''
     #Giveaway Dono Add
-    @commands.command(aliases=['eda'])
+    @commands.command(aliases=['sda'])
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
-    async def event_dono_add(self, ctx, member: discord.Member, amount: int):
+    async def special_dono_add(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
@@ -351,7 +356,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
@@ -359,9 +364,9 @@ class Dono(commands.Cog):
         dbase.close()
 
     #Dono Remove
-    @commands.command(aliases=['edr'])
+    @commands.command(aliases=['sdr'])
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
-    async def event_dono_remove(self, ctx, member: discord.Member, amount: int):
+    async def special_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
@@ -369,7 +374,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
 
@@ -377,9 +382,9 @@ class Dono(commands.Cog):
         dbase.close()
 
     #Dono Reset
-    @commands.command(aliases=['edrs'])
+    @commands.command(aliases=['sdrs'])
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
-    async def event_dono_reset(self, ctx, member: discord.Member):
+    async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
@@ -388,7 +393,7 @@ class Dono(commands.Cog):
 
         amount = 0
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
 
