@@ -282,6 +282,64 @@ class Dono(commands.Cog):
     '''
     EVENT DONATIONS
     '''
+    #Dono Add
+    @commands.command(aliases=['eda'])
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    async def event_dono_add(self, ctx, member: discord.Member, amount: int):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = int(ctx.guild.id)
+        user = int(f'{member.id}')
+        amount = int(f'{amount}')
+
+        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
+
+        dbase.commit()
+        dbase.close()
+
+    #Dono Remove
+    @commands.command(aliases=['edr'])
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    async def event_dono_remove(self, ctx, member: discord.Member, amount: int):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = int(ctx.guild.id)
+        user = int(f'{member.id}')
+        amount = int(f'{amount}')
+
+        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
+
+        dbase.commit()
+        dbase.close()
+
+    #Dono Reset
+    @commands.command(aliases=['edrs'])
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    async def event_dono_reset(self, ctx, member: discord.Member):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = int(ctx.guild.id)
+        user = int(f'{member.id}')
+
+        amount = 0
+
+        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+
+        dbase.commit()
+        dbase.close()
+
+    '''
+    2.5K SPECIAL EVENT
+    '''
     #Giveaway Dono Add
     @commands.command(aliases=['eda'])
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
@@ -336,6 +394,7 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
 
 def setup(client):
     client.add_cog(Dono(client))
