@@ -53,7 +53,7 @@ class Help(commands.Cog):
         #Utility Help
         if cog == 'utility' or cog == 'utils' or cog == 'util':
             help_embed = discord.Embed(title='Event Donations', description='Must have Event Manager role\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
-            help_embed.add_field(name='Coming Soon...')
+            help_embed.add_field(name='Coming Soon...', value='Coming soon')
             await ctx.send(embed=help_embed)
 
 def setup(client):

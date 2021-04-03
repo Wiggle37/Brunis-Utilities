@@ -22,7 +22,7 @@ class Dono(commands.Cog):
         user = f'{ctx.author.id}'
         guild = f'{ctx.guild.id}'
 
-        cursor.execute(f"SELECT user_id FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+        cursor.execute(f"SELECT user_id FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
         result = cursor.fetchone()
 
         if result is None:
@@ -30,6 +30,7 @@ class Dono(commands.Cog):
             cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
             print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
 
         else:
@@ -50,19 +51,24 @@ class Dono(commands.Cog):
         cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result1 = cursor.fetchone()
         if result1 is None:
-            await ctx.send('Donate to giveaways')
-
+            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm Wiggle for assistance')
         #Get Heist Amount
         cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result2 = cursor.fetchone()
         if result2 is None:
-            await ctx.send("Donate to heists")
+            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm Wiggle for assistance')
 
         #Get Event Amount
         cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
         result3 = cursor.fetchone()
         if result3 is None:
-            await ctx.send('Donate to events')
+            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm Wiggle for assistance')
+
+        #Get Money Amount
+        cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+        result4 = cursor.fetchone()
+        if result4 is None:
+            await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm Wiggle for assistance')
 
         result1 = (result1[0])
         new_result1 = ('{:,}'.format(result1))
@@ -73,6 +79,9 @@ class Dono(commands.Cog):
         result3 = (result3[0])
         new_result3 = ('{:,}'.format(result3))
 
+        result4 = (result4[0])
+        new_result4 = ('{:,}'.format(result4))
+
         all = result1 + result2 + result3
         new_all = ('{:,}'.format(all))
 
@@ -80,9 +89,9 @@ class Dono(commands.Cog):
 
         embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
         embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
-        embed.add_field(name=f'Money Donations:', value='`$coming soon...`')
+        embed.add_field(name=f'Money Donations:', value=f'`${new_result4} donated in real money`')
 
-        embed.add_field(name='__**Normal Donations**__', value='Dank Memer Dontations', inline=False)
+        embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
         embed.add_field(name='Giveaway Donations:', value=f'`{new_result1}` donated for giveaways', inline=False)
         embed.add_field(name='Heist Donations:', value=f'`{new_result2}` donated for heists', inline=False)
         embed.add_field(name='Event Donations:', value=f'`{new_result3}` donated for events', inline=False)
@@ -253,7 +262,7 @@ class Dono(commands.Cog):
 
     #Dono Reset
     @commands.command(aliases=['hdrs'])
-    @commands.has_any_role(785631914010214410, 785202756641619999) #Heist Manger, Bruni
+    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manger, Bruni, Bot Dev
     async def heist_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
