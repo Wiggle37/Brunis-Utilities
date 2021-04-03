@@ -23,7 +23,8 @@ class Help(commands.Cog):
         #Donation Help
         if cog == 'dono' or cog == 'donation':
             help_embed = discord.Embed(title='Donations', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
-            help_embed.add_field(name='Dono', value='Check someones donation amount for the server(shows all donated amounts)```b!d <@member / id>```', inline=False)
+            help_embed.add_field(name='Dono', value='Check your own donation amount for the server```b!dono```')
+            help_embed.add_field(name='Dono', value='Check someones donation amount for the server(shows all donated amounts)```b!dono <@member / id>```', inline=False)
             await ctx.send(embed=help_embed)
 
         #Giveaway Help
