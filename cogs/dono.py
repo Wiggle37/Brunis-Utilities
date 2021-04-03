@@ -99,7 +99,7 @@ class Dono(commands.Cog):
     '''
     MONEY DONATIONS
     '''
-    #Money Dono Add
+    #Dono Add
     @commands.command(aliases=['mda'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
     async def money_dono_add(self, ctx, member: discord.Member, amount: int):
@@ -117,10 +117,47 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    #Dono Remove
+    @commands.command(aliases=['mdr'])
+    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    async def money_dono_remove(self, ctx, member: discord.Member, amount: int):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = int(ctx.guild.id)
+        user = int(f'{member.id}')
+        amount = int(f'{amount}')
+
+        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
+
+        dbase.commit()
+        dbase.close()
+
+    #Dono Reset
+    @commands.command(aliases=['mdrs'])
+    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    async def money_dono_reset(self, ctx, member: discord.Member):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = int(ctx.guild.id)
+        user = int(f'{member.id}')
+
+        amount = 0
+
+        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+
+        dbase.commit()
+        dbase.close()
+
     '''
     GIVEAWAY DONATIONS
     '''
-    #Giveaway Dono Add
+    #Dono Add
     @commands.command(aliases=['gda'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: int):
