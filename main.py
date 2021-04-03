@@ -44,7 +44,7 @@ async def on_ready():
         "user_id"	INTEGER UNIQUE,
         "amount"	INTEGER DEFAULT 0
         )""")
-    cursor.execute("""CREATE TABLE "2.5k_event_dono_logs" (
+    cursor.execute("""CREATE TABLE IF NOT EXISTS "special_event_dono_logs" (
         "guild_id"	INTEGER,
         "user_id"	INTEGER UNIQUE,
         "amount"	INTEGER DEFAULT 0
