@@ -149,7 +149,7 @@ class Dono(commands.Cog):
 
             embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
             embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
-            embed.add_field(name=f'Money Donations:', value=f'`${new_result4} donated in real money`')
+            embed.add_field(name=f'Money Donations:', value=f'$`{new_result4} donated in real money`')
 
             embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
             embed.add_field(name='Giveaway Donations:', value=f'⏣`{new_result1}` donated for giveaways', inline=False)
