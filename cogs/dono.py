@@ -3,17 +3,108 @@ from discord.ext import commands
 
 import sqlite3
 
-import random
-
 class Dono(commands.Cog):
 
     def __init__(self, client):
         self.client = client
 
+    '''
+    ADD TO DATABASE IF NOT IN ALREADY
+    '''
+    @commands.Cog.listener()
+    async def on_message(self, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
 
-    '''
-    ADD TO DATABASE
-    '''
+        user = f'{ctx.author.id}'
+        guild = f'{ctx.guild.id}'
+
+        cursor.execute(f"SELECT user_id FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+        result = cursor.fetchone()
+
+        if result is None:
+            amount = 0
+            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
+
+        else:
+            pass
+
+        dbase.commit()
+        dbase.close()
+    @commands.Cog.listener()
+    async def on_message(self, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        user = f'{ctx.author.id}'
+        guild = f'{ctx.guild.id}'
+
+        cursor.execute(f"SELECT user_id FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+        result = cursor.fetchone()
+
+        if result is None:
+            amount = 0
+            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
+    @commands.Cog.listener()
+    async def on_message(self, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        user = f'{ctx.author.id}'
+        guild = f'{ctx.guild.id}'
+
+        cursor.execute(f"SELECT user_id FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+        result = cursor.fetchone()
+
+        if result is None:
+            amount = 0
+            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
+
+        else:
+            pass
+
+        dbase.commit()
+        dbase.close()
+    @commands.Cog.listener()
+    async def on_message(self, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        user = f'{ctx.author.id}'
+        guild = f'{ctx.guild.id}'
+
+        cursor.execute(f"SELECT user_id FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+        result = cursor.fetchone()
+
+        if result is None:
+            amount = 0
+            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
+
+        else:
+            pass
+
+        dbase.commit()
+        dbase.close()
     @commands.Cog.listener()
     async def on_message(self, ctx):
         dbase = sqlite3.connect('bruni.db')
@@ -133,7 +224,7 @@ class Dono(commands.Cog):
 
             embed.add_field(name='User:', value=f'{ctx.author.mention}(User id: {ctx.author.id})', inline=False)
             embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
-            embed.add_field(name=f'Money Donations:', value=f'$`{new_result4} donated in real money`')
+            embed.add_field(name=f'Money Donations:', value=f'$`{new_result4}` donated in real money')
 
             embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
             embed.add_field(name='Giveaway Donations:', value=f'⏣`{new_result1}` donated for giveaways', inline=False)
@@ -149,7 +240,7 @@ class Dono(commands.Cog):
 
             embed.add_field(name='User:', value=f'{member.mention}(User id: {member.id})', inline=False)
             embed.add_field(name='__**Money Donations**__', value='Real Money Donations', inline=False)
-            embed.add_field(name=f'Money Donations:', value=f'$`{new_result4} donated in real money`')
+            embed.add_field(name=f'Money Donations:', value=f'$`{new_result4}` donated in real money')
 
             embed.add_field(name='__**Normal Donations**__', value='Dank Memer Donations', inline=False)
             embed.add_field(name='Giveaway Donations:', value=f'⏣`{new_result1}` donated for giveaways', inline=False)
