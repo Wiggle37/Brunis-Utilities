@@ -23,6 +23,23 @@ class Info(commands.Cog):
         rules_embed.add_field(name='__Note:__', value='*By verifying you agree to every term & condition listed above.*')
         await ctx.send(embed=rules_embed)
 
+    #Dank Rules
+    @commands.command()
+    async def dank_rules(self, ctx):
+        guild = (ctx.guild.id)
+        await ctx.message.delete()
+
+        dank_rules = discord.Embed(title='Dank Memer Rules', description='https://dankmemer.lol/rules', color=0x00ff00)
+        dank_rules.add_field(name='**Rule One**\n**User-bots, Spamming and Macros**', value='\nUsage of user-bots, macros, scripts, auto-typers or anything else enabling automation of commands is strictly forbidden. In addition to this, massive amounts of spam is not allowed and will be punished with equal severity.', inline=False)
+        dank_rules.add_field(name='**Rule Two**\n**Sharing Exploits**', value='Sharing exploits or exploitative bugs with other users is forbidden. Please report all exploits and bugs to staff on the [Dank Memer Support Server](https://discord.com/invite/meme) so that we can fix it as soon as possible.', inline=False)
+        dank_rules.add_field(name='**Rule Three**\n**Giveaway Requirements or Bot Usage Requirements in Your Server**', value='You should not lock the bot, or giveaways for the bot, behind paywalls. This means stuff like patreon roles, donor roles (with irl money), etc, is forbidden for giveaway requirements or role locks. The only exception to this is boosters, we will allow you to lock things behind being a booster for your server. Things like level locks using external bots is perfectly fine.', inline=False)
+        dank_rules.add_field(name='**Rule Four**\n**Racism, Homophobia, Sexism or Slurs**', value='None of the above will be tolerated through usage of Dank Memer. We will not punish you for what you say outside of the usage of our commands. Evidence found of this done through our commands will result in punishment.', inline=False)
+        dank_rules.add_field(name='**Rule Five**\n**Advertisement**', value='Usage of Dank Memer to advertise or promote anything will result in a punishment. This includes other Discord servers. Giving our currency in exchange for invites to your server is also forbidden.', inline=False)
+        dank_rules.add_field(name='**Rule Six**\n**Real Money Trading**', value='Dank Memers currency is not to be traded for real money or discord nitro. Buying anything with real money outside of our patreon and website, will get you a ban.', inline=False)
+        dank_rules.add_field(name='**Rule Seven**\n**Etiquette**', value='Starting harmful rumors about the bot, causing unnecessary drama within our servers about the bot, or witch hunting staff members are all ban worthy behaviors.', inline=False)
+        dank_rules.add_field(name='**Rule Eight**\n**Discord Terms of Service and Usage Guidelines**', value='Through usage of Dank Memer, you accept [Dank Memer Terms of Service](https://dankmemer.lol/terms) and [Privacy Policy](https://dankmemer.lol/privacy). Additionally, you accept [Discords Terms of Service](https://discord.com/terms) and [Community Guidelines](https://discord.com/guidelines), these of which are enforceable through Dank Memer.')
+        await ctx.send(embed=dank_rules)
+
     #Warning Policy
     @commands.command()
     async def warnp(self, ctx):

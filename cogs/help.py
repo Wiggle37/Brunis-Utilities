@@ -76,8 +76,17 @@ class Help(commands.Cog):
 
         #Info Help
         if cog == 'info':
-            help_embed = discord.Embed(title='Info', description='Info commands\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
-            help_embed.add_field(name='<a:loading:802974837395292200>Coming Soon...', value='<a:loading:802974837395292200>Coming soon...')
+            help_embed = discord.Embed(title='Info', description='A list of commands for info to quickly display\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.add_field(name='Dank Merchants Rules', value='The rules of Dank Merchants to quickly display```b!rules```', inline=False)
+            help_embed.add_field(name='Dank Memer Rules', value='The rules of Dank Memer to quickly display```b!dank_rules```', inline=False)
+            help_embed.add_field(name='Dank Merchants Warning Policy', value='The warning policy of Dank Merchants```b!warnp```', inline=False)
+            help_embed.add_field(name='Dank Merchants Trading Rules', value='The Dank Merchants trading rules```b!traderules```', inline=False)
+            help_embed.add_field(name='Dank Merchants Giveaway Rules', value='The giveaway rules for Dank Merchants```b!gawrules```', inline=False)
+            help_embed.add_field(name='Dank Merchants Special Roles', value='A list of special roles you can get```b!specroles```', inline=False)
+            help_embed.add_field(name='Dank Merchants Exlusive Roles', value='The lsit of exlusive roles in the serber```b!eroles```', inline=False)
+            help_embed.add_field(name='Dank Merchants Donor Perks', value='All of the donor perks for the server```b!donoperks```', inline=False)
+            help_embed.add_field(name='Dank Merchants Invite Perks', value='All the perks you can get for geting invites in the server```b!invperks```', inline=False)
+            help_embed.add_field(name='Dank Merchants Booster Perks', value='Booster perks for the server```b!booster```', inline=False)
             await ctx.send(embed=help_embed)
 
 def setup(client):
