@@ -254,7 +254,7 @@ class Dono(commands.Cog):
 
         message = ctx.message
         await message.add_reaction(emoji='✅')
-        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **${amount}**")
 
         dbase.commit()
         dbase.close()
@@ -277,7 +277,7 @@ class Dono(commands.Cog):
 
         amount = ('{:,}'.format(amount))
 
-        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **${amount}**")
 
         dbase.commit()
         dbase.close()
@@ -298,7 +298,7 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **${amount}**")
 
         dbase.commit()
         dbase.close()
@@ -320,7 +320,7 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **${amount}**")
 
         dbase.commit()
         dbase.close()
@@ -347,7 +347,7 @@ class Dono(commands.Cog):
 
         message = ctx.message
         await message.add_reaction(emoji='✅')
-        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -368,7 +368,7 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -391,7 +391,7 @@ class Dono(commands.Cog):
 
         amount = ('{:,}'.format(amount))
 
-        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -413,7 +413,7 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -423,8 +423,8 @@ class Dono(commands.Cog):
     '''
     #Dono Set
     @commands.command(aliases=['hds'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
-    async def gaw_dono_set(self, ctx, member: discord.Member, amount: int):
+    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manager, Bruni, Bot Dev
+    async def heist_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
@@ -440,7 +440,7 @@ class Dono(commands.Cog):
 
         message = ctx.message
         await message.add_reaction(emoji='✅')
-        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -463,7 +463,7 @@ class Dono(commands.Cog):
 
         amount = ('{:,}'.format(amount))
 
-        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -486,7 +486,7 @@ class Dono(commands.Cog):
 
         amount = ('{:,}'.format(amount))
 
-        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -508,7 +508,7 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -518,7 +518,7 @@ class Dono(commands.Cog):
     '''
     #Dono Set
     @commands.command(aliases=['eds'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manager, Bruni, Bot Dev
     async def event_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
@@ -535,7 +535,7 @@ class Dono(commands.Cog):
 
         message = ctx.message
         await message.add_reaction(emoji='✅')
-        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -558,7 +558,7 @@ class Dono(commands.Cog):
 
         amount = ('{:,}'.format(amount))
 
-        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -581,7 +581,7 @@ class Dono(commands.Cog):
 
         amount = ('{:,}'.format(amount))
 
-        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -603,7 +603,7 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
@@ -613,7 +613,7 @@ class Dono(commands.Cog):
     '''
     #Dono Set
     @commands.command(aliases=['sds'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
     async def special_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
@@ -630,14 +630,14 @@ class Dono(commands.Cog):
 
         message = ctx.message
         await message.add_reaction(emoji='✅')
-        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
 
     #Giveaway Dono Add
     @commands.command(aliases=['sda'])
-    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
     async def special_dono_add(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
@@ -653,14 +653,14 @@ class Dono(commands.Cog):
 
         amount = ('{:,}'.format(amount))
 
-        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
 
     #Dono Remove
     @commands.command(aliases=['sdr'])
-    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
     async def special_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
@@ -674,14 +674,14 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
 
     #Dono Reset
     @commands.command(aliases=['sdrs'])
-    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
@@ -696,11 +696,10 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='✅')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
         dbase.commit()
         dbase.close()
-
 
 def setup(client):
     client.add_cog(Dono(client))
