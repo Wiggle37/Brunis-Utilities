@@ -25,7 +25,7 @@ class Info(commands.Cog):
 
     #Dank Rules
     @commands.command()
-    async def dank_rules(self, ctx):
+    async def dankrules(self, ctx):
         guild = (ctx.guild.id)
         await ctx.message.delete()
 

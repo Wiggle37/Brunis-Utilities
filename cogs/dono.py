@@ -270,6 +270,8 @@ class Dono(commands.Cog):
 
         cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
         dbase.commit()
@@ -346,6 +348,8 @@ class Dono(commands.Cog):
 
         cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
 
         dbase.commit()
@@ -386,6 +390,8 @@ class Dono(commands.Cog):
 
         cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
         dbase.commit()
@@ -403,6 +409,8 @@ class Dono(commands.Cog):
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+
+        amount = ('{:,}'.format(amount))
 
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
 
@@ -444,6 +452,8 @@ class Dono(commands.Cog):
 
         cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
         dbase.commit()
@@ -461,6 +471,8 @@ class Dono(commands.Cog):
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+
+        amount = ('{:,}'.format(amount))
 
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
 
@@ -502,6 +514,8 @@ class Dono(commands.Cog):
 
         cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **{amount}**")
 
         dbase.commit()
@@ -519,6 +533,8 @@ class Dono(commands.Cog):
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+
+        amount = ('{:,}'.format(amount))
 
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **{amount}**")
 

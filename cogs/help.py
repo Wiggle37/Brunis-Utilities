@@ -78,7 +78,7 @@ class Help(commands.Cog):
         if cog == 'info':
             help_embed = discord.Embed(title='Info', description='A list of commands for info to quickly display\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='Dank Merchants Rules', value='The rules of Dank Merchants to quickly display```b!rules```', inline=False)
-            help_embed.add_field(name='Dank Memer Rules', value='The rules of Dank Memer to quickly display```b!dank_rules```', inline=False)
+            help_embed.add_field(name='Dank Memer Rules', value='The rules of Dank Memer to quickly display```b!dankrules```', inline=False)
             help_embed.add_field(name='Dank Merchants Warning Policy', value='The warning policy of Dank Merchants```b!warnp```', inline=False)
             help_embed.add_field(name='Dank Merchants Trading Rules', value='The Dank Merchants trading rules```b!traderules```', inline=False)
             help_embed.add_field(name='Dank Merchants Giveaway Rules', value='The giveaway rules for Dank Merchants```b!gawrules```', inline=False)
