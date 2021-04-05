@@ -33,7 +33,7 @@ class Events(commands.Cog):
         cursor.execute("DELETE FROM special_event_dono_logs WHERE user_id = ?", [user_id])
         cursor.execute("DELETE FROM money_dono_logs WHERE user_id = ?", [user_id])
 
-        print('User removed from db')
+        print(f'{user_id} removed from db\n')
 
         dbase.commit()
         dbase.close()
