@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-class Testing(commands.Cog):
+class Voice(commands.Cog):
 
     def __init__(self, client):
         self.client = client
@@ -15,4 +15,4 @@ class Testing(commands.Cog):
         await ctx.voice_client.disconnect()
 
 def setup(client):
-    client.add_cog(Testing(client))
+    client.add_cog(Voice(client))
