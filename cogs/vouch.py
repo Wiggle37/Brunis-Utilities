@@ -13,5 +13,10 @@ class Vouch(commands.Cog):
         dbase = sqlite3.connect('vouch.db')
         cursor = dbase.cursor()
 
+        cursor.execute()
+
+        dbase.commit()
+        dbase.close()
+
 def setup(client):
     client.add_cog(Vouch(client))
