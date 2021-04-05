@@ -9,8 +9,7 @@ import sqlite3
 ###Intents###
 intents = discord.Intents.default()
 intents.members = True
-client = commands.AutoShardedBot(
-    shard_count=3,
+client = commands.Bot(
     command_prefix='b!',
     intents=intents,
     case_insensitive=True,
