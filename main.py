@@ -23,37 +23,6 @@ async def on_ready():
     print(f'{client.user} is online!')
 
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'over Dank Merchants'))
-
-    dbase = sqlite3.connect('bruni.db')
-    cursor = dbase.cursor()
-    cursor.execute("""CREATE TABLE IF NOT EXISTS "money_dono_logs" (
-        "guild_id"	INTEGER,
-        "user_id"	INTEGER UNIQUE,
-        "amount"	INTEGER DEFAULT 0
-        )""")
-    cursor.execute("""CREATE TABLE IF NOT EXISTS "gaw_dono_logs" (
-        "guild_id"	INTEGER,
-        "user_id"	INTEGER UNIQUE,
-        "amount"	INTEGER DEFAULT 0
-        )""")
-    cursor.execute("""CREATE TABLE IF NOT EXISTS "heist_dono_logs" (
-        "guild_id"	INTEGER,
-        "user_id"	INTEGER UNIQUE,
-        "amount"	INTEGER DEFAULT 0
-        )""")
-    cursor.execute("""CREATE TABLE IF NOT EXISTS "event_dono_logs" (
-        "guild_id"	INTEGER,
-        "user_id"	INTEGER UNIQUE,
-        "amount"	INTEGER DEFAULT 0
-        )""")
-    cursor.execute("""CREATE TABLE IF NOT EXISTS "special_event_dono_logs" (
-        "guild_id"	INTEGER,
-        "user_id"	INTEGER UNIQUE,
-        "amount"	INTEGER DEFAULT 0
-        )""")
-    
-    dbase.commit()
-    dbase.close() 
 ###Cog Loader###
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
