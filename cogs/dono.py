@@ -253,7 +253,10 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
+        
         await ctx.send(f"Donation note added for **{member}**\nThe amount set was **${amount}**")
 
         dbase.commit()
@@ -273,7 +276,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         amount = ('{:,}'.format(amount))
 
@@ -296,7 +299,9 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
 
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **${amount}**")
 
@@ -318,7 +323,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **${amount}**")
 
@@ -346,7 +351,10 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
@@ -366,7 +374,9 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
 
         await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
 
@@ -387,7 +397,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         amount = ('{:,}'.format(amount))
 
@@ -411,7 +421,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
@@ -439,7 +449,10 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
@@ -459,7 +472,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         amount = ('{:,}'.format(amount))
 
@@ -482,7 +495,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         amount = ('{:,}'.format(amount))
 
@@ -506,7 +519,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
@@ -534,7 +547,10 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
@@ -554,7 +570,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         amount = ('{:,}'.format(amount))
 
@@ -577,7 +593,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         amount = ('{:,}'.format(amount))
 
@@ -601,7 +617,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
@@ -629,7 +645,10 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
+
         await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
 
         dbase.commit()
@@ -649,7 +668,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         amount = ('{:,}'.format(amount))
 
@@ -672,7 +691,9 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+        amount = ('{:,}'.format(amount))
 
         await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
 
@@ -694,7 +715,7 @@ class Dono(commands.Cog):
         cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
 
         message = ctx.message
-        await message.add_reaction(emoji='✅')
+        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
 
