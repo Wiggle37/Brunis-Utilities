@@ -12,6 +12,7 @@ class Help(commands.Cog):
         #Main Help
         if cog is None:
             help_embed = discord.Embed(title='Brunis Utilities', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/827369094776356905/828079209623584818/dankmerchants.gif')
             help_embed.add_field(name='Donations', value='To track donations for members', inline=False)
             help_embed.add_field(name='Giveaway Donation', value='Track how much someone has donated for giveaways', inline=False)
             help_embed.add_field(name='Heist Donations', value='Track how much someone has donated for heists', inline=False)
