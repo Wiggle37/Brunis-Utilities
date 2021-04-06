@@ -22,7 +22,7 @@ client.remove_command('help')
 ###On Ready###
 @client.event
 async def on_ready():
-    print(f'{client.user} is online!')
+    print(f'Bot is now online!\n---BOT INFO---\n--------------------\nUser: {client.user}\nID: {client.user.id}')
 
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'over Dank Merchants'))
 
