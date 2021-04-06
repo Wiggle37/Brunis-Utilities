@@ -7,7 +7,9 @@ class Events(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-
+    '''
+    MEMBER EVENTS
+    '''
     #On Member Join(Message(Add Data Base))
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -55,6 +57,33 @@ class Events(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    '''
+    TRIGGERS
+    '''
+    #Rob
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.content.startswith('pls rob'):
+            await message.channel.send('You stole NOTHING LMFAO\nRob is turned off dumbass')
+
+    #Steal
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.content.startswith('pls steal'):
+            await message.channel.send('You stole NOTHING LMFAO\nRob is turned off dumbass')
+
+    #Heist
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.content.startswith('pls heist'):
+            await message.channel.send('Heist is turned off')
+
+    #Bank Rob
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.content.startswith('pls bankrob'):
+            await message.channel.send('Heist is turned off')
 
 def setup(client):
     client.add_cog(Events(client))
