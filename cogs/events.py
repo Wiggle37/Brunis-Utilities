@@ -25,16 +25,15 @@ class Events(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
         user = f'{member.id}'
-        guild = f'{ctx.guild.id}'
         cursor.execute(f"SELECT user_id FROM money_dono_logs WHERE user_id = '{member.id}'")
         result = cursor.fetchone()
         if result is None:
             amount = 0
-            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
             print(f'Member added to database\nUSER: {member.name}\nID: {member.id}\n')
         else:
             pass
