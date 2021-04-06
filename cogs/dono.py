@@ -172,7 +172,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         reset = 0
 
@@ -206,7 +205,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -236,7 +234,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -266,7 +263,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
 
         amount = 0
@@ -298,7 +294,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         reset = 0
 
@@ -332,7 +327,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -362,7 +356,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -392,7 +385,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
 
         amount = 0
@@ -424,7 +416,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         reset = 0
 
@@ -458,7 +449,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -488,7 +478,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -519,7 +508,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
 
         amount = 0
@@ -551,7 +539,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         reset = 0
 
@@ -585,7 +572,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -615,7 +601,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -645,7 +630,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
 
         amount = 0
@@ -677,7 +661,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         reset = 0
 
@@ -711,7 +694,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -741,7 +723,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -771,7 +752,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        guild = int(ctx.guild.id)
         user = int(f'{member.id}')
 
         amount = 0
