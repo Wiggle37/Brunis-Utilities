@@ -9,7 +9,7 @@ class Dono(commands.Cog):
         self.client = client
 
     '''
-    ADD TO DATABASE IF NOT IN ALREADY
+    ADD TO DB/ADD ROLES
     '''
     #Make Acc
     @commands.command()
@@ -17,11 +17,11 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE user_id = '{ctx.message.author.id}'")
+        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
         result = cursor.fetchone()
 
         if result is None:
-            user = ctx.message.author.id
+            user = ctx.author.id
             amount = 0
 
             cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
@@ -37,6 +37,36 @@ class Dono(commands.Cog):
 
         else:
             await ctx.send('You are already in the database!')
+
+    @commands.command()
+    async def collect(self, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{ctx.author.id}'")
+        result1 = cursor.fetchone()
+        result1 = (result1[0])
+
+        cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{ctx.author.id}'")
+        result2 = cursor.fetchone()
+        result2 = (result2[0])
+
+        cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{ctx.author.id}'")
+        result3 = cursor.fetchone()
+        result3 = (result3[0])
+
+        cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{ctx.author.id}'")
+        result4 = cursor.fetchone()
+        result4 = (result4[0])
+
+        cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
+        result5 = cursor.fetchone()
+        result5 = (result5[0])
+
+        all = result1 + result2 + result3 + result4 + result5
+
+        if all >= 5000000:
+            
 
     '''
     DONATIONS CHECK
