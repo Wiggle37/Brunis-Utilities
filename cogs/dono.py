@@ -33,103 +33,6 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
-    @commands.Cog.listener()
-    async def on_message(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-        user = f'{ctx.author.id}'
-        guild = f'{ctx.guild.id}'
-        cursor.execute(f"SELECT user_id FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        if result is None:
-            amount = 0
-            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
-        else:
-            pass
-        dbase.commit()
-        dbase.close()
-    @commands.Cog.listener()
-    async def on_message(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-        user = f'{ctx.author.id}'
-        guild = f'{ctx.guild.id}'
-        cursor.execute(f"SELECT user_id FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        if result is None:
-            amount = 0
-            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
-    @commands.Cog.listener()
-    async def on_message(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-        user = f'{ctx.author.id}'
-        guild = f'{ctx.guild.id}'
-        cursor.execute(f"SELECT user_id FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        if result is None:
-            amount = 0
-            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
-        else:
-            pass
-        dbase.commit()
-        dbase.close()
-    @commands.Cog.listener()
-    async def on_message(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-        user = f'{ctx.author.id}'
-        guild = f'{ctx.guild.id}'
-        cursor.execute(f"SELECT user_id FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        if result is None:
-            amount = 0
-            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
-        else:
-            pass
-        dbase.commit()
-        dbase.close()
-    @commands.Cog.listener()
-    async def on_message(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-        user = f'{ctx.author.id}'
-        guild = f'{ctx.guild.id}'
-        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        if result is None:
-            amount = 0
-            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
-            print(f'Member added to database\nUSER: {ctx.author}\nID: {ctx.author.id}\n')
-        else:
-            pass
-        dbase.commit()
-        dbase.close()
-
     '''
     DONATIONS CHECK
     '''
@@ -142,30 +45,30 @@ class Dono(commands.Cog):
         #No Member Provided
         if member is None:
             #Get Gaw Amount
-            cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{ctx.author.id}'")
             result1 = cursor.fetchone()
             if result1 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
             #Get Heist Amount
-            cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{ctx.author.id}'")
             result2 = cursor.fetchone()
             if result2 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Event Amount
-            cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{ctx.author.id}'")
             result3 = cursor.fetchone()
             if result3 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Money Amount
-            cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{ctx.author.id}'")
             result4 = cursor.fetchone()
             if result4 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Special Event Amount
-            cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
+            cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
             result5 = cursor.fetchone()
             if result5 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
@@ -173,30 +76,30 @@ class Dono(commands.Cog):
         #Member Provided
         else:
             #Get Gaw Amount
-            cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{member.id}'")
             result1 = cursor.fetchone()
             if result1 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
             #Get Heist Amount
-            cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{member.id}'")
             result2 = cursor.fetchone()
             if result2 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Event Amount
-            cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{member.id}'")
             result3 = cursor.fetchone()
             if result3 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Money Amount
-            cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{member.id}'")
             result4 = cursor.fetchone()
             if result4 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Special Event Amount
-            cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
+            cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{member.id}'")
             result5 = cursor.fetchone()
             if result5 is None:
                 await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
@@ -281,9 +184,9 @@ class Dono(commands.Cog):
 
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, reset, reset])
+        cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
 
-        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -306,7 +209,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -329,7 +232,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -353,7 +256,7 @@ class Dono(commands.Cog):
 
         amount = 0
 
-        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -379,9 +282,9 @@ class Dono(commands.Cog):
 
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, reset, reset])
+        cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
 
-        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -404,7 +307,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -427,7 +330,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -451,7 +354,7 @@ class Dono(commands.Cog):
 
         amount = 0
 
-        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -477,9 +380,9 @@ class Dono(commands.Cog):
 
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, reset, reset])
+        cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
 
-        cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -502,7 +405,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -525,7 +428,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -549,7 +452,7 @@ class Dono(commands.Cog):
 
         amount = 0
 
-        cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -575,9 +478,9 @@ class Dono(commands.Cog):
 
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, reset, reset])
+        cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -600,7 +503,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -623,7 +526,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -647,7 +550,7 @@ class Dono(commands.Cog):
 
         amount = 0
 
-        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -673,9 +576,9 @@ class Dono(commands.Cog):
 
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, reset, reset])
+        cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
 
-        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -698,7 +601,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -721,7 +624,7 @@ class Dono(commands.Cog):
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
-        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount - ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
@@ -745,7 +648,7 @@ class Dono(commands.Cog):
 
         amount = 0
 
-        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
