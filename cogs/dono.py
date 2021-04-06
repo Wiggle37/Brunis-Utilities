@@ -157,17 +157,6 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
-    #Top Dono
-    @commands.command(aliases=['td'])
-    async def topdono(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-
-        pass
-
-        dbase.commit()
-        dbase.close()
-
     '''
     MONEY DONATIONS
     '''
