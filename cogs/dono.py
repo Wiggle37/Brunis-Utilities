@@ -11,6 +11,28 @@ class Dono(commands.Cog):
     '''
     ADD TO DATABASE IF NOT IN ALREADY
     '''
+    #Make Acc
+    @commands.command()
+    async def init(self, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        guild = ctx.guild.id
+        user = ctx.message.author.id
+
+        amount = 0
+
+        cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+        cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+
+        await ctx.send('Added to database!')
+
+        dbase.commit()
+        dbase.close()
+
     @commands.Cog.listener()
     async def on_message(self, ctx):
         dbase = sqlite3.connect('bruni.db')
@@ -111,6 +133,7 @@ class Dono(commands.Cog):
     '''
     DONATIONS CHECK
     '''
+    #Check Dono
     @commands.command(aliases=['d'])
     async def dono(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bruni.db')
@@ -122,30 +145,30 @@ class Dono(commands.Cog):
             cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
             result1 = cursor.fetchone()
             if result1 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
             #Get Heist Amount
             cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
             result2 = cursor.fetchone()
             if result2 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Event Amount
             cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
             result3 = cursor.fetchone()
             if result3 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Money Amount
             cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
             result4 = cursor.fetchone()
             if result4 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Special Event Amount
             cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{ctx.author.id}'")
             result5 = cursor.fetchone()
             if result5 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
         #Member Provided
         else:
@@ -153,30 +176,30 @@ class Dono(commands.Cog):
             cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
             result1 = cursor.fetchone()
             if result1 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
             #Get Heist Amount
             cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
             result2 = cursor.fetchone()
             if result2 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Event Amount
             cursor.execute(f"SELECT amount FROM event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
             result3 = cursor.fetchone()
             if result3 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Money Amount
             cursor.execute(f"SELECT amount FROM money_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
             result4 = cursor.fetchone()
             if result4 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
             #Get Special Event Amount
             cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE guild_id = '{ctx.guild.id}' AND user_id = '{member.id}'")
             result5 = cursor.fetchone()
             if result5 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
 
         result1 = (result1[0])
         new_result1 = ('{:,}'.format(result1))
@@ -231,10 +254,20 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    #Top Dono
+    @commands.command(aliases=['td'])
+    async def topdono(self, ctx):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        pass
+
+        dbase.commit()
+        dbase.close()
+
     '''
     MONEY DONATIONS
     '''
-
     #Dono Set
     @commands.command(aliases=['mds'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
