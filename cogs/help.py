@@ -71,7 +71,7 @@ class Help(commands.Cog):
         #Utility Help
         if cog == 'utility' or cog == 'utils' or cog == 'util':
             help_embed = discord.Embed(title='Utility', description='Commands that will probally be useful\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
-            help_embed.add_field(name='<a:loading:802974837395292200>Coming Soon...', value='<a:loading:802974837395292200>Coming soon...')
+            help_embed.add_field(name='Bug', value='Report a bot bug to Wiggle```b!bug <ID> <bug>', inline=False)
             await ctx.send(embed=help_embed)
 
         #Info Help
