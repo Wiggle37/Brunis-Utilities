@@ -8,7 +8,7 @@ class Events(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    #On Member Join(Message)
+    #On Member Join(Message(Add Data Base))
     @commands.Cog.listener()
     async def on_member_join(self, member):
         client = self.client
@@ -19,9 +19,6 @@ class Events(commands.Cog):
         join_embed.add_field(name=f'__**User Info:**__', value=f'Date created: {member.created_at}\nUser ID: {member.id}', inline=False)
         await client.get_channel(784491141022220312).send(embed=join_embed)
 
-    #On Member Join(Data Base)
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
         user = f'{member.id}'
