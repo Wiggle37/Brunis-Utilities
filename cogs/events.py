@@ -19,6 +19,28 @@ class Events(commands.Cog):
         join_embed.add_field(name=f'__**User Info:**__', value=f'Date created: {member.created_at}\nUser ID: {member.id}', inline=False)
         await client.get_channel(784491141022220312).send(embed=join_embed)
 
+    #On Member Join(Data Base)
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+        user = f'{member.id}'
+        guild = f'{ctx.guild.id}'
+        cursor.execute(f"SELECT user_id FROM money_dono_logs WHERE user_id = '{member.id}'")
+        result = cursor.fetchone()
+        if result is None:
+            amount = 0
+            cursor.execute("INSERT INTO gaw_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (guild_id, user_id, amount) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [guild, user, amount, amount])
+            print(f'Member added to database\nUSER: {member.name}\nID: {member.id}\n')
+        else:
+            pass
+        dbase.commit()
+        dbase.close()
+
     #On Member Remove(Data Base)
     @commands.Cog.listener()
     async def on_member_remove(self, member):
