@@ -7,14 +7,12 @@ class Utility(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def bug(self, ctx, *, msg):
-        member = '<@765322777329664089>'
+    async def bug(self, ctx, member: discord.Member, *, msg):
         channel = await member.create_dm()
         
         message = ctx.message
         await message.add_reaction(emoji="✅")
 
-        
         dm_embed = discord.Embed(title=f'You Have A Bug Report From {ctx.message.author}', description=f'{msg}', color=0x00ff00)
         await channel.send(embed=dm_embed)
         
