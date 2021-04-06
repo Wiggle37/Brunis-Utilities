@@ -18,14 +18,14 @@ class Help(commands.Cog):
             help_embed.add_field(name='Event Donations', value='Track how much someone has donated for events', inline=False)
             help_embed.add_field(name='Utility', value='Utility commands to make life much more easier', inline=False)
             help_embed.add_field(name='Info', value='Some commands that show info about the server', inline=False)
-            help_embed.set_footer(text='If you have any questions or bugs please DM Wiggle and we will get back to you as soon as possible!')
+            help_embed.set_footer(text='If you have any questions or bugs please DM Wiggle and he will get back to you as soon as possible!')
             await ctx.send(embed=help_embed)
 
         #Donation Help
         if cog == 'dono' or cog == 'donation':
             help_embed = discord.Embed(title='Donations', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='Dono', value='Check your own donation amount for the server```b!dono```')
-            help_embed.add_field(name='Dono', value='Check someones donation amount for the server(shows all donated amounts)```b!dono <@member / id>```', inline=False)
+            help_embed.add_field(name='Init', value='Run this command if it wont let you check your donation amount```b!init```', inline=False)
             await ctx.send(embed=help_embed)
 
         #Giveaway Help
@@ -88,6 +88,11 @@ class Help(commands.Cog):
             help_embed.add_field(name='Dank Merchants Donor Perks', value='All of the donor perks for the server```b!donoperks```', inline=False)
             help_embed.add_field(name='Dank Merchants Invite Perks', value='All the perks you can get for geting invites in the server```b!invperks```', inline=False)
             help_embed.add_field(name='Dank Merchants Booster Perks', value='Booster perks for the server```b!booster```', inline=False)
+            await ctx.send(embed=help_embed)
+
+        if cog == 'admin':
+            help_embed = discord.Embed(title='Admin', description='Commands only admin can use\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.add_field(name='Coming Soon', value='Coming soon', inline=False)
             await ctx.send(embed=help_embed)
 
 def setup(client):
