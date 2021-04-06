@@ -38,36 +38,6 @@ class Dono(commands.Cog):
         else:
             await ctx.send('You are already in the database!')
 
-    @commands.command()
-    async def collect(self, ctx):
-        dbase = sqlite3.connect('bruni.db')
-        cursor = dbase.cursor()
-
-        cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{ctx.author.id}'")
-        result1 = cursor.fetchone()
-        result1 = (result1[0])
-
-        cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{ctx.author.id}'")
-        result2 = cursor.fetchone()
-        result2 = (result2[0])
-
-        cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{ctx.author.id}'")
-        result3 = cursor.fetchone()
-        result3 = (result3[0])
-
-        cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{ctx.author.id}'")
-        result4 = cursor.fetchone()
-        result4 = (result4[0])
-
-        cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
-        result5 = cursor.fetchone()
-        result5 = (result5[0])
-
-        all = result1 + result2 + result3 + result4 + result5
-
-        if all >= 5000000:
-            
-
     '''
     DONATIONS CHECK
     '''
@@ -222,6 +192,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @money_dono_set.error
+    async def money_dono_set_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
+
     #Dono Add
     @commands.command(aliases=['mda'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
@@ -244,6 +221,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @money_dono_add.error
+    async def money_dono_add_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
 
     #Dono Remove
     @commands.command(aliases=['mdr'])
@@ -268,6 +252,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @money_dono_remove.error
+    async def money_dono_remove_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
+
     #Dono Reset
     @commands.command(aliases=['mdrs'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
@@ -289,6 +280,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @money_dono_reset.error
+    async def money_dono_reset_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
 
     '''
     GIVEAWAY DONATIONS
@@ -320,6 +318,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @gaw_dono_set.error
+    async def gaw_dono_set_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
+
     #Dono Add
     @commands.command(aliases=['gda'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
@@ -342,6 +347,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @gaw_dono_add.error
+    async def gaw_dono_add_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
 
     #Dono Remove
     @commands.command(aliases=['gdr'])
@@ -366,6 +378,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @gaw_dono_remove.error
+    async def gaw_dono_remove_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
+
     #Dono Reset
     @commands.command(aliases=['gdrs'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
@@ -387,6 +406,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @gaw_dono_reset.error
+    async def gaw_dono_reset_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
 
     '''
     HEIST DONATIONS
@@ -418,6 +444,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @heist_dono_set.error
+    async def heist_dono_set_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
+
     #Dono Add
     @commands.command(aliases=['hda'])
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manger, Bruni, Bot Dev
@@ -440,6 +473,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @heist_dono_add.error
+    async def heist_dono_add_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly heist managers can use this command')
 
     #Dono Remove
     @commands.command(aliases=['hdr'])
@@ -464,6 +504,14 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+
+    @heist_dono_remove.error
+    async def heist_dono_remove_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly heist managers can use this command')
+
     #Dono Reset
     @commands.command(aliases=['hdrs'])
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manger, Bruni, Bot Dev
@@ -485,6 +533,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @heist_dono_reset.error
+    async def heist_dono_reset_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly heist managers can use this command')
 
     '''
     EVENT DONATIONS
@@ -516,6 +571,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @event_dono_set.error
+    async def event_dono_set_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
+
     #Dono Add
     @commands.command(aliases=['eda'])
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
@@ -538,6 +600,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @event_dono_add.error
+    async def event_dono_add_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
 
     #Dono Remove
     @commands.command(aliases=['edr'])
@@ -562,6 +631,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @event_dono_remove.error
+    async def event_dono_remove_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
+
     #Dono Reset
     @commands.command(aliases=['edrs'])
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
@@ -583,6 +659,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @event_dono_reset.error
+    async def event_dono_reset_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
 
     '''
     SPECIAL EVENT
@@ -614,6 +697,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @special_dono_set.error
+    async def special_dono_set_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
+
     #Giveaway Dono Add
     @commands.command(aliases=['sda'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
@@ -636,6 +726,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @special_dono_add.error
+    async def special_event_dono_add_remove(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
 
     #Dono Remove
     @commands.command(aliases=['sdr'])
@@ -660,6 +757,13 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @special_dono_remove.error
+    async def special_event_dono_set_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
+
     #Dono Reset
     @commands.command(aliases=['sdrs'])
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
@@ -681,6 +785,13 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @special_dono_reset.error
+    async def special_event_dono_reset_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('There are one or more required arguments that are missing')
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
 
 def setup(client):
     client.add_cog(Dono(client))
