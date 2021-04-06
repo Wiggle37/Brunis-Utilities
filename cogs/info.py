@@ -22,6 +22,7 @@ class Info(commands.Cog):
         rules_embed.add_field(name='__Rule Ten:__', value='**Follow Discord TOS:** https://discord.com/terms', inline=False)
         rules_embed.add_field(name='__Rule Eleven:__', value='**DO NOT** beg for money this will only get you a warn', inline=False)
         rules_embed.add_field(name='__Rule Twelve:__', value='A choice is a choice, **DO NOT** argue with a mod/admin over a warn for this will only get you another warn', inline=False)
+        rules_embed.add_field(name='__Rule Thirteen:__', value='**DO NOT** mini-mod dont pretend like you are a mod that makes other stff members like they are not doing a good enough job', inline=False)
         rules_embed.add_field(name='__Note:__', value='*By verifying you agree to every term & condition listed above.*')
         await ctx.send(embed=rules_embed)
 
