@@ -11,7 +11,27 @@ class Dono(commands.Cog):
     '''
     ADD TO DB/ADD ROLES
     '''
-    #Make Acc
+    def get_user():
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
+        result = cursor.fetchone()
+
+        if result is None:
+            user = (f'{member}')
+            amount = 0
+
+            cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
+
+            dbase.commit()
+            dbase.close()
+
+    #Make Acc Command(Backup)
     @commands.command()
     async def init(self, ctx):
         dbase = sqlite3.connect('bruni.db')
@@ -173,6 +193,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         reset = 0
         amount = int(f'{amount}')
@@ -205,6 +227,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -233,6 +257,8 @@ class Dono(commands.Cog):
     async def money_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -263,6 +289,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = 0
 
@@ -292,6 +320,8 @@ class Dono(commands.Cog):
     async def gaw_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         reset = 0
@@ -325,6 +355,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -353,6 +385,8 @@ class Dono(commands.Cog):
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -383,6 +417,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = 0
 
@@ -412,6 +448,8 @@ class Dono(commands.Cog):
     async def heist_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         reset = 0
@@ -445,6 +483,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -473,6 +513,8 @@ class Dono(commands.Cog):
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -504,6 +546,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = 0
 
@@ -533,6 +577,8 @@ class Dono(commands.Cog):
     async def event_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         reset = 0
@@ -566,6 +612,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -594,6 +642,8 @@ class Dono(commands.Cog):
     async def event_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -624,6 +674,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = 0
 
@@ -653,6 +705,8 @@ class Dono(commands.Cog):
     async def special_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         reset = 0
@@ -686,6 +740,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -715,6 +771,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        get_user()
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -743,6 +801,8 @@ class Dono(commands.Cog):
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        get_user()
 
         user = int(f'{member.id}')
         amount = 0
