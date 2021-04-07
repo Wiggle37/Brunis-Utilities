@@ -53,30 +53,31 @@ class Dono(commands.Cog):
             cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{ctx.author.id}'")
             result1 = cursor.fetchone()
             if result1 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
+
             #Get Heist Amount
             cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{ctx.author.id}'")
             result2 = cursor.fetchone()
             if result2 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
             #Get Event Amount
             cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{ctx.author.id}'")
             result3 = cursor.fetchone()
             if result3 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
             #Get Money Amount
             cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{ctx.author.id}'")
             result4 = cursor.fetchone()
             if result4 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
             #Get Special Event Amount
             cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
             result5 = cursor.fetchone()
             if result5 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
         #Member Provided
         else:
@@ -84,30 +85,30 @@ class Dono(commands.Cog):
             cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{member.id}'")
             result1 = cursor.fetchone()
             if result1 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
             #Get Heist Amount
             cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{member.id}'")
             result2 = cursor.fetchone()
             if result2 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
             #Get Event Amount
             cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{member.id}'")
             result3 = cursor.fetchone()
             if result3 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
             #Get Money Amount
             cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{member.id}'")
             result4 = cursor.fetchone()
             if result4 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
             #Get Special Event Amount
             cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{member.id}'")
             result5 = cursor.fetchone()
             if result5 is None:
-                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, pls use command `b!init` and if that doesnt work dm **<@765322777329664089>** for assistance')
+                await ctx.send('Hmm there was an error\nThis ocurred because you are not in the database properly, use the command `b!init` to get added to the database')
 
         result1 = (result1[0])
         new_result1 = ('{:,}'.format(result1))
@@ -174,7 +175,6 @@ class Dono(commands.Cog):
 
         user = int(f'{member.id}')
         reset = 0
-
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
@@ -264,7 +264,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         user = int(f'{member.id}')
-
         amount = 0
 
         cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
@@ -296,7 +295,6 @@ class Dono(commands.Cog):
 
         user = int(f'{member.id}')
         reset = 0
-
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
@@ -386,7 +384,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         user = int(f'{member.id}')
-
         amount = 0
 
         cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
@@ -418,7 +415,6 @@ class Dono(commands.Cog):
 
         user = int(f'{member.id}')
         reset = 0
-
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
@@ -509,7 +505,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         user = int(f'{member.id}')
-
         amount = 0
 
         cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
@@ -541,7 +536,6 @@ class Dono(commands.Cog):
 
         user = int(f'{member.id}')
         reset = 0
-
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
@@ -631,7 +625,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         user = int(f'{member.id}')
-
         amount = 0
 
         cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
@@ -663,7 +656,6 @@ class Dono(commands.Cog):
 
         user = int(f'{member.id}')
         reset = 0
-
         amount = int(f'{amount}')
 
         cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, reset, reset])
@@ -753,7 +745,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         user = int(f'{member.id}')
-
         amount = 0
 
         cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount = ?;", [user, amount, amount])
