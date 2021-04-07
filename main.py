@@ -7,8 +7,6 @@ from discord.ext.commands import Bot
 import os
 from dotenv import load_dotenv
 
-import sqlite3
-
 ###Intents###
 intents = discord.Intents.default()
 intents.members = True
@@ -30,7 +28,6 @@ async def on_ready():
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
-        
 ###Run Bot###
 load_dotenv()
 Bot_Token = os.getenv('Discord_Bot_Token')
