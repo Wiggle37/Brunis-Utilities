@@ -11,15 +11,15 @@ class Dono(commands.Cog):
     '''
     ADD TO DB/ADD ROLES
     '''
-    def get_user():
+    def get_user(self, ctx, member, amount):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
+        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE user_id = '{member.id}'")
         result = cursor.fetchone()
 
         if result is None:
-            user = (f'{member}')
+            user = (f'{member.id}')
             amount = 0
 
             cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
@@ -209,6 +209,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         reset = 0
         amount = int(f'{amount}')
@@ -241,6 +243,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -270,6 +274,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -298,6 +304,8 @@ class Dono(commands.Cog):
     async def money_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         amount = 0
@@ -329,7 +337,7 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        get_user()
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         reset = 0
@@ -363,6 +371,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -391,6 +401,8 @@ class Dono(commands.Cog):
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -421,6 +433,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = 0
 
@@ -450,6 +464,8 @@ class Dono(commands.Cog):
     async def heist_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         reset = 0
@@ -483,6 +499,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -511,6 +529,8 @@ class Dono(commands.Cog):
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -542,6 +562,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = 0
 
@@ -571,6 +593,8 @@ class Dono(commands.Cog):
     async def event_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         reset = 0
@@ -604,6 +628,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -632,6 +658,8 @@ class Dono(commands.Cog):
     async def event_dono_remove(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -662,6 +690,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = 0
 
@@ -691,6 +721,8 @@ class Dono(commands.Cog):
     async def special_dono_set(self, ctx, member: discord.Member, amount: int):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         reset = 0
@@ -724,6 +756,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -753,6 +787,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
+        self.get_user(ctx, member, amount)
+
         user = int(f'{member.id}')
         amount = int(f'{amount}')
 
@@ -781,6 +817,8 @@ class Dono(commands.Cog):
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
+
+        self.get_user(ctx, member, amount)
 
         user = int(f'{member.id}')
         amount = 0
