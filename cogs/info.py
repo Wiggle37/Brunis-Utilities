@@ -99,11 +99,11 @@ class Info(commands.Cog):
     #Exlusive Roles
     @commands.command()
     async def eroles(self, ctx):
-        eroles_embed = discord.Embed(title='__**Dank Merchants Exlusive Roles:**__', description='The Exlusive Roles Of Dank Merchants', color=0x00ff00)
+        eroles_embed = discord.Embed(title='__**Dank Merchants Exclusive Roles:**__', description='The Exlusive Roles Of Dank Merchants', color=0x00ff00)
         eroles_embed.add_field(name='__Dank Harbor Veteran:__', value='<@&784560843890753577>\nFor those who survived Dank Harbor', inline=False)
         eroles_embed.add_field(name='__Server Bot Developer:__', value='<@&788738308879941633>\nDevelope a bot for the server(already taken by <@765322777329664089>)', inline=False)
         eroles_embed.add_field(name='__Christmas 2020:__', value='<@&791229305320767510>\nFor those who won in Chrismas 2020', inline=False)
-        eroles_embed.add_field(name='__1000 Special Winner:__', value='<@&807824584396767292>\nFor those thay own in 1k special event', inline=False)
+        eroles_embed.add_field(name='__1000 Special Winner:__', value='<@&807824584396767292>\nFor those that won in 1k special event', inline=False)
         eroles_embed.add_field(name='__Highest Donor:__', value='<@&793189820151234620>\nHighest donor gets their own custom channel', inline=False)
         await ctx.send(embed=eroles_embed)
 

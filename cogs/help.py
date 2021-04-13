@@ -13,13 +13,15 @@ class Help(commands.Cog):
         if cog is None:
             help_embed = discord.Embed(title='Brunis Utilities', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/827369094776356905/828079209623584818/dankmerchants.gif')
-            help_embed.add_field(name='Donations', value='To track donations for members', inline=False)
-            help_embed.add_field(name='Giveaway Donation', value='Track how much someone has donated for giveaways', inline=False)
-            help_embed.add_field(name='Heist Donations', value='Track how much someone has donated for heists', inline=False)
-            help_embed.add_field(name='Event Donations', value='Track how much someone has donated for events', inline=False)
-            help_embed.add_field(name='Utility', value='Utility commands to make life much more easier', inline=False)
-            help_embed.add_field(name='Info', value='Some commands that show info about the server', inline=False)
-            help_embed.set_footer(text='If you have any questions or bugs please DM Wiggle and he will get back to you as soon as possible!')
+            help_embed.add_field(name='__Donations__', value='To track donations for members', inline=False)
+            help_embed.add_field(name='__Giveaway Donation__', value='Track how much someone has donated for giveaways', inline=False)
+            help_embed.add_field(name='__Heist Donations__', value='Track how much someone has donated for heists', inline=False)
+            help_embed.add_field(name='__Event Donations__', value='Track how much someone has donated for events', inline=False)
+            help_embed.add_field(name='__Special Event Donations__', value='Track how much someone has donated for special events', inline=False)
+            help_embed.add_field(name='__Money Donations__', value='Track how much someone has donated in real money', inline=False)
+            help_embed.add_field(name='__Economy__', value='The servers economy system', inline=False)
+            help_embed.add_field(name='__Utility__', value='Utility commands to make life much more easier', inline=False)
+            help_embed.add_field(name='__Info__', value='Commands that show info about the server', inline=False)
             await ctx.send(embed=help_embed)
 
         #Donation Help
@@ -76,6 +78,15 @@ class Help(commands.Cog):
             help_embed.add_field(name='Timer', value='Make a timer```b!count <time(max: 1000)>```', inline=False)
             await ctx.send(embed=help_embed)
 
+        #Economy Help
+        if cog == 'econ' or cog == 'economy':
+            help_embed = discord.Embed(title='Economy', description='The servers economy system to get some perks\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed.add_field(name='Balance', value='Check you or someones balance```b!balance```', inline=False)
+            help_embed.add_field(name='Inventory', value='Check your inventory```b!inventory <page>```', inline=False)
+            help_embed.add_field(name='Beg', value='Be annoying and beg for someone to give you money```b!beg```')
+            help_embed.add_field(name='Bet', value='Bet some money and maybe win some more!```b!bet <amount>```')
+            await ctx.send(embed=help_embed)
+
         #Info Help
         if cog == 'info':
             help_embed = discord.Embed(title='Info', description='A list of commands for info to quickly display\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
@@ -85,12 +96,13 @@ class Help(commands.Cog):
             help_embed.add_field(name='Dank Merchants Trading Rules', value='The Dank Merchants trading rules```b!traderules```', inline=False)
             help_embed.add_field(name='Dank Merchants Giveaway Rules', value='The giveaway rules for Dank Merchants```b!gawrules```', inline=False)
             help_embed.add_field(name='Dank Merchants Special Roles', value='A list of special roles you can get```b!specroles```', inline=False)
-            help_embed.add_field(name='Dank Merchants Exlusive Roles', value='The lsit of exlusive roles in the serber```b!eroles```', inline=False)
+            help_embed.add_field(name='Dank Merchants Exclusive Roles', value='The lsit of exclusive roles in the serber```b!eroles```', inline=False)
             help_embed.add_field(name='Dank Merchants Donor Perks', value='All of the donor perks for the server```b!donoperks```', inline=False)
             help_embed.add_field(name='Dank Merchants Invite Perks', value='All the perks you can get for geting invites in the server```b!invperks```', inline=False)
             help_embed.add_field(name='Dank Merchants Booster Perks', value='Booster perks for the server```b!booster```', inline=False)
             await ctx.send(embed=help_embed)
 
+        #Admin Help
         if cog == 'admin':
             help_embed = discord.Embed(title='Admin', description='Commands only admin can use\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='Coming Soon', value='Coming soon', inline=False)

@@ -17,6 +17,11 @@ client = commands.Bot(
     )
 client.remove_command('help')
 
+@client.command()
+async def ping(ctx):
+
+    await ctx.send(f'Pong! Your current ping is: {round(client.latency * 1000)}ms')
+
 ###On Ready###
 @client.event
 async def on_ready():
@@ -28,6 +33,7 @@ async def on_ready():
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
+
 ###Run Bot###
 load_dotenv()
 Bot_Token = os.getenv('Discord_Bot_Token')

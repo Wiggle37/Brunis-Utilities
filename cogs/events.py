@@ -15,17 +15,6 @@ class Events(commands.Cog):
     async def on_member_join(self, member):
         client = self.client
 
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
-
-        user = member.id
-        balance = 0
-
-        cursor.execute("INSERT INTO balance (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance = ?;", [user, balance, balance])
-
-        dbase.commit()
-        dbase.close()
-
         join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
         join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for some info about how to get certain thing in the server and <#784547669619507201> for some self roles!')
         join_embed.add_field(name=f'__**User Info:**__', value=f'Date created: {member.created_at}\nUser ID: {member.id}', inline=False)
@@ -57,19 +46,17 @@ class Events(commands.Cog):
 
         balance = 0
 
-        cursor.execute("DELETE FROM balance WHERE user_id = ?", [user_id])
+        cursor.execute("DELETE FROM economy WHERE user_id = ?", [user_id])
 
         dbase.commit()
         dbase.close()
 
-    '''
-    TRIGGERS
-    '''
-    #Rob
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.content.startswith('pls rob'):
-            await message.channel.send('You stole NOTHING LMFAO\nRob is turned off dumbass')
+        client = self.client
+        if str(client.user.id) in message.content:
+            embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
+            await message.channel.send(embed=embed)
 
 def setup(client):
     client.add_cog(Events(client))
