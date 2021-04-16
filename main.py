@@ -11,16 +11,11 @@ from dotenv import load_dotenv
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(
-    command_prefix='b!',
+    command_prefix=['b!', 'B!'],
     intents=intents,
     case_insensitive=True,
     )
 client.remove_command('help')
-
-@client.command()
-async def ping(ctx):
-
-    await ctx.send(f'Pong! Your current ping is: {round(client.latency * 1000)}ms')
 
 ###On Ready###
 @client.event

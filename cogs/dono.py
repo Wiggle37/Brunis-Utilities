@@ -42,7 +42,6 @@ class Dono(commands.Cog):
 
         cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{member}'")
         result = cursor.fetchone()
-
         result = (result[0])
 
         #5 Mil

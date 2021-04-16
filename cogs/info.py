@@ -70,13 +70,14 @@ class Info(commands.Cog):
     #Giveaway Rules
     @commands.command()
     async def gawrules(self, ctx):
-        traderules_embed = discord.Embed(title='__**Dank Merchants Trading Rules:**__', description='The Rules Of Trading In Dank Merchants', color=0x00ff00)
-        traderules_embed.add_field(name='__Rule One:__', value='Only level amari 2s may claim giveaway prizes to avoid freeloaders.', inline=False)
-        traderules_embed.add_field(name='__Rule Two:__', value='You may use **giveaway pass** to skip the requirements of an exclusive giveaway.', inline=False)
-        traderules_embed.add_field(name='__Rule Three:__', value='If you didnt receive your prize in 2 hours go to <#787761394664996865> and ask for help', inline=False)
-        traderules_embed.add_field(name='__Rule Four:__', value='You are not allowed to use secondary accounts (or alts) as this is unfair to others. Alts will be immediately banned.', inline=False)
-        traderules_embed.add_field(name='__Rule Five:__', value='If you are level 2 and stopped talking/only camp in giveaway channels, you will not receive the prize. Thats no different from a freeloader.', inline=False)
-        await ctx.send(embed=traderules_embed)
+        gaw_embed = discord.Embed(title='__**Dank Merchants Giveaway Rules:**__', description='The Rules Of Giveaways In Dank Merchants', color=0x00ff00)
+        gaw_embed.add_field(name='__Rule One:__', value='Only level amari 5s may claim giveaway prizes to avoid freeloaders.', inline=False)
+        gaw_embed.add_field(name='__Rule Two:__', value='You may use **giveaway pass** to skip the requirements of an exclusive giveaway.', inline=False)
+        gaw_embed.add_field(name='__Rule Three:__', value='If you didnt receive your prize in 12 hours go to <#787761394664996865> and ask for help', inline=False)
+        gaw_embed.add_field(name='__Rule Four:__', value='You are not allowed to use secondary accounts (or alts) as this is unfair to others. Alts will be immediately banned.', inline=False)
+        gaw_embed.add_field(name='__Rule Five:__', value='If you are level 2 and stopped talking/only camp in giveaway channels, you will not receive the prize. Thats no different from a freeloader.', inline=False)
+        gaw_embed.add_field(name='__Rule Six:__', value='If you dm a gaw manager AT ALL about your prize the gaw manager will either keep the prize or reroll the giveaway')
+        await ctx.send(embed=gaw_embed)
 
     #Special Roles
     @commands.command()

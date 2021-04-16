@@ -7,7 +7,7 @@ class Help(commands.Cog):
         self.client = client
 
     ###Help###
-    @commands.command()
+    @commands.command(aliases=['cmds', 'commands'])
     async def help(self, ctx, cog=None):
         #Main Help
         if cog is None:
