@@ -4,6 +4,8 @@ from discord import Activity, ActivityType, Color, Embed, User
 from discord.ext import commands
 from discord.ext.commands import Bot
 
+import asyncio
+
 import os
 from dotenv import load_dotenv
 
@@ -22,12 +24,21 @@ client.remove_command('help')
 async def on_ready():
     print(f'Bot is now online!\n---BOT INFO---\n--------------------\nUser: {client.user}\nID: {client.user.id}')
 
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'over Dank Merchants'))
-
 ###Cog Loader###
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
+
+async def status():
+    await client.wait_until_ready()
+    while True:
+        guildCount = len(client.guilds)
+        memberCount = sum([guild.member_count for guild in client.guilds])
+        await client.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = f'{memberCount} members in {guildCount} servers'))
+
+        await asyncio.sleep(60)
+
+client.loop.create_task(status())
 
 ###Run Bot###
 load_dotenv()

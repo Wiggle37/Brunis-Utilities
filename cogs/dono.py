@@ -32,8 +32,8 @@ class Dono(commands.Cog):
             dbase.commit()
             dbase.close()
 
-    #Auto Roles
-    async def roles(self, ctx, member: discord.Member):
+    #Auto Roles Self
+    async def selfroles(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
@@ -41,51 +41,147 @@ class Dono(commands.Cog):
         user = ctx.author
 
         cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{member}'")
-        result = cursor.fetchone()
-        result = (result[0])
+        result1 = cursor.fetchone()
+        result1 = (result1[0])
+
+        cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{member}'")
+        result2 = cursor.fetchone()
+        result2 = (result2[0])
+
+        cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{member}'")
+        result3 = cursor.fetchone()
+        result3 = (result3[0])
+
+        cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{member}'")
+        result4 = cursor.fetchone()
+        result4 = (result4[0])
+
+        cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{member}'")
+        result5 = cursor.fetchone()
+        result5 = (result5[0])
+
+        total = result1 + result2 + result3 + result4 + result5
 
         #5 Mil
-        if result >= 5000000:
+        if total >= 5000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 5 million donor')
             await user.add_roles(role)
 
         #10 Mil
-        if result >= 10000000:
+        if total >= 10000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 10 million donor')
             await user.add_roles(role)
 
         #25 Mil
-        if result >= 25000000:
+        if total >= 25000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 25 million donor')
             await user.add_roles(role)
 
         #50 Mil
-        if result >= 50000000:
+        if total >= 50000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 50 million donor')
             await user.add_roles(role)
 
         #100 Mil
-        if result >= 100000000:
+        if total >= 100000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 100 million donor')
             await user.add_roles(role)
 
         #250 Mil
-        if result >= 250000000:
+        if total >= 250000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 250 million donor')
             await user.add_roles(role)
 
         #500 Mil
-        if result >= 500000000:
+        if total >= 500000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 500 million donor')
             await user.add_roles(role)
 
         #1 Bil
-        if result >= 1000000000:
+        if total >= 1000000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 1 billion donor')
             await user.add_roles(role)
 
         #2.5 Bil
-        if result >= 2500000000:
+        if total >= 2500000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 2.5 billion donor')
+            await user.add_roles(role)
+
+        dbase.commit()
+        dbase.close()
+
+    #Auto Roles Non-Self
+    async def roles(self, ctx, member: discord.Member):
+        dbase = sqlite3.connect('bruni.db')
+        cursor = dbase.cursor()
+
+        member_id = member.id
+        user = member
+
+        cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{member_id}'")
+        result1 = cursor.fetchone()
+        result1 = (result1[0])
+
+        cursor.execute(f"SELECT amount FROM heist_dono_logs WHERE user_id = '{member_id}'")
+        result2 = cursor.fetchone()
+        result2 = (result2[0])
+
+        cursor.execute(f"SELECT amount FROM event_dono_logs WHERE user_id = '{member_id}'")
+        result3 = cursor.fetchone()
+        result3 = (result3[0])
+
+        cursor.execute(f"SELECT amount FROM special_event_dono_logs WHERE user_id = '{member_id}'")
+        result4 = cursor.fetchone()
+        result4 = (result4[0])
+
+        cursor.execute(f"SELECT amount FROM money_dono_logs WHERE user_id = '{member_id}'")
+        result5 = cursor.fetchone()
+        result5 = (result5[0])
+
+        total = result1 + result2 + result3 + result4 + result5
+
+        #5 Mil
+        if total >= 5000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 5 million donor')
+            await user.add_roles(role)
+
+        #10 Mil
+        if total >= 10000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 10 million donor')
+            await user.add_roles(role)
+
+        #25 Mil
+        if total >= 25000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 25 million donor')
+            await user.add_roles(role)
+
+        #50 Mil
+        if total >= 50000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 50 million donor')
+            await user.add_roles(role)
+
+        #100 Mil
+        if total >= 100000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 100 million donor')
+            await user.add_roles(role)
+
+        #250 Mil
+        if total >= 250000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 250 million donor')
+            await user.add_roles(role)
+
+        #500 Mil
+        if total >= 500000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 500 million donor')
+            await user.add_roles(role)
+
+        #1 Bil
+        if total >= 1000000000:
+            role = discord.utils.get(ctx.guild.roles, name='✧ 1 billion donor')
+            await user.add_roles(role)
+
+        #2.5 Bil
+        if total >= 2500000000:
             role = discord.utils.get(ctx.guild.roles, name='✧ 2.5 billion donor')
             await user.add_roles(role)
 
@@ -127,27 +223,11 @@ class Dono(commands.Cog):
     async def dono(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
-
-        await self.roles(ctx, member)
-
-        cursor.execute(f"SELECT user_id FROM special_event_dono_logs WHERE user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-
-        if result is None:
-            user = (f'{member}')
-            amount = 0
-
-            cursor.execute("INSERT INTO gaw_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
-            cursor.execute("INSERT INTO heist_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
-            cursor.execute("INSERT INTO event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
-            cursor.execute("INSERT INTO money_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
-            cursor.execute("INSERT INTO special_event_dono_logs (user_id, amount) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET amount = amount + ?;", [user, amount, amount])
-
-            dbase.commit()
-            dbase.close()
         
         #No Member Provided
         if member is None:
+            await self.selfroles(ctx, member)
+
             #Get Gaw Amount
             cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{ctx.author.id}'")
             result1 = cursor.fetchone()
@@ -180,6 +260,8 @@ class Dono(commands.Cog):
 
         #Member Provided
         else:
+            await self.roles(ctx, member)
+
             #Get Gaw Amount
             cursor.execute(f"SELECT amount FROM gaw_dono_logs WHERE user_id = '{member.id}'")
             result1 = cursor.fetchone()
@@ -273,7 +355,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         reset = 0
@@ -308,7 +389,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -340,7 +420,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -372,7 +451,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = 0
@@ -405,7 +483,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         reset = 0
@@ -440,7 +517,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -472,7 +548,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -504,7 +579,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = 0
@@ -537,7 +611,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         reset = 0
@@ -572,7 +645,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -604,7 +676,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -637,7 +708,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = 0
@@ -670,7 +740,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         reset = 0
@@ -705,7 +774,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -737,7 +805,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -769,7 +836,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = 0
@@ -802,7 +868,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         reset = 0
@@ -837,7 +902,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -869,7 +933,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = int(f'{amount}')
@@ -901,7 +964,6 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         self.get_user(ctx, member, amount)
-        await self.roles(ctx, member)
 
         user = int(f'{member.id}')
         amount = 0

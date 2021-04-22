@@ -58,5 +58,8 @@ class Events(commands.Cog):
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
 
+        if str(765322777329664089) in message.content:
+            await message.channel.send('reeee')
+
 def setup(client):
     client.add_cog(Events(client))
