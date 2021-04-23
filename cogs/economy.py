@@ -29,8 +29,12 @@ class Economy(commands.Cog):
 
         if result is None:
             balance = 500
+            amount = 0
 
             cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance = ?;", [user, balance, balance])
+            cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox = ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO multis (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut = ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO items (user_id, ducks) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ducks = ducks = ?;", [user, amount, amount])
 
         dbase.commit()
         dbase.close()
@@ -94,23 +98,23 @@ class Economy(commands.Cog):
         if member == None:
             
             if page == '1' or page == None:
-                cursor.execute(f"SELECT woodbox FROM economy WHERE user_id = '{ctx.author.id}'")
+                cursor.execute(f"SELECT woodbox FROM boxes WHERE user_id = '{ctx.author.id}'")
                 woodbox = cursor.fetchone()
                 woodbox = (woodbox[0])
 
-                cursor.execute(f"SELECT ironbox FROM economy WHERE user_id = '{ctx.author.id}'")
+                cursor.execute(f"SELECT ironbox FROM boxes WHERE user_id = '{ctx.author.id}'")
                 ironbox = cursor.fetchone()
                 ironbox = (ironbox[0])
 
-                cursor.execute(f"SELECT goldbox FROM economy WHERE user_id = '{ctx.author.id}'")
+                cursor.execute(f"SELECT goldbox FROM boxes WHERE user_id = '{ctx.author.id}'")
                 goldbox = cursor.fetchone()
                 goldbox = (goldbox[0])
 
-                cursor.execute(f"SELECT diamondbox FROM economy WHERE user_id = '{ctx.author.id}'")
+                cursor.execute(f"SELECT diamondbox FROM boxes WHERE user_id = '{ctx.author.id}'")
                 diamondbox = cursor.fetchone()
                 diamondbox = (diamondbox[0])
 
-                cursor.execute(f"SELECT emeraldbox FROM economy WHERE user_id = '{ctx.author.id}'")
+                cursor.execute(f"SELECT emeraldbox FROM boxes WHERE user_id = '{ctx.author.id}'")
                 emeraldbox = cursor.fetchone()
                 emeraldbox = (emeraldbox[0])
 
@@ -122,37 +126,41 @@ class Economy(commands.Cog):
                 embed.add_field(name=f'<:emeraldbox:830216613755486229> __Emerald Box__', value=f'**{emeraldbox}** owned', inline=False)
                 embed.set_footer(text='Page 1-2')
                 await ctx.send(embed=embed)
-            
+
             if page == '2':
-                cursor.execute(f"SELECT doughnut FROM economy WHERE user_id = '{ctx.author.id}'")
+                cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{ctx.author.id}'")
                 doughnut = cursor.fetchone()
                 doughnut = (doughnut[0])
 
+                cursor.execute(f"SELECT brunisbackpack FROM multis WHERE user_id = '{ctx.author.id}'")
+                backpack = cursor.fetchone()
+                backpack = (backpack[0])
+
                 embed = discord.Embed(title=f'{ctx.author}s Inventory', description='Multipliers', color=0x00ff00)
                 embed.add_field(name=f'<:doughnut:831895771442839552> __Doughnut 5%__', value=f'**{doughnut}** owned', inline=False)
+                embed.add_field(name='<:brunisbackpack:834948572826828830> __Brunis Backpack 10%__', value=f'**{backpack}** owned', inline=False)
                 embed.set_footer(text='Page 2-2')
                 await ctx.send(embed=embed)
-
-        else:
             
+        else:
             if page == '1' or page == None:
-                cursor.execute(f"SELECT woodbox FROM economy WHERE user_id = '{member.id}'")
+                cursor.execute(f"SELECT woodbox FROM boxes WHERE user_id = '{member.id}'")
                 woodbox = cursor.fetchone()
                 woodbox = (woodbox[0])
 
-                cursor.execute(f"SELECT ironbox FROM economy WHERE user_id = '{member.id}'")
+                cursor.execute(f"SELECT ironbox FROM boxes WHERE user_id = '{member.id}'")
                 ironbox = cursor.fetchone()
                 ironbox = (ironbox[0])
 
-                cursor.execute(f"SELECT goldbox FROM economy WHERE user_id = '{member.id}'")
+                cursor.execute(f"SELECT goldbox FROM boxes WHERE user_id = '{member.id}'")
                 goldbox = cursor.fetchone()
                 goldbox = (goldbox[0])
 
-                cursor.execute(f"SELECT diamondbox FROM economy WHERE user_id = '{member.id}'")
+                cursor.execute(f"SELECT diamondbox FROM boxes WHERE user_id = '{member.id}'")
                 diamondbox = cursor.fetchone()
                 diamondbox = (diamondbox[0])
 
-                cursor.execute(f"SELECT emeraldbox FROM economy WHERE user_id = '{member.id}'")
+                cursor.execute(f"SELECT emeraldbox FROM boxes WHERE user_id = '{member.id}'")
                 emeraldbox = cursor.fetchone()
                 emeraldbox = (emeraldbox[0])
 
@@ -166,12 +174,17 @@ class Economy(commands.Cog):
                 await ctx.send(embed=embed)
 
             if page == '2':
-                cursor.execute(f"SELECT doughnut FROM economy WHERE user_id = '{member.id}'")
+                cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{member.id}'")
                 doughnut = cursor.fetchone()
                 doughnut = (doughnut[0])
 
-                embed = discord.Embed(title=f'{member}s Inventory', description='Multipliers', color=0x00ff00)
+                cursor.execute(f"SELECT brunisbackpack FROM multis WHERE user_id = '{member.id}'")
+                backpack = cursor.fetchone()
+                backpack = (backpack[0])
+
+                embed = discord.Embed(title=f'{member.id}s Inventory', description='Multipliers', color=0x00ff00)
                 embed.add_field(name=f'<:doughnut:831895771442839552> __Doughnut 5%__', value=f'**{doughnut}** owned', inline=False)
+                embed.add_field(name='<:brunisbackpack:834948572826828830> __Brunis Backpack 10%__', value=f'**{backpack}** owned', inline=False)
                 embed.set_footer(text='Page 2-2')
                 await ctx.send(embed=embed)
 
@@ -262,7 +275,7 @@ class Economy(commands.Cog):
                 amount = 50000
                 box = 1
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO economy (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox + ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox + ?;", [user, box, box])
 
                 await ctx.send('Enjoy your wooden box')
 
@@ -275,7 +288,7 @@ class Economy(commands.Cog):
                 amount = 100000
                 box = 1
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO economy (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox + ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox + ?;", [user, box, box])
 
                 await ctx.send('Enjoy your iron box')
 
@@ -288,7 +301,7 @@ class Economy(commands.Cog):
                 amount = 250000
                 box = 1
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO economy (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox + ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox + ?;", [user, box, box])
 
                 await ctx.send('Enjoy your gold box')
 
@@ -301,7 +314,7 @@ class Economy(commands.Cog):
                 amount = 500000
                 box = 1
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO economy (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox + ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox + ?;", [user, box, box])
 
                 await ctx.send('Enjoy your diamond box')
 
@@ -314,7 +327,7 @@ class Economy(commands.Cog):
                     amount = 1000000
                     box = 1
                     cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO economy (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox + ?;", [user, box, box])
+                    cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox + ?;", [user, box, box])
 
                     await ctx.send('Enjoy your emerald box')
 
@@ -343,14 +356,14 @@ class Economy(commands.Cog):
 
         #Wooden Box
         if item == 'wooden' or item == 'wood':
-            cursor.execute(f"SELECT woodbox FROM economy WHERE user_id = '{ctx.author.id}'")
+            cursor.execute(f"SELECT woodbox FROM boxes WHERE user_id = '{ctx.author.id}'")
             result = cursor.fetchone()
             result = (result[0])
 
             if result > 0:
                 box = 1
 
-                cursor.execute("INSERT INTO economy (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox - ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox - ?;", [user, box, box])
                 
                 coins = random.randint(25000, 50000)
                 appleamount = random.randint(0, 5)
@@ -379,7 +392,7 @@ class Economy(commands.Cog):
 
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
                 cursor.execute("INSERT INTO economy (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO economy (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
+                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
 
                 await ctx.send(f'Box Contents:\nCoins: `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`')
 
@@ -388,13 +401,13 @@ class Economy(commands.Cog):
 
         #Gold Box
         if item == 'gold':
-            cursor.execute(f"SELECT goldbox FROM economy WHERE user_id = '{ctx.author.id}'")
+            cursor.execute(f"SELECT goldbox FROM boxes WHERE user_id = '{ctx.author.id}'")
             result = cursor.fetchone()
             result = (result[0])
 
             if result > 0:
                 box = 1
-                cursor.execute("INSERT INTO economy (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox - ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox - ?;", [user, box, box])
 
                 coins = random.randint(100000, 250000)
                 appleamount = random.randint(0, 15)
@@ -402,7 +415,7 @@ class Economy(commands.Cog):
 
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
                 cursor.execute("INSERT INTO economy (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO economy (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
+                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
 
                 await ctx.send(f'Box Contents:\nCoins: `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`')
 
@@ -417,16 +430,15 @@ class Economy(commands.Cog):
 
             if result > 0:
                 box = 1
-                cursor.execute("INSERT INTO economy (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox - ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox - ?;", [user, box, box])
 
                 coins = random.randint(250000, 500000)
                 appleamount = random.randint(1, 25)
                 duckamount = random.randint(1, 25)
-                donutamount = random.randint(0, 1)
 
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
                 cursor.execute("INSERT INTO economy (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO economy (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
+                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
 
                 await ctx.send(f'Box Contents:\n***Coins:*** `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`')
 
@@ -441,7 +453,7 @@ class Economy(commands.Cog):
 
             if result > 0:
                 box = 1
-                cursor.execute("INSERT INTO economy (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox - ?;", [user, box, box])
+                cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox - ?;", [user, box, box])
 
                 coins = random.randint(500000, 1000000)
                 appleamount = random.randint(1, 50)
@@ -450,8 +462,8 @@ class Economy(commands.Cog):
 
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
                 cursor.execute("INSERT INTO economy (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO economy (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
-                cursor.execute("INSERT INTO economy (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut + ?;", [user, donutamount, donutamount])
+                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
+                cursor.execute("INSERT INTO multi (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut + ?;", [user, donutamount, donutamount])
 
                 await ctx.send(f'Box Contents:\n***Coins:*** `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`\n***Donuts:*** `{donutamount}`')
 
@@ -514,8 +526,8 @@ class Economy(commands.Cog):
 
             else:
                 if item == 'wood' or item == 'wooden' or item == 'woo':
-                    cursor.execute("INSERT INTO economy (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO economy (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox + ?;", [member_id, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox - ?;", [user, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox + ?;", [member_id, amount, amount])
 
                     channel = await member.create_dm()
             
@@ -525,8 +537,8 @@ class Economy(commands.Cog):
                     await ctx.send(f'You gave **{member}** {amount} wooden boxe(es) <:woodbox:830211928595890206>')
 
                 if item == 'iron' or item == 'iro':
-                    cursor.execute("INSERT INTO economy (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO economy (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox + ?;", [member_id, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox - ?;", [user, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox + ?;", [member_id, amount, amount])
 
                     channel = await member.create_dm()
             
@@ -538,8 +550,8 @@ class Economy(commands.Cog):
 
 
                 if item == 'gold' or item == 'gol':
-                    cursor.execute("INSERT INTO economy (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO economy (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox + ?;", [member_id, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox - ?;", [user, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox + ?;", [member_id, amount, amount])
 
                     channel = await member.create_dm()
             
@@ -549,8 +561,8 @@ class Economy(commands.Cog):
                     await ctx.send(f'You gave **{member} {amount} gold box(es) <:goldbox:830197220405805147>')
 
                 if item == 'diamond' or item == 'dia':
-                    cursor.execute("INSERT INTO economy (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO economy (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox + ?;", [member_id, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox - ?;", [user, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox + ?;", [member_id, amount, amount])
 
                     channel = await member.create_dm()
             
@@ -560,8 +572,8 @@ class Economy(commands.Cog):
                     await ctx.send(f'You gave **{member} {amount} diamond box(es) <:diamondbox:830197220007477259>')
 
                 if item == 'emerald' or item == 'eme':
-                    cursor.execute("INSERT INTO economy (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO economy (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox + ?;", [member_id, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox - ?;", [user, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox + ?;", [member_id, amount, amount])
 
                     channel = await member.create_dm()
             
@@ -571,8 +583,8 @@ class Economy(commands.Cog):
                     await ctx.send(f'You gave **{member}** {amount} emerald box(es) <:emeraldbox:830216613755486229>')
 
                 if item == 'donut' or item == 'doughnut' or item == 'dough' or item == 'don':
-                    cursor.execute("INSERT INTO economy (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO economy (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut + ?;", [member_id, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut - ?;", [user, amount, amount])
+                    cursor.execute("INSERT INTO boxes (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut + ?;", [member_id, amount, amount])
 
                     channel = await member.create_dm()
             
@@ -589,7 +601,7 @@ class Economy(commands.Cog):
     '''
     #Beg
     @commands.command()
-    @commands.cooldown(1, 15, commands.BucketType.user)
+    @commands.cooldown(1, 35, commands.BucketType.user)
     async def beg(self, ctx):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
@@ -622,7 +634,7 @@ class Economy(commands.Cog):
 
         amount = random.randint(100, 1000)
 
-        cursor.execute(f"SELECT doughnut FROM economy WHERE user_id = '{ctx.author.id}'")
+        cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{ctx.author.id}'")
         doughnut_amount = cursor.fetchone()
         doughnut_amount = (doughnut_amount[0])
 
@@ -663,7 +675,7 @@ class Economy(commands.Cog):
 
     #Bet
     @commands.command()
-    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.cooldown(1, 8, commands.BucketType.user)
     async def bet(self, ctx, bet: int=None):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
@@ -675,7 +687,7 @@ class Economy(commands.Cog):
             'no'
         ]
 
-        cursor.execute(f"SELECT doughnut FROM economy WHERE user_id = '{ctx.author.id}'")
+        cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{ctx.author.id}'")
         doughnut_result = cursor.fetchone()
         doughnut_result = (doughnut_result[0])
 
@@ -768,7 +780,7 @@ class Economy(commands.Cog):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
 
-        await ctx.reply('What would you like to do to work?\n`Mine`\n`Hunt`\n`Fish`')
+        await ctx.reply('What would you like to do to work?\n`Mine`\n`Chop`\n`Hunt`\n`Fish`')
 
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
@@ -809,6 +821,10 @@ class Economy(commands.Cog):
 
             if fight == 'no':
                 await ctx.send(f'You went mining and there were no monsters so you got out with stuff')
+
+        #Chop
+        if msg.clean_content.lower() == 'chop':
+            pass
 
         #Hunt
         if msg.clean_content.lower() == 'hunt':
