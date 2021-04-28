@@ -4,7 +4,7 @@ import re
 
 import sqlite3
 
-class bumpTracker(commands.Cog):
+class BumpTracker(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -97,4 +97,4 @@ class bumpTracker(commands.Cog):
         dbase.close()
 
 def setup(client):
-    client.add_cog(bumpTracker(client))
+    client.add_cog(BumpTracker(client))

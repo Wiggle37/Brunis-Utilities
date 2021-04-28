@@ -42,11 +42,11 @@ class Events(commands.Cog):
         dbase = sqlite3.connect('bruni.db')
         cursor = dbase.cursor()
 
-        cursor.execute("DELETE FROM gaw_dono_logs WHERE user_id = ?", [user_id])
-        cursor.execute("DELETE FROM heist_dono_logs WHERE user_id = ?", [user_id])
-        cursor.execute("DELETE FROM event_dono_logs WHERE user_id = ?", [user_id])
-        cursor.execute("DELETE FROM special_event_dono_logs WHERE user_id = ?", [user_id])
-        cursor.execute("DELETE FROM money_dono_logs WHERE user_id = ?", [user_id])
+        cursor.execute("DELETE FROM donations WHERE user_id = ?", [user_id])
+        cursor.execute("DELETE FROM donations WHERE user_id = ?", [user_id])
+        cursor.execute("DELETE FROM donations WHERE user_id = ?", [user_id])
+        cursor.execute("DELETE FROM donations WHERE user_id = ?", [user_id])
+        cursor.execute("DELETE FROM donations WHERE user_id = ?", [user_id])
 
         print(f'{user_id} removed from dono db\n')
 
@@ -64,20 +64,34 @@ class Events(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
-        client = self.client
-        if str(client.user.id) in message.content:
+        if str(self.client.user.id) in message.content:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
 
         if str(765322777329664089) in message.content:
             user = message.author
             if not user.bot:
-                await message.channel.send('reeee')
+                await message.channel.send('If you are trying to donate to wiggle for a giveaway please ping someone else because he got blacklisted')
+                await message.add_reaction(emoji='<a:blob:829822719372951592>')
 
             else:
                 return
+
+        if 'pls rob' in message.content:
+            await message.channel.send('Ur dumb, rob is off')
+
+        if 'pls steal' in message.content:
+            await message.channel.send('Just why are you dumb')
+
+    #Command Not Found
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        print(f'{ctx.author}: {error}')
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send(f'{error} use the command `b!help` for a list of commands')
 
 def setup(client):
     client.add_cog(Events(client))

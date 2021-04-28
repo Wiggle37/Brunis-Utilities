@@ -9,8 +9,6 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-import random
-
 ###Intents###
 intents = discord.Intents.default()
 intents.members = True
@@ -40,29 +38,6 @@ async def status():
         await asyncio.sleep(60)
 
 client.loop.create_task(status())
-
-@client.command()
-async def pp(ctx):
-    sizes = [
-            '0 in. \n8D',
-            '1 in. \n8=D',
-            '2 in. \n8==D',
-            '3 in. \n8===D',
-            '4 in. \n8====D',
-            '5 in. \n8=====D',
-            '6 in. \n8======D',
-            '7 in. \n8=======D',
-            '8 in. \n8========D',
-            '9 in. \n8=========D',
-            '10 in. \n8=========D',
-            '11 in. \n8==========D',
-            '12 in. \n8===========D'
-        ]
-
-    size = f'{random.choice(sizes)}'
-
-    pp_embed = discord.Embed(title=f'{ctx.message.author}s pp', description=size, color=0x00ff00)
-    await ctx.send(embed=pp_embed)
 
 ###Run Bot###
 load_dotenv()

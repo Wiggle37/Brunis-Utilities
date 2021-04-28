@@ -1,0 +1,70 @@
+        '''
+        PERKS
+        '''
+        #Premium
+        if item == 'premium':
+            if bal >= 2500000:
+                role = discord.utils.find(lambda r: r.name == '👑 Premium', ctx.message.guild.roles)
+                if role in member.roles:
+                    await ctx.send('You already have premium active!')
+
+                else:
+                    amount = 750000
+                    cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
+
+                    role = discord.utils.get(ctx.guild.roles, name='👑 Premium')
+                    await member.add_roles(role)
+                    await client.get_channel(787761394664996865).send(f'{ctx.author} bought 1 week premium that needs to be removed in 1 week')
+                    await ctx.send('Enjoy your premium!')
+            else:
+                await ctx.send('You dont have enough money to buy that!')
+
+        #Auto Reaction
+        if item == 'reaction':
+            if bal >= 3000000:
+                amount = 3000000
+                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
+
+                await ctx.send('Puchase complete! Please go ask a mod to get your auto reaction set up and make sure to show them this confirmation message as well')
+                await client.get_channel(787761394664996865).send(f'{ctx.author} bought 1 week auto reaction that needs to be set up please help them')
+
+            else:
+                await ctx.send('You dont have enough money to buy that!')
+
+        #Giveaway Bypass
+        if item == 'bypass':
+            if bal >= 3000000:
+                amount = 3000000
+                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
+
+                role = discord.utils.get(ctx.guild.roles, name='bypass access')
+                await member.add_roles(role)
+                await ctx.send('Enjoy your giveaway bypasses!')
+                await client.get_channel(787761394664996865).send(f'{ctx.author} bought 1 giveaway bypass that needs to be removed in 1 week')
+
+            else:
+                await ctx.send('You dont have enough money to buy that!')
+
+        #Channel
+        if item == 'channel':
+            if bal >= 5000000:
+                amount = 5000000
+                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
+
+                await ctx.send('Puchase complete! Please go ask a mod to get your auto reaction set up and make sure to show them this confirmation message as well')
+                await client.get_channel(787761394664996865).send(f'{ctx.author} bought 1 week custom channel please help them set it up')
+
+            else:
+                await ctx.send('You dont have enough money to buy that!')
+
+        #Role
+        if item == 'role':
+            if bal >= 5000000:
+                amount = 5000000
+                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
+
+                await ctx.send('Puchase complete! Please go ask a mod to get your role set up and make sure to show them this confirmation message as well')
+                await client.get_channel(787761394664996865).send(f'{ctx.author} bought 1 week custom role please help them set it up')
+
+            else:
+                await ctx.send('You dont have enough money to buy that!')

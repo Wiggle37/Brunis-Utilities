@@ -28,8 +28,8 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633) #Admin, Mod, Bruni, Bot Dev
     async def purge(self, ctx, amount=1):
-        if amount > 100:
-            await ctx.send(f'Please choose a number under 100 to purge.\nYour number was: {amount}')
+        if amount > 1000:
+            await ctx.send(f'Please choose a number under 1000 to purge.\nYour number was: {amount}')
 
         else:
 
@@ -43,6 +43,28 @@ class Admin(commands.Cog):
             time.sleep(2)
 
             await ctx.channel.purge(limit=1)
+
+    #Lock
+    @commands.command()
+    @commands.has_any_role(794292540806791229)
+    async def lock(self, ctx):
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
+        await ctx.send('Channel locked')
+
+    @lock.error
+    async def error(self, ctx, error):
+        await ctx.send(f'There was an error\n{error}')
+
+    #Unlock
+    @commands.command()
+    @commands.has_any_role(794292540806791229)
+    async def unlock(self, ctx):
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
+        await ctx.send('Channel unlocked')
+
+    @unlock.error
+    async def error(self, ctx, error):
+        await ctx.send(f'There was an error\n{error}')
 
 def setup(client):
     client.add_cog(Admin(client))
