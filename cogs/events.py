@@ -39,7 +39,7 @@ class Events(commands.Cog):
         user_id = member.id
 
         #Dono
-        dbase = sqlite3.connect('bruni.db')
+        dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
 
         cursor.execute("DELETE FROM donations WHERE user_id = ?", [user_id])

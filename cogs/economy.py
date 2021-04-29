@@ -1202,7 +1202,7 @@ class Economy(commands.Cog):
                                 await ctx.reply(embed=embed)
 
                         if bet > 500000:
-                            await ctx.reply('Woah there the max you can bet is 500k at a time!')
+                            await ctx.reply('Woah there the max you can bet is 250k at a time!')
 
         dbase.commit()
         dbase.close()
@@ -1393,15 +1393,15 @@ class Economy(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
-    async def slots(self, ctx, amount: int=None):
+    async def slots(self, ctx, bet: int=None):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
 
-        if amount is None:
+        if bet is None:
             await ctx.send('You have to bet something dumby')
 
         else:
-            if amount < 50:
+            if bet < 50:
                 await ctx.send('Bet more than 50!')
             
             else:
@@ -1417,13 +1417,17 @@ class Economy(commands.Cog):
                 outcome2 = random.choice(outcome)
                 outcome3 = random.choice(outcome)
 
-                if outcome1 and outcome2 and outcome3 == outcome1 and outcome2 and outcome3:
-                    embed = discord.Embed(title='You Won!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}', color=0x00ff00)
+                if outcome1 == outcome2 == outcome3:
+                    amount = bet * 3
+                    embed = discord.Embed(title='You Won!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou won: <:dankmerchants:829809749058650152> `{amount}`', color=0x00ff00)
                     await ctx.send(embed=embed)
-                    await ctx.send('You won')
 
                 else:
-                    await ctx.send('You lost')
+                    embed = discord.Embed(title='You Lost!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou lost: <:dankmerchants:829809749058650152> `{bet}`', color=0x00ff00)
+                    await ctx.send(embed=embed)
+
+        dbase.commit()
+        dbase.close()
 
 def setup(client):
     client.add_cog(Economy(client))
