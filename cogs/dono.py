@@ -59,115 +59,42 @@ class Dono(commands.Cog):
         dbase.close()
 
     #Auto Roles Non-Self
-    async def roles(self, ctx, member: discord.Member):
+    async def roles(self, ctx, user: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
 
-        member_id = member.id
-        user = member
+        user_roles_id = [role.id for role in user.roles]
 
-        cursor.execute(f"SELECT total FROM donations WHERE user_id = '{member_id}'")
-        total = cursor.fetchone()
-        total = (total[0])
+        cursor.execute(f"SELECT total FROM donations WHERE user_id = '{user.id}'")
+        total = cursor.fetchone()[0]
 
-        #5 Mil
-        if total >= 5000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 5 million donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 5 million donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
+        # stores donation amount and associated role id
+        donors_roles = {
+            5.0e6: 787342154862166046, # 5 million
+            1.0e7: 787342156573704203, # 10 million
+            2.5e7: 799022090791419954, # 25 million
+            5.0e7: 787868761528336427, # 50 million
+            1.0e8: 787868759720722493, # 100 million
+            2.5e8: 799844364389187616, # 250 million
+            5.0e8: 799022083778543696, # 500 million
+            1.0e9: 799844367551692827, # 1 billion
+            2.5e9: 824615522934849607  # 2.5 billion
+        }
+        
+        roles_added = []
+        for amount, role_id in donors_roles:
+            if total < amount:
+                return
+            if role_id in user_roles_id:
+                continue
 
-        #10 Mil
-        if total >= 10000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 10 million donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 10 million donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
+            role = discord.utils.find(lambda r: r.id == role_id, ctx.guild.roles)
+            await user.add_roles(role)
+            roles_added.append(role.name)
 
-        #25 Mil
-        if total >= 25000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 25 million donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 25 million donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
+        if roles_added != []:
+            return await ctx.send(f"**{user.name}** now has the roles: `{", ".join(roles_added)}`! Tysm for donating!")
 
-        #50 Mil
-        if total >= 50000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 50 million donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 50 million donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
-
-        #100 Mil
-        if total >= 100000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 100 million donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 100 million donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
-
-        #250 Mil
-        if total >= 250000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 250 million donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 250 million donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
-
-        #500 Mil
-        if total >= 500000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 500 million donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 500 million donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
-
-        #1 Bil
-        if total >= 1000000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 1 billion donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 1 billion donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
-
-        #2.5 Bil
-        if total >= 2500000000:
-            role = discord.utils.find(lambda r: r.name == '✧ 2.5 billion donor', ctx.message.guild.roles)
-            if role in user.roles:
-                pass
-            
-            else:
-                role = discord.utils.get(ctx.guild.roles, name='✧ 2.5 billion donor')
-                await user.add_roles(role)
-                await ctx.send(f'**{member}** now has the `{role}` role! Tysm for donating!')
 
     #Beatify Numbers
     def beautify_numbers(self, num):
