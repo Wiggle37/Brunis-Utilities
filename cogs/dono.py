@@ -48,13 +48,12 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         user = member.id
-        amount = 0
 
         cursor.execute(f"SELECT user_id FROM donations WHERE user_id = '{member.id}'")
         result = cursor.fetchone()
 
         if result is None:
-            cursor.execute("INSERT INTO donations (user_id, total) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET total = total + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO donations (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
 
         dbase.commit()
         dbase.close()
