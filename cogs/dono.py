@@ -965,5 +965,6 @@ class Dono(commands.Cog):
             await ctx.send('There are one or more required arguments that are missing')
         if isinstance(error, commands.MissingPermissions):
             await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
+            
 def setup(client):
     client.add_cog(Dono(client))

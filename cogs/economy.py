@@ -16,6 +16,18 @@ class Economy(commands.Cog):
         self.client = client
 
     '''
+    Functions
+    '''
+    #Number Converter
+    def is_valid_int(self, amount):
+        try:
+            float(amount.replace("m","").replace("k",""))
+            return int(eval(amount.replace("k","e3").replace("m", "e6")))
+            
+        except ValueError:
+            return False
+
+    '''
     DB Adder
     '''
     @commands.Cog.listener()
@@ -951,41 +963,42 @@ class Economy(commands.Cog):
     '''
     #Give
     @commands.command()
-    async def give(self, ctx, member: discord.Member, amount: int=None):
+    async def give(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
 
-        cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        result = (result[0])
-
-        if result < amount:
-            await ctx.send('You dont have enough money to do that')
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            await ctx.send('That isnt a valid number')
 
         else:
-            if member == None:
-                await ctx.reply('You actully have to give stuff to someone')
+            cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
+            result = cursor.fetchone()
+
+            if result[0] < amount:
+                await ctx.send('You dont have enough money to do that')
 
             else:
-                if amount < 0:
-                    await ctx.send('Dont even try me dumbass')
+                if member == None:
+                    await ctx.reply('You actully have to give stuff to someone')
 
                 else:
-                    user = ctx.author.id
-                    member_id = member.id
+                    if amount < 0:
+                        await ctx.send('Dont even try me dumbass')
 
-                    cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
+                    else:
+                        user = ctx.author.id
+                        member_id = member.id
 
-                    cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [member_id, amount, amount])
+                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
+                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [member_id, amount, amount])
+                        
+                        await ctx.send(f'{ctx.author.mention} you gave **{member}** <:dankmerchants:829809749058650152> **{amount}**')
+
+                        channel = await member.create_dm()
                     
-                    await ctx.send(f'{ctx.author.mention} you gave **{member}** <:dankmerchants:829809749058650152> **{amount}**')
-
-                    channel = await member.create_dm()
-                
-                    dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\nYou got <:dankmerchants:829809749058650152> **{amount}** from {ctx.message.author}', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
-
-                    
+                        dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\nYou got <:dankmerchants:829809749058650152> **{amount}** from {ctx.message.author}', color=0x00ff00)
+                        await channel.send(embed=dm_embed)
 
             dbase.commit()
             dbase.close()
