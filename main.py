@@ -9,8 +9,6 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-import aiohttp
-
 ###Intents###
 intents = discord.Intents.default()
 intents.members = True
@@ -24,22 +22,25 @@ client.remove_command('help')
 ###On Ready###
 @client.event
 async def on_ready():
-    print(f'Bot is now online!\n---BOT INFO---\n--------------------\nUser: {client.user}\nID: {client.user.id}')
+    print(f'Bot is now online!\n--------------------\nUser: {client.user}\nID: {client.user.id}')
 
 ###Cog Loader###
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
+
 @client.command()
 @commands.is_owner()
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f'Loaded **{extension}**')
+
 @client.command()
 @commands.is_owner()
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f'Unloaded **{extension}**')
+
 @client.command()
 @commands.is_owner()
 async def reload(ctx, extension):
@@ -51,7 +52,7 @@ async def status():
     await client.wait_until_ready()
     while True:
         memberCount = sum([guild.member_count for guild in client.guilds])
-        await client.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = f'over {memberCount} people'))
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'over {memberCount} people'))
 
         await asyncio.sleep(30)
 
