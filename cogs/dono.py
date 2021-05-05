@@ -47,7 +47,7 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
 
-        user = member.id
+        user = (member or ctx.author).id
 
         cursor.execute(f"SELECT user_id FROM donations WHERE user_id = '{member.id}'")
         result = cursor.fetchone()
@@ -68,17 +68,16 @@ class Dono(commands.Cog):
         cursor.execute(f"SELECT total FROM donations WHERE user_id = '{user.id}'")
         total = cursor.fetchone()[0]
 
-        # stores donation amount and associated role id
         donors_roles = {
-            5.0e6: 787342154862166046, # 5 million
-            1.0e7: 787342156573704203, # 10 million
-            2.5e7: 799022090791419954, # 25 million
-            5.0e7: 787868761528336427, # 50 million
-            1.0e8: 787868759720722493, # 100 million
-            2.5e8: 799844364389187616, # 250 million
-            5.0e8: 799022083778543696, # 500 million
-            1.0e9: 799844367551692827, # 1 billion
-            2.5e9: 824615522934849607  # 2.5 billion
+            5000000: 787342154862166046, # 5 million
+            10000000: 787342156573704203, # 10 million
+            25000000: 799022090791419954, # 25 million
+            50000000: 787868761528336427, # 50 million
+            100000000: 787868759720722493, # 100 million
+            250000000: 799844364389187616, # 250 million
+            500000000: 799022083778543696, # 500 million
+            1000000000: 799844367551692827, # 1 billion
+            2500000000: 824615522934849607  # 2.5 billion
         }
         
         roles_added = []
@@ -93,7 +92,7 @@ class Dono(commands.Cog):
             roles_added.append(role.name)
 
         if roles_added != []:
-            return await ctx.send(f"**{user.name}** now has the roles: `{", ".join(roles_added)}`! Tysm for donating!")
+            return await ctx.send(f"**{user.name}** now has the roles: `{', '.join(roles_added)}`! Tysm for donating!")
 
 
     #Beatify Numbers
@@ -202,6 +201,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @gaw_dono_set.error
     async def gaw_dono_set_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -238,10 +239,10 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-            await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @gaw_dono_add.error
     async def gaw_dono_add_error(self, ctx, error):
@@ -282,6 +283,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @gaw_dono_remove.error
     async def gaw_dono_remove_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -315,6 +318,8 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @gaw_dono_reset.error
     async def gaw_dono_reset_error(self, ctx, error):
@@ -357,10 +362,10 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-            await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @heist_dono_set.error
     async def heist_dono_set_error(self, ctx, error):
@@ -398,10 +403,10 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-            await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @heist_dono_add.error
     async def heist_dono_add_error(self, ctx, error):
@@ -442,6 +447,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @heist_dono_remove.error
     async def heist_dono_remove_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -475,6 +482,8 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @heist_dono_reset.error
     async def heist_dono_reset_error(self, ctx, error):
@@ -517,10 +526,10 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-            await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @event_dono_set.error
     async def event_dono_set_error(self, ctx, error):
@@ -558,10 +567,10 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-            await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @event_dono_add.error
     async def event_dono_add_error(self, ctx, error):
@@ -602,6 +611,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @event_dono_remove.error
     async def event_dono_remove_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -635,6 +646,8 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @event_dono_reset.error
     async def event_dono_reset_error(self, ctx, error):
@@ -677,10 +690,10 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-            await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @special_dono_set.error
     async def special_dono_set_error(self, ctx, error):
@@ -718,10 +731,10 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-            await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @special_dono_add.error
     async def special_event_dono_add_remove(self, ctx, error):
@@ -762,6 +775,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @special_dono_remove.error
     async def special_event_dono_set_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -793,10 +808,10 @@ class Dono(commands.Cog):
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        await self.roles(ctx, member)
-
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @special_dono_reset.error
     async def special_event_dono_reset_error(self, ctx, error):
@@ -843,6 +858,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @money_dono_set.error
     async def money_dono_set_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -884,6 +901,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @money_dono_add.error
     async def money_dono_add_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -924,6 +943,8 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
+        await self.roles(ctx, member)
+
     @money_dono_remove.error
     async def money_dono_remove_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -958,6 +979,8 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+        await self.roles(ctx, member)
 
     @money_dono_reset.error
     async def money_dono_reset_error(self, ctx, error):

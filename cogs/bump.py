@@ -93,12 +93,10 @@ class BumpTracker(commands.Cog):
         cursor.execute(f"INSERT INTO bumps (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
 
         cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user}'")
-        bump = cursor.fetchone()
-        bump = int(bump[0])
+        bump = cursor.fetchone()[0]
 
         cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
-        total = cursor.fetchone()
-        total = int(total[0])
+        total = cursor.fetchone()[0]
 
         user = await ctx.guild.fetch_member(user)
 
@@ -110,12 +108,12 @@ class BumpTracker(commands.Cog):
             await ctx.send(embed=embed)
 
         else:
-            precentage = int(round(bump / total, 2) * 100)
+            percentage = int(round(bump / total, 2) * 100)
 
             embed = discord.Embed(title=f'Bumps for **{user}**', description='The server bump tracker', color=0x00ff00)
             embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
             embed.add_field(name='Total Bumps:', value=f'`{(total)}`')
-            embed.add_field(name='Precentage:', value=f'`{int(precentage)}%`')
+            embed.add_field(name='Percentage:', value=f'`{int(percentage)}%`')
             embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
             await ctx.send(embed=embed)
         
