@@ -140,6 +140,28 @@ class Economy(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    #Rich
+    @commands.command()
+    async def rich(self, ctx):
+        dbase = sqlite3.connect("economy.db")
+        cursor = dbase.cursor()
+
+        cursor.execute("SELECT balance, user_id FROM economy ORDER BY balance DESC")
+        richest = cursor.fetchmany(10)
+
+        rich_embed = discord.Embed(title="Richest People In Dank Merchants", colour=0x00ff00)
+
+        embed_desc = ""
+        dank_merchants = self.client.get_guild(784491141022220309)
+        for rank, user_info in enumerate(richest):
+            member = dank_merchants.get_member(int(user_info[1]))
+            embed_desc += f"**{rank + 1}. {member}:** <:dankmerchants:829809749058650152> `{'{:,}'.format(user_info[0])}`\n"
+
+        rich_embed.description = embed_desc
+        await ctx.send(embed = rich_embed)
+
+        dbase.close()
+
     #Inventory
     @commands.command(aliases=['inv'])
     async def inventory(self, ctx, page=None, member: discord.Member=None):
@@ -483,6 +505,7 @@ class Economy(commands.Cog):
 
     #Buy
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def buy(self, ctx, item=None):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
@@ -685,18 +708,20 @@ class Economy(commands.Cog):
         dbase.commit()
         dbase.close()
 
+    @buy.error
+    async def buy_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            await ctx.send(embed=embed)
+
     #Use
     @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def use(self, ctx, item=None):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
 
         user = ctx.author.id
-
-        selection = [
-            'yes',
-            'no'
-        ]
 
         if item == None:
             await ctx.send('You have to give an item to use (0)_(0)')
@@ -712,7 +737,7 @@ class Economy(commands.Cog):
 
                 cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox - ?;", [user, box, box])
                 
-                coins = random.randint(25000, 50000)
+                coins = random.randint(12500, 25000)
                 appleamount = random.randint(0, 5)
 
                 cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
@@ -733,7 +758,7 @@ class Economy(commands.Cog):
                 box = 1
                 cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox - ?;", [user, box, box])
 
-                coins = random.randint(50000, 100000)
+                coins = random.randint(25000, 50000)
                 appleamount = random.randint(0, 10)
                 duckamount = random.randint(1, 5)
 
@@ -756,7 +781,7 @@ class Economy(commands.Cog):
                 box = 1
                 cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox - ?;", [user, box, box])
 
-                coins = random.randint(100000, 250000)
+                coins = random.randint(50000, 100000)
                 appleamount = random.randint(0, 15)
                 duckamount = random.randint(1, 10)
 
@@ -779,7 +804,7 @@ class Economy(commands.Cog):
                 box = 1
                 cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox - ?;", [user, box, box])
 
-                coins = random.randint(250000, 500000)
+                coins = random.randint(100000, 250000)
                 appleamount = random.randint(1, 25)
                 duckamount = random.randint(1, 25)
 
@@ -802,7 +827,7 @@ class Economy(commands.Cog):
                 box = 1
                 cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox - ?;", [user, box, box])
 
-                coins = random.randint(500000, 1000000)
+                coins = random.randint(250000, 500000)
                 appleamount = random.randint(1, 50)
                 duckamount = random.randint(1, 10)
                 donutamount = random.randint(0, 1)
@@ -819,6 +844,13 @@ class Economy(commands.Cog):
 
         dbase.commit()
         dbase.close()
+
+    @use.error
+    async def use_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            await ctx.send(embed=embed)
+
 
     #Sell
     @commands.command()
@@ -945,13 +977,15 @@ class Economy(commands.Cog):
                     cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
 
                     cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [member_id, amount, amount])
+                    
+                    await ctx.send(f'{ctx.author.mention} you gave **{member}** <:dankmerchants:829809749058650152> **{amount}**')
 
                     channel = await member.create_dm()
                 
                     dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\nYou got <:dankmerchants:829809749058650152> **{amount}** from {ctx.message.author}', color=0x00ff00)
                     await channel.send(embed=dm_embed)
 
-                    await ctx.send(f'{ctx.author.mention} you gave **{member}** <:dankmerchants:829809749058650152> **{amount}**')
+                    
 
             dbase.commit()
             dbase.close()
@@ -1059,6 +1093,8 @@ class Economy(commands.Cog):
         names = [
             'Lily',
             'Darkside',
+            'Dark',
+            'Neon',
             'London',
             'Dank Mazen',
             'Bruni',
@@ -1392,40 +1428,112 @@ class Economy(commands.Cog):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Why do you want to be working so much GEEZ\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
+    #Slots
     @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def slots(self, ctx, bet: int=None):
         dbase = sqlite3.connect('economy.db')
         cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
+        bal = cursor.fetchone()
+        bal = int(bal[0])
+
+        user = ctx.author.id
 
         if bet is None:
             await ctx.send('You have to bet something dumby')
 
         else:
-            if bet < 50:
-                await ctx.send('Bet more than 50!')
-            
+            if bal < bet:
+                await ctx.send('You dont have the money ot do that')
+
             else:
-                outcome = [
-                    '🤑',
-                    '😢',
-                    '😩',
-                    '🥵',
-                    '<:dankmerchants:829809749058650152>'
-                ]
+                if bet < 0:
+                    await ctx.send('Just stop')
+                
+                else:
+                    if bet < 50:
+                        await ctx.send('Bet more than 50!')
+                    
+                    else:
+                        if bet > 100000:
+                            await ctx.send('Your bet has to be under 100k')
 
-                outcome1 = random.choice(outcome)
-                outcome2 = random.choice(outcome)
-                outcome3 = random.choice(outcome)
+                        else:
+                            outcome = [
+                                '🤑',
+                                '😢',
+                                '😩',
+                                '🥵',
+                                '<:dankmerchants:829809749058650152>'
+                            ]
 
-                if outcome1 == outcome2 == outcome3:
-                    amount = bet * 3
-                    embed = discord.Embed(title='You Won!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou won: <:dankmerchants:829809749058650152> `{amount}`', color=0x00ff00)
-                    await ctx.send(embed=embed)
+                            outcome1 = random.choice(outcome)
+                            outcome2 = random.choice(outcome)
+                            outcome3 = random.choice(outcome)
+
+                            if outcome1 == outcome2 == outcome3:
+                                amount = int(bet * 3)
+
+                                cursor.execute(f"INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, amount, amount])
+
+                                embed = discord.Embed(title='You Won!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou won: <:dankmerchants:829809749058650152> `{amount}`', color=0x00ff00)
+                                await ctx.reply(embed=embed)
+
+                            else:
+                                if outcome1 == '<:dankmerchants:829809749058650152>' and outcome2 == '<:dankmerchants:829809749058650152>' and outcome3 == '<:dankmerchants:829809749058650152>':
+                                    amount = int(bet * 10)
+
+                                    cursor.execute(f"INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, amount, amount])
+
+                                    embed = discord.Embed(title='You Won The Jackpot!!!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: <:dankmerchants:829809749058650152> `{amount}`', color=0x00ff00)
+                                    await ctx.reply(embed=embed)
+
+                                else:
+                                    if outcome1 == outcome2 or outcome2 == outcome3 or outcome1 == outcome3:
+                                        amount = int(bet * 1.5)
+
+                                        cursor.execute(f"INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, amount, amount])
+
+                                        embed = discord.Embed(title='You Won Some!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: <:dankmerchants:829809749058650152> `{amount}`', color=0x00ff00)
+                                        await ctx.reply(embed=embed)
+                                    
+                                    else:
+                                        cursor.execute(f"INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, bet, bet])
+
+                                        embed = discord.Embed(title='You Lost!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou lost: <:dankmerchants:829809749058650152> `{bet}`', color=0xff0000)
+                                        await ctx.reply(embed=embed)
+
+        dbase.commit()
+        dbase.close()
+
+    @slots.error
+    async def slots_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Stop using the slot machine before you breka it\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            await ctx.send(embed=embed)
+
+    #Rock Paper Scissors
+    @commands.command()
+    async def rps(self, ctx, amount: int=None):
+        dbase = sqlite3.connect('economy.db')
+        cursor = dbase.cursor()
+
+        if amount is None:
+            await ctx.send('You have to bet something cmon')
+
+        else:
+            if amount < 100:
+                await ctx.send('You have to bet at least 100 are you poor?')
+
+            else:
+                if amount > 100000:
+                    await ctx.send('You cant bet over 100k')
 
                 else:
-                    embed = discord.Embed(title='You Lost!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou lost: <:dankmerchants:829809749058650152> `{bet}`', color=0x00ff00)
-                    await ctx.send(embed=embed)
-
+                    pass
+                    
         dbase.commit()
         dbase.close()
 

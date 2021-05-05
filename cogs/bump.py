@@ -8,7 +8,6 @@ class BumpTracker(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    
     def valid_message(self, message):
         return message.author.id == 302050872383242240 and message.channel.id == 784994978661138453 and message.embeds != [] 
     
@@ -28,23 +27,57 @@ class BumpTracker(commands.Cog):
         cursor = dbase.cursor()
 
         bump = 1
-        user = message.author.id
 
         if not self.valid_message(message):
             return
         
         embed_desc = message.embeds[0].description
         success = self.check_success(embed_desc)
+
         if success == None:
             return
+
         user_id = self.get_user_id(embed_desc)
 
         if success:
             cursor.execute("INSERT INTO bumps (user_id, bump) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET bump = bump + ?;", [user_id, bump, bump])
             cursor.execute("INSERT INTO bumps (user_id, allbumps) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET allbumps = allbumps + ?;", [user_id, bump, bump])
 
+            cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user_id}'")
+            bump = cursor.fetchone()
+
+            cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user_id}'")
+            total = cursor.fetchone()
+
+            precentage = int(round(bump[0] / total[0], 2) * 100)
+
+            cursor.execute(f"UPDATE bumps SET precentage = '{precentage}' WHERE user_id == {user_id}")
+
         else:
             cursor.execute("INSERT INTO bumps (user_id, allbumps) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET allbumps = allbumps + ?;", [user_id, bump, bump])
+            
+            cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user_id}'")
+            bump = cursor.fetchone()
+
+            cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user_id}'")
+            total = cursor.fetchone()
+
+            precentage = int(round(bump[0] / total[0], 2) * 100)
+
+            cursor.execute(f"UPDATE bumps SET precentage = '{precentage}' WHERE user_id == {user_id}")
+
+        cursor.execute("SELECT user_id, MAX(bump) FROM bumps;")
+        top = cursor.fetchone()
+        top = int(top[0])
+
+        role = discord.utils.find(lambda r: r.id == 787868761620348929, message.guild.roles)
+
+        user = await message.guild.fetch_member(top)
+            
+        if role in user.roles:
+            await user.remove_roles(role)
+
+        await user.add_roles(role)
 
         dbase.commit()
         dbase.close()
@@ -54,43 +87,36 @@ class BumpTracker(commands.Cog):
     async def bumps(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bump.db')
         cursor = dbase.cursor()
+        
+        user = (member or ctx.author).id
 
-        if member is None:
-            user = ctx.author.id
-            bump = 0
-            cursor.execute("INSERT INTO bumps (user_id, allbumps) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET allbumps = allbumps + ?;", [user, bump, bump])
-            cursor.execute("INSERT INTO bumps (user_id, bump) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET bump = bump + ?;", [user, bump, bump])
+        cursor.execute(f"INSERT INTO bumps (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
 
-            cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{ctx.author.id}'")
-            successful = cursor.fetchone()
-            successful = int(successful[0])
+        cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user}'")
+        bump = cursor.fetchone()
+        bump = int(bump[0])
 
-            cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{ctx.author.id}'")
-            total = cursor.fetchone()
-            total = int(total[0])
+        cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
+        total = cursor.fetchone()
+        total = int(total[0])
 
-            embed = discord.Embed(title=f'Bumps for **{ctx.author}**', description='The server bump tracker', color=0x00ff00)
-            embed.add_field(name='Successful Bumps:', value=f'`{successful}`')
-            embed.add_field(name='Total Bumps:', value=f'`{total}`')
+        user = await ctx.guild.fetch_member(user)
+
+        if bump == 0:
+            embed = discord.Embed(title=f'Bumps for **{user}**', description='The server bump tracker', color=0x00ff00)
+            embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
+            embed.add_field(name='Total Bumps:', value=f'`{(total)}`')
+            embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
             await ctx.send(embed=embed)
 
         else:
-            user = member.id
-            bump = 0
-            cursor.execute("INSERT INTO bumps (user_id, allbumps) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET allbumps = allbumps + ?;", [user, bump, bump])
-            cursor.execute("INSERT INTO bumps (user_id, bump) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET bump = bump + ?;", [user, bump, bump])
-            
-            cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{member.id}'")
-            successful = cursor.fetchone()
-            successful = int(successful[0])
+            precentage = int(round(bump / total, 2) * 100)
 
-            cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{member.id}'")
-            total = cursor.fetchone()
-            total = int(total[0])
-
-            embed = discord.Embed(title=f'Bumps for **{member}**', description='The server bump tracker', color=0x00ff00)
-            embed.add_field(name='Successful Bumps:', value=f'`{successful}`')
-            embed.add_field(name='Total Bumps:', value=f'`{total}`')
+            embed = discord.Embed(title=f'Bumps for **{user}**', description='The server bump tracker', color=0x00ff00)
+            embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
+            embed.add_field(name='Total Bumps:', value=f'`{(total)}`')
+            embed.add_field(name='Precentage:', value=f'`{int(precentage)}%`')
+            embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
             await ctx.send(embed=embed)
         
         dbase.commit()
