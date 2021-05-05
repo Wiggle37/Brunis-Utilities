@@ -84,7 +84,7 @@ class Dono(commands.Cog):
         roles_added = []
         for amount, role_id in donors_roles:
             if total < amount:
-                return
+                break
             if role_id in user_roles_id:
                 continue
 
