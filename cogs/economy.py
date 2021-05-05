@@ -1437,7 +1437,6 @@ class Economy(commands.Cog):
 
         cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
         bal = cursor.fetchone()
-        bal = int(bal[0])
 
         user = ctx.author.id
 
@@ -1445,7 +1444,7 @@ class Economy(commands.Cog):
             await ctx.send('You have to bet something dumby')
 
         else:
-            if bal < bet:
+            if bal[0] < bet:
                 await ctx.send('You dont have the money ot do that')
 
             else:
