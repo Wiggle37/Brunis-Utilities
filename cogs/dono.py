@@ -107,7 +107,6 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect("dono.db")
         cursor = dbase.cursor()
         
-        await self.roles(ctx, member)
         user = member or ctx.author
 
         cursor.execute(f"SELECT gaw, heist, event, special, total, money FROM donations WHERE user_id = '{user.id}'")
