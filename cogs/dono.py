@@ -58,7 +58,6 @@ class Dono(commands.Cog):
         dbase.commit()
         dbase.close()
 
-    #Auto Roles Non-Self
     async def roles(self, ctx, user: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -81,7 +80,7 @@ class Dono(commands.Cog):
         }
         
         roles_added = []
-        for amount, role_id in donors_roles:
+        for amount, role_id in donors_roles.items():
             if total < amount:
                 break
             if role_id in user_roles_id:
@@ -108,6 +107,7 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect("dono.db")
         cursor = dbase.cursor()
         
+        self.roles(ctx, member)
         user = member or ctx.author
 
         cursor.execute(f"SELECT gaw, heist, event, special, total, money FROM donations WHERE user_id = '{user.id}'")
