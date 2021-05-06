@@ -91,7 +91,7 @@ class Dono(commands.Cog):
             roles_added.append(role.name)
 
         if roles_added != []:
-            return await ctx.send(f"**{user.name}** now has the roles: `{', '.join(roles_added)}`! Tysm for donating!")
+            return await ctx.send(f"**{user.name}** now has the role(s): `{', '.join(roles_added)}`! Tysm for donating!")
 
 
     #Beatify Numbers
@@ -107,7 +107,7 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect("dono.db")
         cursor = dbase.cursor()
         
-        self.roles(ctx, member)
+        await self.roles(ctx, member)
         user = member or ctx.author
 
         cursor.execute(f"SELECT gaw, heist, event, special, total, money FROM donations WHERE user_id = '{user.id}'")

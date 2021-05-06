@@ -9,7 +9,7 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-###Intents###
+###Bot###
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(

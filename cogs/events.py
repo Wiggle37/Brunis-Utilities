@@ -90,13 +90,13 @@ class Events(commands.Cog):
 
         if 'pls steal' in message.content:
             await message.channel.send('Just why are you dumb')
-'''
+
     #Command Not Found
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         print(f'{ctx.author}: {error}')
         if isinstance(error, commands.CommandNotFound):
             await ctx.send(f'{error} use the command `b!help` for a list of commands')
-'''
+
 def setup(client):
     client.add_cog(Events(client))
