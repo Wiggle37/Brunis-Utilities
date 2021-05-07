@@ -113,16 +113,16 @@ class Dono(commands.Cog):
         gaw, heist, event, special, total, money = map(self.beautify_numbers, cursor.fetchone())
 
         donation_embed = discord.Embed(title="Donation Stats",color=0x7008C2)
-        
         donation_embed.add_field(name="User:", value = f"{user.mention}(User id: {user.id})", inline=False)
-        donation_embed.add_field(name="__**Money Donations**__", value="Money Donations", inline=False)
-        donation_embed.add_field(name="Money Donations:", value = f"$`{money}` donated in real money")
-
-        donation_embed.add_field(name="__**Normal Donations**__", value="Dank Memer Donations", inline=False)
+        
+        donation_embed.add_field(name="__**✦ Normal Donations ✦**__", value="Dank Memer Donations", inline=False)
         donation_embed.add_field(name="Giveaway Donations:", value = f"⏣`{gaw}` donated for giveaways", inline=False)
         donation_embed.add_field(name="Heist Donations:", value = f"⏣`{heist}` donated for heists", inline=False)
         donation_embed.add_field(name="Event Donations:", value = f"⏣`{event}` donated for events", inline=False)
         donation_embed.add_field(name="Special Event Donations:", value = f"⏣`{special}`", inline=False)
+
+        donation_embed.add_field(name="__**✦ Money Donations ✦**__", value="Money Donations", inline=False)
+        donation_embed.add_field(name="Money Donations:", value = f"$`{money}` donated in real money")
 
         donation_embed.add_field(name="Total Donations:", value = f"⏣`{total}` donated in total", inline=False)
         await ctx.send(embed=donation_embed)
