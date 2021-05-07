@@ -1,6 +1,0 @@
-discord
-python-dotenv
-sqlite3
-aiohttp
-aiohttp-requests
-re
