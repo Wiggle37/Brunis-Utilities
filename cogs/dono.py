@@ -118,15 +118,15 @@ class Dono(commands.Cog):
         donation_embed.add_field(name="Giveaway Donations:", value = f"⏣`{gaw}` donated for giveaways", inline=True)
         donation_embed.add_field(name="Heist Donations:", value = f"⏣`{heist}` donated for heists", inline=True)
         donation_embed.add_field(name="Event Donations:", value = f"⏣`{event}` donated for events", inline=True)
-        donation_embed.add_field(name="__**✦ Other Donations ✦**__", value="Money Donations", inline=False)
+        donation_embed.add_field(name="__**✦ Special Donations ✦**__", value="Money Donations", inline=False)
         donation_embed.add_field(name="Special Event Donations:", value = f"⏣`{special}`", inline=True)
         donation_embed.add_field(name="Money Donations:", value = f"$`{money}` donated in real money", inline=True)
-        donation_embed.add_field(name="Total Donations:", value = f"⏣`{total}` donated in total", inline=False)
+        donation_embed.add_field(name="__**Total Donations:**__", value = f"⏣`{total}` donated in total", inline=False)
         await ctx.send(embed=donation_embed)
 
     @dono.error
     async def dono_error(self, ctx, error):
-        await ctx.send('You are not in the database correctly. Use the command `b!init` to get added')
+        await ctx.send(f'There was and error\nError: {error}')
 
     #Top Donators
     @commands.command()
