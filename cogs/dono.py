@@ -126,7 +126,7 @@ class Dono(commands.Cog):
 
     @dono.error
     async def dono_error(self, ctx, error):
-        await ctx.send(f'There was and error\nError: {error}')
+        await ctx.send(f'There was and error\nError: `{error}`')
 
     #Top Donators
     @commands.command()
