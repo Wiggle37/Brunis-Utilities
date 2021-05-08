@@ -100,8 +100,11 @@ class Events(commands.Cog):
 
     #On Command
     @commands.Cog.listener()
-    async def on_command_completion(self, ctx, command):
-        print(command)
+    async def print(self, ctx):
+        server = ctx.guild.name
+        user = ctx.author
+        command = ctx.command
+        print(f'{server} > {user} > {command}')
 
 def setup(client):
     client.add_cog(Events(client))
