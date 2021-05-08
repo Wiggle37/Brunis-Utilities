@@ -104,7 +104,7 @@ class Events(commands.Cog):
         server = ctx.guild.name
         user = ctx.author
         command = ctx.command
-        print(f'{server} > {user} > {command}')
+        print(f'COMMAND USED:\n\nServer: {server}\nServer id: {server.id}\nUser: {user}\nUser id: {user.id}\nCommand: {command}\n\n\n')
 
 def setup(client):
     client.add_cog(Events(client))
