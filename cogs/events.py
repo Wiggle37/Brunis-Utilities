@@ -101,7 +101,7 @@ class Events(commands.Cog):
     #On Command
     @commands.Cog.listener()
     async def on_command(self, ctx):
-        server = ctx.guild.name
+        server = ctx.guild
         user = ctx.author
         command = ctx.command
         print(f'COMMAND USED:\n\nServer: {server}\nServer id: {server.id}\nUser: {user}\nUser id: {user.id}\nCommand: {command}\n\n\n')
