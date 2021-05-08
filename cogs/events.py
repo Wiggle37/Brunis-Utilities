@@ -100,7 +100,7 @@ class Events(commands.Cog):
 
     #On Command
     @commands.Cog.listener()
-    async def print(self, ctx):
+    async def on_command(self, ctx):
         server = ctx.guild.name
         user = ctx.author
         command = ctx.command
