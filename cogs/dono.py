@@ -94,7 +94,6 @@ class Dono(commands.Cog):
         if roles_added != []:
             return await ctx.send(f"**{user.name}** now has the role(s): `{', '.join(roles_added)}`! Tysm for donating!")
 
-
     #Beatify Numbers
     def beautify_numbers(self, num):
         return "{:,}".format(num)
@@ -115,16 +114,13 @@ class Dono(commands.Cog):
 
         donation_embed = discord.Embed(title="Donation Stats",color=0x7008C2)
         donation_embed.add_field(name="User:", value = f"{user.mention}(User id: {user.id})", inline=False)
-        
         donation_embed.add_field(name="__**✦ Normal Donations ✦**__", value="Dank Memer Donations", inline=False)
         donation_embed.add_field(name="Giveaway Donations:", value = f"⏣`{gaw}` donated for giveaways", inline=False)
         donation_embed.add_field(name="Heist Donations:", value = f"⏣`{heist}` donated for heists", inline=False)
         donation_embed.add_field(name="Event Donations:", value = f"⏣`{event}` donated for events", inline=False)
         donation_embed.add_field(name="Special Event Donations:", value = f"⏣`{special}`", inline=False)
-
         donation_embed.add_field(name="__**✦ Money Donations ✦**__", value="Money Donations", inline=False)
         donation_embed.add_field(name="Money Donations:", value = f"$`{money}` donated in real money")
-
         donation_embed.add_field(name="Total Donations:", value = f"⏣`{total}` donated in total", inline=False)
         await ctx.send(embed=donation_embed)
 
@@ -182,10 +178,8 @@ class Dono(commands.Cog):
 
         else:
             user = int(f'{member.id}')
-            reset = 0
 
-            cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw = ?;", [user, reset, reset])
-            cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [user, amount, amount])
 
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
@@ -346,10 +340,8 @@ class Dono(commands.Cog):
 
         else:
             user = int(f'{member.id}')
-            reset = 0
 
-            cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist = ?;", [user, reset, reset])
-            cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = ?;", [user, amount, amount])
 
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
@@ -510,10 +502,8 @@ class Dono(commands.Cog):
 
         else:
             user = int(f'{member.id}')
-            reset = 0
 
-            cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event = ?;", [user, reset, reset])
-            cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = ?;", [user, amount, amount])
 
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
@@ -674,10 +664,8 @@ class Dono(commands.Cog):
 
         else:
             user = int(f'{member.id}')
-            reset = 0
 
-            cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special = ?;", [user, reset, reset])
-            cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = ?;", [user, amount, amount])
 
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
@@ -837,10 +825,8 @@ class Dono(commands.Cog):
 
         else:
             user = int(f'{member.id}')
-            reset = 0
 
-            cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money = ?;", [user, reset, reset])
-            cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = ?;", [user, amount, amount])
 
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
