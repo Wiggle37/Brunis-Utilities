@@ -98,5 +98,10 @@ class Events(commands.Cog):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send(f'{error} use the command `b!help` for a list of commands')
 
+    #On Command
+    @commands.Cog.listener()
+    async def on_command_completion(self, ctx, command):
+        print(command)
+
 def setup(client):
     client.add_cog(Events(client))
