@@ -118,7 +118,7 @@ class Dono(commands.Cog):
         donation_embed.add_field(name="Giveaway Donations:", value = f"⏣`{gaw}` donated for giveaways", inline=True)
         donation_embed.add_field(name="Heist Donations:", value = f"⏣`{heist}` donated for heists", inline=True)
         donation_embed.add_field(name="Event Donations:", value = f"⏣`{event}` donated for events", inline=True)
-        donation_embed.add_field(name="__**✦ Other Donations ✦**__", value="Money Donations", inline=True)
+        donation_embed.add_field(name="__**✦ Other Donations ✦**__", value="Money Donations", inline=False)
         donation_embed.add_field(name="Special Event Donations:", value = f"⏣`{special}`", inline=True)
         donation_embed.add_field(name="Money Donations:", value = f"$`{money}` donated in real money", inline=True)
         donation_embed.add_field(name="Total Donations:", value = f"⏣`{total}` donated in total", inline=False)
