@@ -22,7 +22,7 @@ client.remove_command('help')
 ###On Ready###
 @client.event
 async def on_ready():
-    print(f'Bot is now online!\n--------------------\nUser: {client.user}\nID: {client.user.id}')
+    print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
 
 ###Cog Loader###
 for filename in os.listdir('./cogs'):
