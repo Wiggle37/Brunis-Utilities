@@ -8,7 +8,7 @@ class Help(commands.Cog):
 
     #Help
     @commands.command(aliases=['cmds', 'commands'])
-    async def help(self, ctx, cog=None):
+    async def help(self, ctx, command=None):
         '''
         COGS
         '''
