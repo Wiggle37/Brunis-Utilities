@@ -23,7 +23,7 @@ class Help(commands.Cog):
             await ctx.send(embed=help_embed)
 
         #Donation Help
-        if command == 'dono' or cog == 'donation' or cog == 'donations':
+        if command == 'dono' or command == 'donation' or command == 'donations':
             help_embed = discord.Embed(title='Donations', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='__**Basic:**__', value='`b!dono` ➞ Check how much you have donated\n`b!init` ➞ Add you self to the database')
             help_embed.add_field(name='__**Giveaway Donations:**__', value='`b!gda <@member / id> <amount>` ➞ Add to someones giveaway donations\n`b!gdr <@member / id> <amount>` ➞ Remove from someones giveaway donations\n`b!gds <@member / id> <amount>` ➞ Set someones donations\n`b!gdrs <@member / id>` ➞ Reset someones giveaway donations', inline=False)
@@ -34,14 +34,14 @@ class Help(commands.Cog):
             await ctx.send(embed=help_embed)
 
         #Utility Help
-        if command == 'utility' or cog == 'utils' or cog == 'util':
+        if command == 'utility' or command == 'utils' or command == 'util':
             help_embed = discord.Embed(title='Utility', description='Commands that will probally be useful\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='__**Useful:**__', value='`b!count` ➞ Count to up to 1000', inline=False)
             help_embed.add_field(name='__**Support Server:**__', value='b!suggest <suggestion> ➞ Suggest something to the bot\n`b!bug <bug>` ➞ report a bug', inline=False)
             await ctx.send(embed=help_embed)
 
         #Economy Help
-        if command == 'econ' or cog == 'economy':
+        if command == 'econ' or command == 'economy':
             help_embed = discord.Embed(title='Economy', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='__**Basic:**__', value='`b!bal [@member / id]` ➞ Check how much money you have\n`b!inv [page] [member]` ➞ Check what you have in your inventory', inline=False)
             help_embed.add_field(name='__**Money Making:**__', value='`b!beg` ➞ Gives you some money\n`b!bet <amount>` ➞ Risk losing some money but have a chance of winning even more\n`b!work` ➞ Go to work and do some things that could make you some money', inline=False)
