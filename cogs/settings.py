@@ -27,9 +27,10 @@ class Settings(commands.Cog):
 
             else:
                 await ctx.send('That user is already whitelisted')
-
-        dbase.close()
+                
         dbase.commit()
+        dbase.close()
+        
 
 def setup(client):
     client.add_cog(Settings(client))
