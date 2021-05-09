@@ -8,7 +8,7 @@ class Settings(commands.Cog):
 
     #Add Whitelist
     @commands.command(aliases=['wl'])
-    @commands.has_any_roles(791516118120267806)
+    @commands.has_role(791516118120267806)
     async def whitelist(self, ctx, member: discord.Member=None):
         dbase = sqlite.connect('settings.db')
         cursor = dbase
