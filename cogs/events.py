@@ -20,7 +20,7 @@ class Events(commands.Cog):
         cursor = dbase.cursor()
 
         cursor.execute(f"SELECT user_id FROM whitelists WHERE user_id = '{member.id}'")
-        wl = cursor.fetchone()[0]
+        wl = cursor.fetchone()
 
         if member.guild.id == 784491141022220309:
             client = self.client
