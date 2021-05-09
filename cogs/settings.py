@@ -13,7 +13,7 @@ class Settings(commands.Cog):
     @commands.has_role(791516118120267806)
     async def whitelist(self, ctx, member: discord.Member=None):
         dbase = sqlite.connect('settings.db')
-        cursor = dbase
+        cursor = dbase.cursor()
         if member is None:
             await ctx.send('You need to mention a member!')
 
