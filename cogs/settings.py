@@ -21,9 +21,9 @@ class Settings(commands.Cog):
             await ctx.send('You need to mention a member!')
 
         else:
-                cursor.execute("INSERT INTO whitelists (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
+            cursor.execute("INSERT INTO whitelists (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
 
-                await ctx.send(f'{member} is now whitelisted from being auto banned')
+            await ctx.send(f'{member} is now whitelisted from being auto banned')
 
         dbase.commit()
         dbase.close()
