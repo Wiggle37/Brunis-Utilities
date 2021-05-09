@@ -19,7 +19,7 @@ class Events(commands.Cog):
         dbase = sqlite3.connect('settings.db')
         cursor = dbase.cursor()
 
-        cursor.execute(f"SELECT user_id FROM whitelist WHERE user_id = '{member.id}")
+        cursor.execute(f"SELECT user_id FROM whitelist WHERE user_id = '{member.id}'")
         wl = cursor.fetchone()[0]
 
         if member.guild.id == 784491141022220309:
