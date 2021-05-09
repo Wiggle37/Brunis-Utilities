@@ -24,7 +24,7 @@ class Settings(commands.Cog):
             cursor.execute(f"SELECT user_id FROM whitelists WHERE user_id = '{member.id}'")
             wl = cursor.fetchone()
             if wl is None:
-                cursor.execute("INSERT INTO whitelists (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user])
+                cursor.execute("INSERT INTO whitelists (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
 
                 await ctx.send(f'{member} is now whitelisted from being auto banned')
 
