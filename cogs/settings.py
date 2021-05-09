@@ -12,7 +12,7 @@ class Settings(commands.Cog):
     @commands.command(aliases=['wl'])
     @commands.has_role(791516118120267806)
     async def whitelist(self, ctx, member: discord.Member=None):
-        dbase = sqlite.connect('settings.db')
+        dbase = sqlite3.connect('settings.db')
         cursor = dbase.cursor()
         if member is None:
             await ctx.send('You need to mention a member!')
@@ -27,7 +27,7 @@ class Settings(commands.Cog):
 
             else:
                 await ctx.send('That user is already whitelisted')
-                
+
         dbase.commit()
         dbase.close()
         
