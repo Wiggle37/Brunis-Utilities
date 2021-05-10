@@ -30,18 +30,21 @@ for filename in os.listdir('./cogs'):
         client.load_extension(f'cogs.{filename[:-3]}')
         print(f'cog.{filename[:-3]} loaded')
 
+#Load
 @client.command()
 @commands.is_owner()
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f'Loaded **{extension}**')
 
+#Unload
 @client.command()
 @commands.is_owner()
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f'Unloaded **{extension}**')
 
+#Reload
 @client.command()
 @commands.is_owner()
 async def reload(ctx, extension):
@@ -57,6 +60,14 @@ async def status():
 
         await asyncio.sleep(30)
 
+async def botping():
+    await client.wait_until_ready()
+    while True:
+        await client.get_channel(841422269972742175).send(f'**Current Ping:** {round(client.latency*1000)}ms')
+
+        await asyncio.sleep(60)
+
+client.loop.create_task(botping())
 client.loop.create_task(status())
 
 ###Run Bot###
