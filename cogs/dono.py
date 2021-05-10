@@ -76,14 +76,18 @@ class Dono(commands.Cog):
             250000000: 799844364389187616, # 250 million
             500000000: 799022083778543696, # 500 million
             1000000000: 799844367551692827, # 1 billion
-            2500000000: 824615522934849607,  # 2.5 billion
+            2500000000: 824615522934849607, # 2.5 billion
             5000000000: 786610853033541632 # 5 billion
         }
         
         roles_added = []
         for amount, role_id in donors_roles.items():
             if total < amount:
-                break
+                continue
+            
+            role = discord.utils.find(lambda r: r.id == role_id, ctx.guild.roles)
+            await user.remove_roles(role)
+
             if role_id in user_roles_id:
                 continue
 
