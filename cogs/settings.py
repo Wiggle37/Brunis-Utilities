@@ -15,13 +15,13 @@ class Settings(commands.Cog):
         dbase = sqlite3.connect('settings.db')
         cursor = dbase.cursor()
 
-        user = member.id
+        print(member)
 
         if member == None:
             await ctx.send('You need to mention a member!')
 
         else:
-            cursor.execute("INSERT INTO whitelists (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
+            cursor.execute("INSERT INTO whitelists (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [member.id, member.id])
 
             await ctx.send(f'{member} is now whitelisted from being auto banned')
 
