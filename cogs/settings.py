@@ -17,7 +17,7 @@ class Settings(commands.Cog):
 
         user = member.id
 
-        if member is None:
+        if member == None:
             await ctx.send('You need to mention a member!')
 
         else:
