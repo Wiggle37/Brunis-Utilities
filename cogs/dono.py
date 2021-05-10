@@ -84,9 +84,9 @@ class Dono(commands.Cog):
         for amount, role_id in donors_roles.items():
             if total < amount:
                 continue
-            
-            role = discord.utils.find(lambda r: r.id == role_id, ctx.guild.roles)
-            await user.remove_roles(role)
+
+                role = discord.utils.find(lambda r: r.id == role_id, ctx.guild.roles)
+                await user.remove_roles(role)
 
             if role_id in user_roles_id:
                 continue
