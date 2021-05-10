@@ -64,6 +64,7 @@ async def botping():
     await client.wait_until_ready()
     while True:
         await client.get_channel(841422269972742175).send(f'**Current Ping:** {round(client.latency*1000)}ms')
+        print(f'Current Latency: {round(client.latency*1000)}ms')
 
         await asyncio.sleep(60)
 
