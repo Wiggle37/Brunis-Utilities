@@ -112,13 +112,5 @@ class Events(commands.Cog):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send(f'{error} use the command `b!help` for a list of commands')
 
-    #On Command
-    @commands.Cog.listener()
-    async def on_command(self, ctx):
-        server = ctx.guild
-        user = ctx.author
-        command = ctx.command
-        print(f'𝘾𝙤𝙢𝙢𝙖𝙣𝙙 𝙐𝙨𝙚𝙙:\nUser: {user}\nUser id: {user.id}\nCommand: {command}\n==============================================\n')
-
 def setup(client):
     client.add_cog(Events(client))
