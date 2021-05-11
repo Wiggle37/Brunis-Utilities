@@ -1526,28 +1526,5 @@ class Economy(commands.Cog):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Stop using the slot machine before you breka it\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
-    #Rock Paper Scissors
-    @commands.command()
-    async def rps(self, ctx, amount: int=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
-
-        if amount is None:
-            await ctx.send('You have to bet something cmon')
-
-        else:
-            if amount < 100:
-                await ctx.send('You have to bet at least 100 are you poor?')
-
-            else:
-                if amount > 100000:
-                    await ctx.send('You cant bet over 100k')
-
-                else:
-                    pass
-                    
-        dbase.commit()
-        dbase.close()
-
 def setup(client):
     client.add_cog(Economy(client))

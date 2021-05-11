@@ -1,8 +1,6 @@
 import sqlite3
 import random
 
-# dict of items for economy at the end
-
 """
     Base class for inheritance, a given category has to inherit this class before itself would be inherited to form actual items.
     
@@ -30,7 +28,6 @@ import random
     sell_items -- For selling items, handles deduction items and incrementation of balance.
 
     If there need be, these functions can always be overridden, for custom implementation.
-
 """
 
 class item:
