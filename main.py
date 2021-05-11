@@ -66,7 +66,7 @@ async def botping():
         await client.get_channel(841422269972742175).send(f'**Current Ping:** {round(client.latency*1000)}ms')
         print(f'Current Latency: {round(client.latency*1000)}ms')
 
-        await asyncio.sleep(60)
+        await asyncio.sleep(600)
 
 client.loop.create_task(botping())
 client.loop.create_task(status())
