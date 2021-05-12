@@ -22,7 +22,7 @@ class economy(commands.Cog):
     def user_exists(self, user_id):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM economy SELECT balance WHERE user_id == ?", [user_id])
+        cursor.execute("SELECT balance FROM economy WHERE user_id == ?", [user_id])
         result = cursor.fetchone() is not None
         dbase.close()
         return result
