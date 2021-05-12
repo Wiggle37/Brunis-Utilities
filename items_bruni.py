@@ -1,6 +1,8 @@
 import sqlite3
 import random
 
+# dict of items for economy at the end
+
 """
     Base class for inheritance, a given category has to inherit this class before itself would be inherited to form actual items.
     
@@ -28,6 +30,7 @@ import random
     sell_items -- For selling items, handles deduction items and incrementation of balance.
 
     If there need be, these functions can always be overridden, for custom implementation.
+
 """
 
 class item:
@@ -36,7 +39,7 @@ class item:
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
 
-        cursor.execute("FROM ? SELECT ? WHERE user_id == ?", [cls.table, cls.db_name, user_id])
+        cursor.execute("SELECT ? FROM ? WHERE user_id == ?", [cls.db_name, cls.table, user_id])
         item_count = cursor.fetchone()[0]
         dbase.close()
         return item_count
@@ -45,7 +48,7 @@ class item:
     def increase_item(cls, user_id, count = 1):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM ? UPDATE ? = ? + ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
+        cursor.execute("UPDATE ? SET ? = ? + ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
 
         dbase.commit()
         dbase.close()
@@ -54,7 +57,7 @@ class item:
     def decrease_item(cls, user_id, count = 1):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM ? UPDATE ? = ? - ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
+        cursor.execute("UPDATE ?  SET ? = ? - ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
 
         dbase.commit()
         dbase.close()
@@ -66,9 +69,9 @@ class item:
 
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM economy UPDATE balance = balance - ? WHERE user_id == ?", [cls.price * count, user_id])
+        cursor.execute("UPDATE economy SET balance = balance - ? WHERE user_id == ?", [cls.price * count, user_id])
 
-        cursor.execute("FROM ? UPDATE ? = ? + ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
+        cursor.execute("UPDATE ? SET ? = ? + ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
         dbase.commit()
         dbase.close()
     
@@ -79,9 +82,9 @@ class item:
 
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM economy UPDATE balance = balance + ? WHERE user_id == ?", [cls.sell_price * count, user_id])
+        cursor.execute("UPDATE economy SET balance = balance + ? WHERE user_id == ?", [cls.sell_price * count, user_id])
 
-        cursor.execute("FROM ? UPDATE ? = ? - ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
+        cursor.execute("UPDATE ? SET ? = ? - ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, count, user_id])
         dbase.commit()
         dbase.close()
 
@@ -96,7 +99,7 @@ class currency:
     def add(cls, user_id, amount):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM ? UPDATE ? SET ? = ? + ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, cls.db_name, amount, user_id])
+        cursor.execute("UPDATE ? SET ? = ? + ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, cls.db_name, amount, user_id])
         dbase.commit()
         dbase.close()
 
@@ -104,7 +107,7 @@ class currency:
     def subtract(cls, user_id, amount):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM ? UPDATE ? = ? - ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, cls.db_name, amount, user_id])
+        cursor.execute("UPDATE ? SET ? = ? - ? WHERE user_id == ?", [cls.table, cls.db_name, cls.db_name, cls.db_name, amount, user_id])
         dbase.commit()
         dbase.close()
 
@@ -112,7 +115,7 @@ class currency:
     def get_amount(cls, user_id):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-        cursor.execute("FROM ? SELECT ? WHERE user_id == ?", [cls.table, cls.db_name, user_id])
+        cursor.execute("SELECT ? FROM ? WHERE user_id == ?", [cls.db_name, cls.table, user_id])
         amount = cursor.fetchone()
         dbase.close()
         return amount
@@ -346,7 +349,7 @@ class boxes(item):
         cursor = dbase.cursor()
         for item, range in cls.possible_items.items():
             total_items = sum([random.randint(range[0], range[1]) for num in range(count)])
-            cursor.execute("FROM ? UPDATE ? SET ? = ? + ? WHERE user_id == ?", [item.table, item.db_name, item.db_name, item.db_name, total_items, user_id])
+            cursor.execute("UPDATE ? SET ? = ? + ? WHERE user_id == ?", [item.table, item.db_name, item.db_name, item.db_name, total_items, user_id])
             response += f"\n***{item.name}:*** `{total_items}`"
 
         dbase.commit()
