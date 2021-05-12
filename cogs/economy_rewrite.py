@@ -1,3 +1,4 @@
+import discord
 from discord.ext.commands.errors import BadArgument
 from items_bruni import currency
 from items_bruni import economy_items
