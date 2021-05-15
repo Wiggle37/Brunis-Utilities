@@ -1,19 +1,18 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType
-
 import asyncio
-
 import sqlite3
-
 import random
-
 from datetime import datetime
+from items_bruni import economy_items, currency
 
 class Economy(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.items = economy_items
+        self.currency = currency
 
     '''
     Functions
