@@ -6,6 +6,7 @@ import sqlite3
 import random
 from datetime import datetime
 from items_bruni import economy_items, currency
+import traceback
 
 class Economy(commands.Cog):
 
