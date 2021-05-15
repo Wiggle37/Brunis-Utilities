@@ -1,9 +1,7 @@
 import discord
 from discord.ext import commands
-
 import aiohttp
 from aiohttp import ClientSession
-
 import requests
 
 class Images(commands.Cog):

@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import re
-
 import sqlite3
 
 class BumpTracker(commands.Cog):

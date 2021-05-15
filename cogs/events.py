@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
-
 import sqlite3
-
 import time
 
 class Events(commands.Cog):
