@@ -108,9 +108,6 @@ class Economy(commands.Cog):
     @commands.command(aliases=['bal', 'money'])
     async def balance(self, ctx, member: discord.Member = None):
         user = member or ctx.author
-
-        if not self.user_exists(user.id): # if the persion is not in database
-            self.add_user(user.id)
         
         amount = self.currency.get_amount(user.id)
         bal_embed = discord.Embed(
