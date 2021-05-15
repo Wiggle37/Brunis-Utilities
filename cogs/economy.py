@@ -7,6 +7,7 @@ import random
 from datetime import datetime
 from items_bruni import economy_items, currency
 import traceback
+import sys
 
 class Economy(commands.Cog):
 

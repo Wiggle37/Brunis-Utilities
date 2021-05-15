@@ -443,4 +443,4 @@ economy_items = {}
 for i in items_classes:
     economy_items[i.name] = i
 
-economy_items = dict(sorted(economy_items.items())) # sorts in alphabetical order
+#economy_items = dict(sorted(economy_items.items())) # sorts in alphabetical order
