@@ -1,19 +1,18 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType
-
 import asyncio
-
 import sqlite3
-
 import random
-
 from datetime import datetime
+from items_bruni import economy_items, currency
 
 class Economy(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.items = economy_items
+        self.currency = currency
 
     '''
     Functions
@@ -107,51 +106,30 @@ class Economy(commands.Cog):
     '''
     #Balance
     @commands.command(aliases=['bal', 'money'])
-    async def balance(self, ctx, member: discord.Member=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
+    async def balance(self, ctx, member: discord.Member = None):
+        user = member or ctx.author
 
-        if member is None:
-            cursor.execute(f"SELECT user_id FROM economy WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
+        if not self.user_exists(user.id): # if the persion is not in database
+            self.add_user(user.id)
+        
+        amount = self.currency.get_amount(user.id)
+        bal_embed = discord.Embed(
+            title = f"{user.name}'s balance",
+            description = f"**Balance:**\n{self.currency.emoji} {amount}",
+            colour = 0x00ff00
+        )
+        await ctx.send(embed = bal_embed)
+    
+    @balance.error
+    async def bal_error(self, ctx, error):
+        if isinstance(error, commands.errors.MemberNotFound):
+            return await ctx.send("That isn't a valid user")
+        
+        # print any other error
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
-            user = ctx.author.id
-
-            if result is None:
-                balance = 0
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance = ?;", [user, balance, balance])
-
-            cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
-            result = (result[0])
-            result = ('{:,}'.format(result))
-
-            bal_embed = discord.Embed(title=f"{ctx.message.author}'s Balance", description=f'**Balance:**\n<:dankmerchants:829809749058650152> {result}', color=0x00ff00)
-            await ctx.send(embed=bal_embed)
-
-        else:
-            cursor.execute(f"SELECT user_id FROM economy WHERE user_id = '{member.id}'")
-            result = cursor.fetchone()
-
-            user = member.id
-
-            if result is None:
-                balance = 0
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance = ?;", [user, balance, balance])
-
-            cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{member.id}'")
-            result = cursor.fetchone()
-            result = (result[0])
-            result = ('{:,}'.format(result))
-
-            bal_embed = discord.Embed(title=f"{member}'s Balance", description=f'**Balance:**\n<:dankmerchants:829809749058650152> {result}', color=0x00ff00)
-            await ctx.send(embed=bal_embed)
-
-        dbase.commit()
-        dbase.close()
-
+        
     #Rich
     @commands.command()
     async def rich(self, ctx):
