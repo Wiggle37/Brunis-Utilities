@@ -84,7 +84,6 @@ class Events(commands.Cog):
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
-        message.lower()
         user = message.author
         if str(self.client.user.id) in message.content:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
