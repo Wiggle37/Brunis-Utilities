@@ -109,8 +109,7 @@ class Economy(commands.Cog):
     #Balance
     @commands.command(aliases=['bal', 'money'])
     async def balance(self, ctx, member: discord.Member = None):
-        firecracker = self.client.fetch_user(531317158530121738)
-        await firecracker.send("Hi")
+        await ctx.send("Some bug is here")
         user = member or ctx.author
         
         amount = self.currency.get_amount(user.id)
