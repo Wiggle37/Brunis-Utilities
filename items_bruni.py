@@ -435,10 +435,12 @@ items_classes = [
     woodenBox, ironBox, goldBox, diamondBox, emeraldBox,
     wiggle, bruni,
     wood, iron, gold, diamond, emerald,
-    woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingPole,
+    woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun,
     doughnut, brunisBackpack, 
     apple, duck, goose, chicken, smallFish, mediumFish, largeFish
 ]
+
+# TODO: add in fishingpole in db lol
 
 economy_items = {}
 for i in items_classes:
