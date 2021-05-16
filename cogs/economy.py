@@ -109,7 +109,9 @@ class Economy(commands.Cog):
     #Balance
     @commands.command(aliases=['bal', 'money'])
     async def balance(self, ctx, member: discord.Member = None):
-        await ctx.send("Some bug is here")
+        if ctx.author.id != 531317158530121738:
+            return await ctx.send("There's a bug here for now...")
+        
         user = member or ctx.author
         
         amount = self.currency.get_amount(user.id)
@@ -126,6 +128,7 @@ class Economy(commands.Cog):
             return await ctx.send("That isn't a valid user")
         
         # print any other error
+        await ctx.send(f"{type(error)} {error} {error.__traceback__}")
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
