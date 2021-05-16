@@ -116,7 +116,7 @@ class currency:
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
         cursor.execute("SELECT ? FROM ? WHERE user_id == ?", [cls.db_name, cls.table, user_id])
-        amount = cursor.fetchone()
+        amount = cursor.fetchone()[0]
         dbase.close()
         return amount
         
