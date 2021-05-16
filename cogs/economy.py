@@ -159,11 +159,13 @@ class Economy(commands.Cog):
         item_limit_per_page = 5 # for displaying a maximum number of items in the inventory
 
         user = member or ctx.author
+        await ctx.send("Hi")
 
         inv_embed = discord.Embed(
             title = f"{user.name}’s Inventory" ,
             colour = 0x00ff00
         )
+        await ctx.send("Hi")
 
         user_items = self.economy_items.copy() # will be left with items that the user has
         for name, item in user_items.items():
@@ -172,6 +174,7 @@ class Economy(commands.Cog):
                 del user_items[name]
             else:
                 user_items[name] = quantity
+        await ctx.send("Hi")
 
         for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)):
             inv_embed.add_field(
@@ -180,8 +183,10 @@ class Economy(commands.Cog):
                 inline = False
             )
 
+        await ctx.send("Hi")
         if inv_embed.fields == []:
             return await ctx.send(f"Page {page} doesn’t exist")
+        await ctx.send("Hi")
         
         total_pages = len(user_items) // item_limit_per_page + 1
         inv_embed.set_footer(text = f"Page {page} of {total_pages}")
@@ -196,7 +201,7 @@ class Economy(commands.Cog):
             return await ctx.send("You either specify a page or don't specify one at all")
         
         # print any other error
-        await ctx.send(f"{error}")
+        await ctx.send(f"{type(error)} {error}")
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
