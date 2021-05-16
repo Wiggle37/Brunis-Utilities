@@ -172,6 +172,7 @@ class Economy(commands.Cog):
                 del user_items[name]
             else:
                 user_items[name] = quantity
+        await ctx.send("Hi")
 
         for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)):
             inv_embed.add_field(
@@ -179,6 +180,7 @@ class Economy(commands.Cog):
                 value = f"**{self.beautify_number(item_count)}** owned",
                 inline = False
             )
+        await ctx.send("Hi")
 
         if inv_embed.fields == []:
             return await ctx.send(f"Page {page} doesn’t exist")
@@ -189,6 +191,7 @@ class Economy(commands.Cog):
 
     @inventory.error
     async def inv_error(self, ctx, error):
+        await ctx.send(f"{type(error)} {error}")
         if isinstance(error, commands.errors.MemberNotFound):
             return await ctx.send("That isn't a valid user")
         
@@ -196,7 +199,6 @@ class Economy(commands.Cog):
             return await ctx.send("You either specify a page or don't specify one at all")
         
         # print any other error
-        await ctx.send(f"{type(error)} {error}")
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
