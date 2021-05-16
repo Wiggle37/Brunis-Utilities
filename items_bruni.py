@@ -419,14 +419,14 @@ class wiggle(boxes):
     purchasable = False
 
 class bruni(boxes):
-    name = "Bruni",
-    description = "Really good box that can only be optianed on bruni's birthday",
-    image_url = "https://cdn.discordapp.com/attachments/784491141022220312/842934701470515240/bruni.gif",
-    emoji = "<:brunisculpture:834947443434061864>",
-    db_name = "bruni",
-    price = None,
+    name = "Bruni"
+    description = "Really good box that can only be optianed on bruni's birthday"
+    image_url = "https://cdn.discordapp.com/attachments/784491141022220312/842934701470515240/bruni.gif"
+    emoji = "<:brunisculpture:834947443434061864>"
+    db_name = "bruni"
+    price = None
     possible_items = {currency: [1000000, 15000000], emeraldBox: [1, 5], doughnut: [1, 3]}
-    table = "collectables",
+    table = "collectables"
     purchasable = False
 
 
@@ -443,4 +443,4 @@ economy_items = {}
 for i in items_classes:
     economy_items[i.name] = i
 
-#economy_items = dict(sorted(economy_items.items())) # sorts in alphabetical order
+economy_items = dict(sorted(economy_items.items())) # sorts in alphabetical order
