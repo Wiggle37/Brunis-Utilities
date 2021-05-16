@@ -1,11 +1,8 @@
-###Imports###
 import discord
 from discord import Activity, ActivityType, Color, Embed, User
 from discord.ext import commands
 from discord.ext.commands import Bot
-
 import asyncio
-
 import os
 from dotenv import load_dotenv
 
@@ -71,7 +68,6 @@ async def botping():
 client.loop.create_task(botping())
 client.loop.create_task(status())
 
-###Run Bot###
 load_dotenv()
 Bot_Token = os.getenv('BOT_TOKEN')
 client.run(Bot_Token)
