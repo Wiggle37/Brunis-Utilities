@@ -146,7 +146,7 @@ class Dono(commands.Cog):
         dank_merchants = self.client.get_guild(784491141022220309)
         for rank, user in enumerate(dank_donors):
             member = dank_merchants.get_member(int(user[0]))
-            donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
+            donor_info += f"**{rank + 1}. {member}**: `⏣{int('{:,}'.format(user[1]))}`\n"
 
         cursor.execute("SELECT user_id, money FROM donations ORDER BY money DESC")
         money_donors = cursor.fetchmany(3)
@@ -154,7 +154,7 @@ class Dono(commands.Cog):
         donor_info += "__**Real Money Donations**__\n"
         for rank, user in enumerate(money_donors):
             member = ctx.guild.get_member(int(user[0]))
-            donor_info += f"**{rank + 1}. {member}**: `${'{:,}'.format(user[1])}`\n"
+            donor_info += f"**{rank + 1}. {member}**: `${int('{:,}'.format(user[1]))}`\n"
 
         top_donors_embed.description=donor_info
         await ctx.send(embed=top_donors_embed)
