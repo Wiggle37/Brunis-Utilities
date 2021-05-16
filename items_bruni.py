@@ -415,13 +415,13 @@ class wiggle(boxes):
     db_name = "wiggle"
     price = None
     possible_items = {currency: [2500000,5000000], emeraldBox: [1,1]}
-    table = "collectibles"
+    table = "collectables"
     purchasable = False
 
 
 class bruni(boxes):
     name = "Bruni"
-    description = "Really good box that can only be optianed on bruni's birthday"
+    description = "Really good box that can only be obtained on bruni's birthday"
     image_url = "https://cdn.discordapp.com/attachments/784491141022220312/842934701470515240/bruni.gif"
     emoji = "<:brunisculpture:834947443434061864>"
     db_name = "bruni"
