@@ -27,6 +27,9 @@ class Economy(commands.Cog):
             
         except ValueError:
             return False
+    
+    def beautify_number(self, num):
+        return '{:,}'.format(num)
 
     '''
     DB Adder
@@ -108,16 +111,13 @@ class Economy(commands.Cog):
     '''
     #Balance
     @commands.command(aliases=['bal', 'money'])
-    async def balance(self, ctx, member: discord.Member = None):
-        if ctx.author.id != 531317158530121738:
-            return await ctx.send("There's a bug here for now...")
-        
+    async def balance(self, ctx, member: discord.Member = None):        
         user = member or ctx.author
         
         amount = self.currency.get_amount(user.id)
         bal_embed = discord.Embed(
             title = f"{user.name}'s balance",
-            description = f"**Balance:**\n{self.currency.emoji} {amount}",
+            description = f"**Balance:**\n{self.currency.emoji} {self.beautify_number(amount)}",
             colour = 0x00ff00
         )
         await ctx.send(embed = bal_embed)
@@ -128,7 +128,6 @@ class Economy(commands.Cog):
             return await ctx.send("That isn't a valid user")
         
         # print any other error
-        await ctx.send(f"{type(error)} {error} {error.__traceback__}")
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
