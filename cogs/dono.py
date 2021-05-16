@@ -78,7 +78,7 @@ class Dono(commands.Cog):
             2500000000: 824615522934849607, # 2.5 billion
             5000000000: 786610853033541632 # 5 billion
         }
-        
+
         roles_added = []
         for amount, role_id in donors_roles.items():
             if total < amount:
@@ -136,6 +136,7 @@ class Dono(commands.Cog):
 
         cursor.execute("SELECT user_id, total FROM donations ORDER BY total DESC")
         dank_donors = cursor.fetchmany(5)
+        print(dank_donors)
 
         top_donors_embed = discord.Embed(title="Top donors!", color=0x00ff00)
 
