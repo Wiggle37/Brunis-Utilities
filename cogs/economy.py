@@ -6,6 +6,7 @@ import sqlite3
 import random
 from datetime import datetime
 from items_bruni import economy_items, currency
+from itertools import islice
 import traceback
 import sys
 
@@ -172,7 +173,6 @@ class Economy(commands.Cog):
                 del user_items[name]
             else:
                 user_items[name] = quantity
-        await ctx.send("Hi")
 
         for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)):
             inv_embed.add_field(
