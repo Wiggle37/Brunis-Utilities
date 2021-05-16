@@ -154,226 +154,51 @@ class Economy(commands.Cog):
 
         dbase.close()
 
-    #Inventory
-    @commands.command(aliases=['inv'])
-    async def inventory(self, ctx, page=None, member: discord.Member=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
+    @commands.command(aliases=["inv"])
+    async def inventory(self, ctx, member: discord.Member = None, page: int = 1):
+        item_limit_per_page = 5 # for displaying a maximum number of items in the inventory
 
-        if member == None:
-            if page == '1' or page == None:
-                cursor.execute(f"SELECT woodbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-                woodbox = cursor.fetchone()
-                woodbox = (woodbox[0])
+        user = member or ctx.author
 
-                cursor.execute(f"SELECT ironbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-                ironbox = cursor.fetchone()
-                ironbox = (ironbox[0])
+        inv_embed = discord.Embed(
+            title = f"{user.name}’s Inventory" ,
+            colour = 0x00ff00
+        )
 
-                cursor.execute(f"SELECT goldbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-                goldbox = cursor.fetchone()
-                goldbox = (goldbox[0])
+        user_items = self.economy_items.copy() # will be left with items that the user has
+        for name, item in user_items.items():
+            quantity = item.get_amount(user.id)
+            if quantity == 0:
+                del user_items[name]
+            else:
+                user_items[name] = quantity
 
-                cursor.execute(f"SELECT diamondbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-                diamondbox = cursor.fetchone()
-                diamondbox = (diamondbox[0])
+        for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)):
+            inv_embed.add_field(
+                name = f"{self.economy_items[name].emoji} __{self.economy_items[name].name}__",
+                value = f"**{self.beautify_number(item_count)}** owned",
+                inline = False
+            )
 
-                cursor.execute(f"SELECT emeraldbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-                emeraldbox = cursor.fetchone()
-                emeraldbox = (emeraldbox[0])
+        if inv_embed.fields == []:
+            return await ctx.send(f"Page {page} doesn’t exist")
+        
+        total_pages = len(user_items) // item_limit_per_page + 1
+        inv_embed.set_footer(text = f"Page {page} of {total_pages}")
+        return await ctx.send(embed = inv_embed)
 
-                embed = discord.Embed(title=f'{ctx.author}s Inventory', description='Loot Boxes', color=0x00ff00)
-                embed.add_field(name=f'<:woodbox:830211928595890206> __Wooden Box__', value=f'**{woodbox}** owned', inline=False)
-                embed.add_field(name=f'<:ironbox:830197241934512188> __Iron Box__', value=f'**{ironbox}** owned', inline=False)
-                embed.add_field(name=f'<:goldbox:830197220405805147> __Gold Box__', value=f'**{goldbox}** owned', inline=False)
-                embed.add_field(name=f'<:diamondbox:830197220007477259> __Diamond Box__', value=f'**{diamondbox}** owned', inline=False)
-                embed.add_field(name=f'<:emeraldbox:830216613755486229> __Emerald Box__', value=f'**{emeraldbox}** owned', inline=False)
-                embed.set_footer(text='Page 1-4')
-                await ctx.send(embed=embed)
-
-            if page == '2':
-                cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{ctx.author.id}'")
-                doughnut = cursor.fetchone()
-                doughnut = (doughnut[0])
-
-                cursor.execute(f"SELECT brunisbackpack FROM multis WHERE user_id = '{ctx.author.id}'")
-                backpack = cursor.fetchone()
-                backpack = (backpack[0])
-
-                embed = discord.Embed(title=f'{ctx.author}s Inventory', description='Multipliers', color=0x00ff00)
-                embed.add_field(name=f'<:doughnut:831895771442839552> __Doughnut 5%__', value=f'**{doughnut}** owned', inline=False)
-                embed.add_field(name='<:brunisbackpack:834948572826828830> __Brunis Backpack 10%__', value=f'**{backpack}** owned', inline=False)
-                embed.set_footer(text='Page 2-4')
-                await ctx.send(embed=embed)
-
-            if page == '3':
-                    cursor.execute(f"SELECT wood FROM materials WHERE user_id = '{ctx.author.id}'")
-                    wood = cursor.fetchone()
-                    wood = (wood[0])
-
-                    cursor.execute(f"SELECT iron FROM materials WHERE user_id = '{ctx.author.id}'")
-                    iron = cursor.fetchone()
-                    iron = (iron[0])
-
-                    cursor.execute(f"SELECT gold FROM materials WHERE user_id = '{ctx.author.id}'")
-                    gold = cursor.fetchone()
-                    gold = (gold[0])
-
-                    cursor.execute(f"SELECT diamond FROM materials WHERE user_id = '{ctx.author.id}'")
-                    diamond = cursor.fetchone()
-                    diamond = (diamond[0])
-
-                    cursor.execute(f"SELECT emerald FROM materials WHERE user_id = '{ctx.author.id}'")
-                    emerald = cursor.fetchone()
-                    emerald = (emerald[0])
-
-                    embed = discord.Embed(title=f'{ctx.author}s Inventory', description='Materials', color=0x00ff00)
-                    embed.add_field(name=f'<:mwood:835262637851541555> __Wood__', value=f'**{wood}** owned', inline=False)
-                    embed.add_field(name='<:iron:834958446906441789> __Iron__', value=f'**{iron}** owned', inline=False)
-                    embed.add_field(name='<:gold:834958470955532338> __Gold__', value=f'**{gold}** owned', inline=False)
-                    embed.add_field(name='<:diamond:834958491315339294> __Diamond__', value=f'**{diamond}** owned', inline=False)
-                    embed.add_field(name='<:emerald:834958503369637941> __Emerald__', value=f'**{emerald}** owned', inline=False)
-                    embed.set_footer(text='Page 3-4')
-                    await ctx.send(embed=embed)
-                
-            if page == '4':
-                cursor.execute(f"SELECT woodpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                woodpick = cursor.fetchone()
-                woodpick = (woodpick[0])
-
-                cursor.execute(f"SELECT ironpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                ironpick = cursor.fetchone()
-                ironpick = (ironpick[0])
-
-                cursor.execute(f"SELECT goldpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                goldpick = cursor.fetchone()
-                goldpick = (goldpick[0])
-
-                cursor.execute(f"SELECT diamondpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                diamondpick = cursor.fetchone()
-                diamondpick = (diamondpick[0])
-
-                cursor.execute(f"SELECT emeraldpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                emeraldpick = cursor.fetchone()
-                emeraldpick = (emeraldpick[0])
-
-                embed = discord.Embed(title=f'{ctx.author}s Inventory', description='Materials', color=0x00ff00)
-                embed.add_field(name=f'<:woodpick:835505500035612772> __Wood Pickaxe__', value=f'**{woodpick}** owned', inline=False)
-                embed.add_field(name=f'<:ironpick:835505509716197437> __Iron Pickaxe__', value=f'**{ironpick}** owned', inline=False)
-                embed.add_field(name=f'<:goldpick:835505519468740608> __Gold Pickaxe__', value=f'**{goldpick}** owned', inline=False)
-                embed.add_field(name=f'<:diamondpick:835505528913264661> __Diamond Pickaxe__', value=f'**{diamondpick}** owned', inline=False)
-                embed.add_field(name=f'<:emeraldpick:835505536744161330> __Emerald Pickaxe__', value=f'**{emeraldpick}** owned', inline=False)
-                embed.set_footer(text='Page 4-4')
-                await ctx.send(embed=embed)
-            
-        else:
-            if page == '1' or page == None:
-                cursor.execute(f"SELECT woodbox FROM boxes WHERE user_id = '{member.id}'")
-                woodbox = cursor.fetchone()
-                woodbox = (woodbox[0])
-
-                cursor.execute(f"SELECT ironbox FROM boxes WHERE user_id = '{member.id}'")
-                ironbox = cursor.fetchone()
-                ironbox = (ironbox[0])
-
-                cursor.execute(f"SELECT goldbox FROM boxes WHERE user_id = '{member.id}'")
-                goldbox = cursor.fetchone()
-                goldbox = (goldbox[0])
-
-                cursor.execute(f"SELECT diamondbox FROM boxes WHERE user_id = '{member.id}'")
-                diamondbox = cursor.fetchone()
-                diamondbox = (diamondbox[0])
-
-                cursor.execute(f"SELECT emeraldbox FROM boxes WHERE user_id = '{member.id}'")
-                emeraldbox = cursor.fetchone()
-                emeraldbox = (emeraldbox[0])
-
-                embed = discord.Embed(title=f'{member}s Inventory', description='Loot Boxes', color=0x00ff00)
-                embed.add_field(name=f'<:woodbox:830211928595890206> __Wooden Box__', value=f'**{woodbox}** owned', inline=False)
-                embed.add_field(name=f'<:ironbox:830197241934512188> __Iron Box__', value=f'**{ironbox}** owned', inline=False)
-                embed.add_field(name=f'<:goldbox:830197220405805147> __Gold Box__', value=f'**{goldbox}** owned', inline=False)
-                embed.add_field(name=f'<:diamondbox:830197220007477259> __Diamond Box__', value=f'**{diamondbox}** owned', inline=False)
-                embed.add_field(name=f'<:emeraldbox:830216613755486229> __Emerald Box__', value=f'**{emeraldbox}** owned', inline=False)
-                embed.set_footer(text='Page 1-4')
-                await ctx.send(embed=embed)
-
-            if page == '2':
-                cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{member.id}'")
-                doughnut = cursor.fetchone()
-                doughnut = (doughnut[0])
-
-                cursor.execute(f"SELECT brunisbackpack FROM multis WHERE user_id = '{member.id}'")
-                backpack = cursor.fetchone()
-                backpack = (backpack[0])
-
-                embed = discord.Embed(title=f'{member.id}s Inventory', description='Multipliers', color=0x00ff00)
-                embed.add_field(name=f'<:doughnut:831895771442839552> __Doughnut 5%__', value=f'**{doughnut}** owned', inline=False)
-                embed.add_field(name='<:brunisbackpack:834948572826828830> __Brunis Backpack 10%__', value=f'**{backpack}** owned', inline=False)
-                embed.set_footer(text='Page 2-4')
-                await ctx.send(embed=embed)
-
-            if page == '3':
-                cursor.execute(f"SELECT wood FROM materials WHERE user_id = '{member.id}'")
-                wood = cursor.fetchone()
-                wood = (wood[0])
-
-                cursor.execute(f"SELECT iron FROM materials WHERE user_id = '{member.id}'")
-                iron = cursor.fetchone()
-                iron = (iron[0])
-
-                cursor.execute(f"SELECT gold FROM materials WHERE user_id = '{member.id}'")
-                gold = cursor.fetchone()
-                gold = (gold[0])
-
-                cursor.execute(f"SELECT diamond FROM materials WHERE user_id = '{member.id}'")
-                diamond = cursor.fetchone()
-                diamond = (diamond[0])
-
-                cursor.execute(f"SELECT emerald FROM materials WHERE user_id = '{member.id}'")
-                emerald = cursor.fetchone()
-                emerald = (emerald[0])
-
-                embed = discord.Embed(title=f'{member}s Inventory', description='Materials', color=0x00ff00)
-                embed.add_field(name=f'<:mwood:835262637851541555> __Wood__', value=f'**{wood}** owned', inline=False)
-                embed.add_field(name='<:iron:834958446906441789> __Iron__', value=f'**{iron}** owned', inline=False)
-                embed.add_field(name='<:gold:834958470955532338> __Gold__', value=f'**{gold}** owned', inline=False)
-                embed.add_field(name='<:diamond:834958491315339294> __Diamond__', value=f'**{diamond}** owned', inline=False)
-                embed.add_field(name='<:emerald:834958503369637941> __Emerald__', value=f'**{emerald}** owned', inline=False)
-                embed.set_footer(text='Page 3-4')
-                await ctx.send(embed=embed)
-
-            if page == '4':
-                cursor.execute(f"SELECT woodpick FROM tools WHERE user_id = '{member.id}'")
-                woodpick = cursor.fetchone()
-                woodpick = (woodpick[0])
-
-                cursor.execute(f"SELECT ironpick FROM tools WHERE user_id = '{member.id}'")
-                ironpick = cursor.fetchone()
-                ironpick = (ironpick[0])
-
-                cursor.execute(f"SELECT goldpick FROM tools WHERE user_id = '{member.id}'")
-                goldpick = cursor.fetchone()
-                goldpick = (goldpick[0])
-
-                cursor.execute(f"SELECT diamondpick FROM tools WHERE user_id = '{member.id}'")
-                diamondpick = cursor.fetchone()
-                diamondpick = (diamondpick[0])
-
-                cursor.execute(f"SELECT emeraldpick FROM tools WHERE user_id = '{member.id}'")
-                emeraldpick = cursor.fetchone()
-                emeraldpick = (emeraldpick[0])
-
-                embed = discord.Embed(title=f'{member}s Inventory', description='Materials', color=0x00ff00)
-                embed.add_field(name=f'<:woodpick:835505500035612772> __Wood Pickaxe__', value=f'**{woodpick}** owned', inline=False)
-                embed.add_field(name=f'<:ironpick:835505509716197437> __Iron Pickaxe__', value=f'**{ironpick}** owned', inline=False)
-                embed.add_field(name=f'<:goldpick:835505519468740608> __Gold Pickaxe__', value=f'**{goldpick}** owned', inline=False)
-                embed.add_field(name=f'<:diamondpick:835505528913264661> __Diamond Pickaxe__', value=f'**{diamondpick}** owned', inline=False)
-                embed.add_field(name=f'<:emeraldpick:835505536744161330> __Emerald Pickaxe__', value=f'**{emeraldpick}** owned', inline=False)
-                embed.set_footer(text='Page 4-4')
-                await ctx.send(embed=embed)
-
-        dbase.commit()
-        dbase.close()
+    @inventory.error
+    async def inv_error(self, ctx, error):
+        if isinstance(error, commands.errors.MemberNotFound):
+            return await ctx.send("That isn't a valid user")
+        
+        if isinstance(error, BadArgument):
+            return await ctx.send("You either specify a page or don't specify one at all")
+        
+        # print any other error
+        await ctx.send(f"{error}")
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     #Shop
     @commands.command(aliases=['store'])
