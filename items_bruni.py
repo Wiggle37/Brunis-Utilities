@@ -362,7 +362,7 @@ class woodenBox(boxes):
     description = "A basic wooden box that could find you some loot"
     image_url = "https://cdn.discordapp.com/emojis/830211928595890206.png?v=1"
     emoji = "<:woodbox:830211928595890206>"
-    db_name = "woodenbox"
+    db_name = "woodbox"
     price = 50000
     possible_items = {currency: [12500, 25000], apple: [0, 5]}
         
