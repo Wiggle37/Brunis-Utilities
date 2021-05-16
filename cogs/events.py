@@ -7,10 +7,10 @@ class Events(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+
     '''
     MEMBER EVENTS
     '''
-    
     #On Member Join(Message(Add Data Base))
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -84,12 +84,13 @@ class Events(commands.Cog):
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
+        message.lower()
         user = message.author
         if str(self.client.user.id) in message.content:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
 
-        if '<@!765322777329664089>' in message.content:
+        if '<@!824010269071507536>' in message.content:
             if not user.bot:
                 await message.channel.send('why you pong meh')
                 await message.add_reaction(emoji='<a:blob:829822719372951592>')
@@ -102,6 +103,9 @@ class Events(commands.Cog):
 
         if 'pls steal' in message.content:
             await message.channel.send('Just why are you dumb')
+
+        if 'dyno' in message.content:
+            await message.channel.send('gae')
 
     #Command Not Found
     @commands.Cog.listener()
