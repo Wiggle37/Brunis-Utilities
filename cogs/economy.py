@@ -157,7 +157,7 @@ class Economy(commands.Cog):
 
     @commands.command(aliases=["inv"])
     async def inventory(self, ctx, member: discord.Member = None, page: int = 1):
-        await ctx.send("There's a bug in here for now... ")
+        return await ctx.send("There's a bug in here for now... ")
         item_limit_per_page = 5 # for displaying a maximum number of items in the inventory
 
         user = member or ctx.author
