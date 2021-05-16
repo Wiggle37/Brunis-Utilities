@@ -180,7 +180,7 @@ class Economy(commands.Cog):
                 value = f"**{self.beautify_number(item_count)}** owned",
                 inline = False
             )
-        await ctx.send("Hi")
+        await ctx.send(str(dict(islice(user_items.items(), (page - 1) * 5, page *5))))
 
         if inv_embed.fields == []:
             return await ctx.send(f"Page {page} doesn’t exist")
