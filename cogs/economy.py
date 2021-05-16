@@ -167,7 +167,7 @@ class Economy(commands.Cog):
 
         user_items = self.items.copy() # will be left with items that the user has
         for name, item in user_items.items():
-            quantity = item.get_amount(user.id)
+            quantity = item.get_item_count(user.id)
             if quantity == 0:
                 del user_items[name]
             else:
