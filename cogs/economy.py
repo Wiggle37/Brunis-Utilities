@@ -159,34 +159,29 @@ class Economy(commands.Cog):
         item_limit_per_page = 5 # for displaying a maximum number of items in the inventory
 
         user = member or ctx.author
-        await ctx.send("Hi")
 
         inv_embed = discord.Embed(
             title = f"{user.name}’s Inventory" ,
             colour = 0x00ff00
         )
-        await ctx.send("Hi")
 
-        user_items = self.economy_items.copy() # will be left with items that the user has
+        user_items = self.items.copy() # will be left with items that the user has
         for name, item in user_items.items():
             quantity = item.get_amount(user.id)
             if quantity == 0:
                 del user_items[name]
             else:
                 user_items[name] = quantity
-        await ctx.send("Hi")
 
         for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)):
             inv_embed.add_field(
-                name = f"{self.economy_items[name].emoji} __{self.economy_items[name].name}__",
+                name = f"{self.items[name].emoji} __{self.items[name].name}__",
                 value = f"**{self.beautify_number(item_count)}** owned",
                 inline = False
             )
 
-        await ctx.send("Hi")
         if inv_embed.fields == []:
             return await ctx.send(f"Page {page} doesn’t exist")
-        await ctx.send("Hi")
         
         total_pages = len(user_items) // item_limit_per_page + 1
         inv_embed.set_footer(text = f"Page {page} of {total_pages}")
