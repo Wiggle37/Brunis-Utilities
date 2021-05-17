@@ -234,7 +234,7 @@ class gun(tools):
     price = 100000
     
 
-class fishingPole(tools):
+class fishingRod(tools):
     name = "Fishing Pole"
     description = "Have a nice peaceful time while fishing"
     image_url = "https://cdn.discordapp.com/emojis/836051493744148561.png?v=1"
@@ -435,7 +435,7 @@ items_classes = [
     woodenBox, ironBox, goldBox, diamondBox, emeraldBox,
     wiggle, bruni,
     wood, iron, gold, diamond, emerald,
-    woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingpole,
+    woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingRod,
     doughnut, brunisBackpack, 
     apple, duck, goose, chicken, smallFish, mediumFish, largeFish
 ]
