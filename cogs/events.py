@@ -14,73 +14,27 @@ class Events(commands.Cog):
     #On Member Join(Message(Add Data Base))
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        dbase = sqlite3.connect('settings.db')
-        cursor = dbase.cursor()
-
-        cursor.execute(f"SELECT user_id FROM whitelists WHERE user_id = '{member.id}'")
-        wl = cursor.fetchone()
-
         if member.guild.id == 784491141022220309:
-            client = self.client
             if time.time() - member.created_at.timestamp() < 1814400:
-                if wl is None:
-                    channel = await member.create_dm()
+                channel = await member.create_dm()
                     
-                    dm_embed = discord.Embed(title=f'You were banned from dank merchants', description=f'You were banned because your account was too young\nFill out [THIS](https://forms.gle/fZEuHNbpNH4LeJuPA) form to appeal and please state that you were banned because your account was too new', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
+                dm_embed = discord.Embed(title=f'You were banned from dank merchants', description=f'You were banned because your account was too young\nFill out [THIS](https://forms.gle/fZEuHNbpNH4LeJuPA) form to appeal and please state that you were banned because your account was too new', color=0x00ff00)
+                await channel.send(embed=dm_embed)
 
-                    reason = 'Account to young in age'
-                    await member.ban(reason=reason)
-                    await client.get_channel(784491141022220312).send(f'{member.mention} was banned\nReason: Account age to young')
-
-                else:
-                    join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
-                    join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for some info about how to get certain thing in the server and <#784547669619507201> for some self roles!')
-                    join_embed.add_field(name=f'__**User Info:**__', value=f'Date created: {member.created_at}\nUser ID: {member.id}', inline=False)
-                    await self.client.get_channel(784491141022220312).send(f'{member.mention}', embed=join_embed)
+                reason = 'Account to young in age'
+                await member.ban(reason=reason)
+                await self.client.get_channel(784491141022220312).send(f'{member.mention} was banned\nReason: Account age to young')
 
             else:
                 join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
-                join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for some info about how to get certain thing in the server and <#784547669619507201> for some self roles!')
+                join_embed.set_thumbnail(url=member.avatar_url)
+                join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\nAnd go get some roles in <#784547669619507201> to get notified when certain things happen\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and they will be there as soon as possible!')
                 join_embed.add_field(name=f'__**User Info:**__', value=f'Date created: {member.created_at}\nUser ID: {member.id}', inline=False)
                 await self.client.get_channel(784491141022220312).send(f'{member.mention}', embed=join_embed)
         
         else:
             pass
-
-        dbase.close()    
-
-    #On Member Remove(Data Base)
-    @commands.Cog.listener()
-    async def on_member_remove(self, member):
-        if member.guild.id == 784491141022220309:
-            user_id = member.id
-
-            #Dono
-            dbase = sqlite3.connect('dono.db')
-            cursor = dbase.cursor()
-
-            cursor.execute("DELETE FROM donations WHERE user_id = ?", [user_id])
-
-            print(f'{user_id} removed from dono db\n')
-
-            dbase.commit()
-            dbase.close()
-
-            #Economy
-            dbase = sqlite3.connect('economy.db')
-            cursor = dbase.cursor()
-
-            balance = 0
-
-            cursor.execute("DELETE FROM economy WHERE user_id = ?", [user_id])
-
-            dbase.commit()
-            dbase.close()
         
-        else:
-            return
-
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):

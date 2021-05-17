@@ -3,6 +3,8 @@ import discord
 from discord.ext import commands
 import sqlite3
 
+from discord.utils import to_json
+
 class Dono(commands.Cog):
 
     def __init__(self, client):
@@ -126,7 +128,8 @@ class Dono(commands.Cog):
         cursor.execute(f"SELECT gaw, heist, event, special, total, money FROM donations WHERE user_id = '{user.id}'")
         gaw, heist, event, special, total, money = map(self.beautify_numbers, cursor.fetchone())
 
-        donation_embed = discord.Embed(title="Donation Stats",color=0x7008C2)
+        donation_embed = discord.Embed(title="Donation Stats", color=0x7008C2)
+        donation_embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/827369094776356905/828079209623584818/dankmerchants.gif')
         donation_embed.add_field(name="User:", value = f"{user.mention}(User id: {user.id})", inline=False)
         donation_embed.add_field(name="__**✦ Normal Donations ✦**__", value="Dank Memer Donations", inline=False)
         donation_embed.add_field(name="Giveaway Donations:", value = f"⏣`{gaw}` donated for giveaways", inline=True)
@@ -137,9 +140,6 @@ class Dono(commands.Cog):
         donation_embed.add_field(name="Money Donations:", value = f"$`{money}` donated in real money", inline=True)
         donation_embed.add_field(name="__**Total Donations:**__", value = f"⏣`{total}` donated in total", inline=False)
         await ctx.send(embed=donation_embed)
-
-        amount = self.get_amount(ctx, member)
-        await ctx.send(amount)
 
     @dono.error
     async def dono_error(self, ctx, error):
@@ -187,32 +187,27 @@ class Dono(commands.Cog):
     async def gaw_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @gaw_dono_set.error
@@ -228,32 +223,27 @@ class Dono(commands.Cog):
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw + ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @gaw_dono_add.error
@@ -269,32 +259,27 @@ class Dono(commands.Cog):
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw - ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
+            amount = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @gaw_dono_remove.error
@@ -310,27 +295,22 @@ class Dono(commands.Cog):
     async def gaw_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
+        user = member.id
 
-        user = int(f'{member.id}')
-        amount = 0
-
-        cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw = ?;", [user, amount, amount])
-
+        cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [user, 0, 0])
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Set:** 0\n\n**Updated by: {ctx.author}**', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @gaw_dono_reset.error
@@ -349,32 +329,27 @@ class Dono(commands.Cog):
     async def heist_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThe have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @heist_dono_set.error
@@ -390,32 +365,27 @@ class Dono(commands.Cog):
     async def heist_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist + ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @heist_dono_add.error
@@ -431,32 +401,27 @@ class Dono(commands.Cog):
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist - ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @heist_dono_remove.error
@@ -472,27 +437,23 @@ class Dono(commands.Cog):
     async def heist_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         user = int(f'{member.id}')
-        amount = 0
 
-        cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist = ?;", [user, amount, amount])
+        cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist = ?;", [user, 0, 0])
 
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @heist_dono_reset.error
@@ -519,24 +480,20 @@ class Dono(commands.Cog):
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
+            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(amount)}")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @event_dono_set.error
@@ -552,25 +509,21 @@ class Dono(commands.Cog):
     async def event_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event + ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
@@ -593,25 +546,22 @@ class Dono(commands.Cog):
     async def event_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
+            user = member.id
 
             cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event - ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
@@ -634,27 +584,22 @@ class Dono(commands.Cog):
     async def event_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
+        user = member.id
 
-        user = int(f'{member.id}')
-        amount = 0
-
-        cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event = ?;", [user, amount, amount])
-
+        cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event = ?;", [user, 0, 0])
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @event_dono_reset.error
@@ -673,32 +618,27 @@ class Dono(commands.Cog):
     async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @special_dono_set.error
@@ -714,32 +654,27 @@ class Dono(commands.Cog):
     async def special_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special + ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @special_dono_add.error
@@ -755,32 +690,27 @@ class Dono(commands.Cog):
     async def special_dono_remove(self, ctx, member: discord.Member, amount: int=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special - ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @special_dono_remove.error
@@ -796,20 +726,16 @@ class Dono(commands.Cog):
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
+        user = member.id
 
-        user = int(f'{member.id}')
-        amount = 0
-
-        cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special = ?;", [user, amount, amount])
-
+        cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special = ?;", [user, 0, 0])
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣{amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
@@ -834,18 +760,15 @@ class Dono(commands.Cog):
     async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
+            user = member.id
 
             cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
@@ -861,7 +784,6 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @money_dono_set.error
@@ -877,18 +799,15 @@ class Dono(commands.Cog):
     async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
+            user = member.id
 
             cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money + ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
@@ -897,14 +816,11 @@ class Dono(commands.Cog):
             amount = ('{:,}'.format(amount))
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **${amount}**")
 
-            await self.roles(ctx, member)
-
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @money_dono_add.error
@@ -920,19 +836,14 @@ class Dono(commands.Cog):
     async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
-
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            user = int(f'{member.id}')
-            amount = int(f'{amount}')
-
+            user = member.id
             cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money - ?;", [user, amount, amount])
-
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
@@ -946,7 +857,6 @@ class Dono(commands.Cog):
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @money_dono_remove.error
@@ -962,28 +872,22 @@ class Dono(commands.Cog):
     async def money_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         self.get_user(ctx, member)
+        user = member.id
 
-        user = int(f'{member.id}')
-        amount = 0
-
-        cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money = ?;", [user, amount, amount])
-
+        cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money = ?;", [user, 0, 0])
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-        amount = ('{:,}'.format(amount))
-        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **${amount}**")
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **$0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.commit()
         dbase.close()
-
         await self.roles(ctx, member)
 
     @money_dono_reset.error
