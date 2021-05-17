@@ -43,7 +43,7 @@ class Dono(commands.Cog):
             return False
 
     #Get Amount
-    async def get_amount(self, ctx, member: discord.Member):
+    def get_amount(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
 
