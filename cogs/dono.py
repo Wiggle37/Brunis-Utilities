@@ -15,15 +15,13 @@ class Dono(commands.Cog):
     async def init(self, ctx):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         user = ctx.author.id
-        amount = 0
 
         cursor.execute(f"SELECT user_id FROM donations WHERE user_id = '{ctx.author.id}'")
         result = cursor.fetchone()
 
         if result is None:
-            cursor.execute("INSERT INTO donations (user_id, total) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET total = total + ?;", [user, amount, amount])
+            cursor.execute("INSERT INTO donations (user_id, total) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET total = total + ?;", [user, 0, 0])
             await ctx.send('Added to database!')
 
         else:
@@ -122,7 +120,6 @@ class Dono(commands.Cog):
     async def dono(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect("dono.db")
         cursor = dbase.cursor()
-        
         user = member or ctx.author
 
         cursor.execute(f"SELECT gaw, heist, event, special, total, money FROM donations WHERE user_id = '{user.id}'")
@@ -153,7 +150,6 @@ class Dono(commands.Cog):
 
         cursor.execute("SELECT user_id, total FROM donations ORDER BY total DESC")
         dank_donors = cursor.fetchmany(5)
-        print(dank_donors)
 
         top_donors_embed = discord.Embed(title="Top donors!", color=0x00ff00)
 
@@ -200,13 +196,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -236,13 +233,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -272,13 +270,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -304,12 +303,13 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+        dbase.commit()
+
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Set:** 0\n\n**Updated by: {ctx.author}**', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -342,13 +342,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThe have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -378,13 +379,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -414,13 +416,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -447,12 +450,13 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+        dbase.commit()
+
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -487,12 +491,13 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(amount)}")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -522,13 +527,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
 
         await self.roles(ctx, member)
@@ -553,12 +559,13 @@ class Dono(commands.Cog):
 
         else:
             user = member.id
-
             cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event - ?;", [user, amount, amount])
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+
+            dbase.commit()
 
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**")
@@ -566,7 +573,6 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
 
         await self.roles(ctx, member)
@@ -593,12 +599,13 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+        dbase.commit()
+
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -631,13 +638,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -667,13 +675,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -703,13 +712,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -735,12 +745,13 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+        dbase.commit()
+
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
 
         await self.roles(ctx, member)
@@ -774,6 +785,8 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             amount = ('{:,}'.format(amount))
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **${amount}**")
 
@@ -782,7 +795,6 @@ class Dono(commands.Cog):
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -813,13 +825,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             amount = ('{:,}'.format(amount))
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **${amount}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -849,13 +862,14 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+            dbase.commit()
+
             amount = ('{:,}'.format(amount))
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **${amount}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
@@ -881,12 +895,13 @@ class Dono(commands.Cog):
         message = ctx.message
         await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
+        dbase.commit()
+
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **$0**")
 
         embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
         await self.client.get_channel(838440247507288095).send(embed=embed)
 
-        dbase.commit()
         dbase.close()
         await self.roles(ctx, member)
 
