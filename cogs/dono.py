@@ -1,9 +1,8 @@
-from functools import total_ordering
-from os import curdir
 import discord
 from discord.ext import commands
 import sqlite3
-
+from functools import total_ordering
+from os import curdir
 from discord.utils import to_json
 
 class Dono(commands.Cog):
