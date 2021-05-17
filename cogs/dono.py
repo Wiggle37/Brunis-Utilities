@@ -1,3 +1,4 @@
+from os import curdir
 import discord
 from discord.ext import commands
 import sqlite3
@@ -40,6 +41,16 @@ class Dono(commands.Cog):
             
         except ValueError:
             return False
+
+    #Get Amount
+    async def get_amount(self, ctx, member: discord.Member):
+        dbase = sqlite3.connect('dono.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT total FROM donations WHERE user_id = '{member.id}'")
+        return cursor.fetchone()[0]
+
+        dbase.close()
 
     #Get User
     def get_user(self, ctx, member: discord.Member):
@@ -123,6 +134,9 @@ class Dono(commands.Cog):
         donation_embed.add_field(name="Money Donations:", value = f"$`{money}` donated in real money", inline=True)
         donation_embed.add_field(name="__**Total Donations:**__", value = f"⏣`{total}` donated in total", inline=False)
         await ctx.send(embed=donation_embed)
+
+        amount = self.get_amount(ctx, member)
+        await ctx.send(amount)
 
     @dono.error
     async def dono_error(self, ctx, error):
