@@ -49,7 +49,7 @@ class Dono(commands.Cog):
 
         member = (member or ctx.author).id
 
-        cursor.execute(f"SELECT total FROM donations WHERE user_id = '{member.id}'")
+        cursor.execute(f"SELECT total FROM donations WHERE user_id = '{member}'")
         amount = cursor.fetchone()[0]
         return amount
 
@@ -143,7 +143,7 @@ class Dono(commands.Cog):
 
     @dono.error
     async def dono_error(self, ctx, error):
-        await ctx.send(f'There was and error\nError: `{error}`')
+        await ctx.send(f'There was an error\nError: `{error}`')
 
     #Top Donators
     @commands.command()
