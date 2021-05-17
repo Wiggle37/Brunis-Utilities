@@ -47,6 +47,8 @@ class Dono(commands.Cog):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
 
+        member = (member or ctx.author).id
+
         cursor.execute(f"SELECT total FROM donations WHERE user_id = '{member.id}'")
         amount = cursor.fetchone()[0]
         return amount
