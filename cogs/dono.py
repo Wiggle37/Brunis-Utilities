@@ -48,7 +48,8 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
 
         cursor.execute(f"SELECT total FROM donations WHERE user_id = '{member.id}'")
-        return cursor.fetchone()[0]
+        amount = cursor.fetchone()[0]
+        return amount
 
         dbase.close()
 
