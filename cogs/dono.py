@@ -1,3 +1,4 @@
+from functools import total_ordering
 from os import curdir
 import discord
 from discord.ext import commands
@@ -272,8 +273,8 @@ class Dono(commands.Cog):
             message = ctx.message
             await message.add_reaction(emoji='<a:check~1:828448588488769588>')
 
-            amount = self.get_amount(ctx, member)
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **")
+            total = self.get_amount(ctx, member)
+            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
