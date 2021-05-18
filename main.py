@@ -5,6 +5,10 @@ from discord.ext.commands import Bot
 import asyncio
 import os
 from dotenv import load_dotenv
+import git 
+
+repo = git.Repo(r"C:\Users\Miste\Documents\GitHub\Brunis-Utilities")
+repo.remotes.origin.pull()
 
 ###Bot###
 intents = discord.Intents.default()
