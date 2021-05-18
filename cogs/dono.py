@@ -56,13 +56,12 @@ class Dono(commands.Cog):
         dbase.close()
 
     #Get User
-    def get_user(self, ctx, member: discord.Member):
+    def get_user(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
-
         user = (member or ctx.author).id
 
-        cursor.execute(f"SELECT user_id FROM donations WHERE user_id = '{member.id}'")
+        cursor.execute(f"SELECT user_id FROM donations WHERE user_id = '{user}'")
         result = cursor.fetchone()
 
         if result is None:
@@ -122,6 +121,8 @@ class Dono(commands.Cog):
         cursor = dbase.cursor()
         user = member or ctx.author
 
+        self.get_user(ctx, user)
+
         cursor.execute(f"SELECT gaw, heist, event, special, total, money FROM donations WHERE user_id = '{user.id}'")
         gaw, heist, event, special, total, money = map(self.beautify_numbers, cursor.fetchone())
 
@@ -140,7 +141,11 @@ class Dono(commands.Cog):
 
     @dono.error
     async def dono_error(self, ctx, error):
-        await ctx.send(f'There was an error\nError: `{error}`')
+        if error == "Command raised an exception: TypeError: 'NoneType' object is not iterable":
+            await ctx.send('Use the command `b!init` to be added to the db, sorry for the error')
+
+        else:
+            await ctx.send(f'There was an error\nError: `{error}`\nPlease dm Wiggle so he can fix it')
 
     #Top Donators
     @commands.command()
