@@ -9,6 +9,7 @@ from items_bruni import economy_items, currency
 from itertools import islice
 import traceback
 import sys
+import typing
 
 class Economy(commands.Cog):
 
@@ -156,8 +157,7 @@ class Economy(commands.Cog):
         dbase.close()
 
     @commands.command(aliases=["inv"])
-    async def inventory(self, ctx, member: discord.Member = None, page: int = 1):
-        return await ctx.send("There's a bug in here for now... ")
+    async def inventory(self, ctx, member: typing.Optional[discord.Member] = None, page: typing.Optional[int] = 1):
         item_limit_per_page = 5 # for displaying a maximum number of items in the inventory
 
         user = member or ctx.author
@@ -175,33 +175,22 @@ class Economy(commands.Cog):
             else:
                 user_items[name] = quantity
 
-        for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)):
+        for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)).items():
             inv_embed.add_field(
                 name = f"{self.items[name].emoji} __{self.items[name].name}__",
                 value = f"**{self.beautify_number(item_count)}** owned",
                 inline = False
             )
-        await ctx.send(str(dict(islice(user_items.items(), (page - 1) * 5, page *5))))
-
+            
         if inv_embed.fields == []:
+            if page == 1:
+                return await ctx.send("You don't have any items!")
+            
             return await ctx.send(f"Page {page} doesn’t exist")
         
         total_pages = len(user_items) // item_limit_per_page + 1
         inv_embed.set_footer(text = f"Page {page} of {total_pages}")
         return await ctx.send(embed = inv_embed)
-
-    @inventory.error
-    async def inv_error(self, ctx, error):
-        await ctx.send(f"{type(error)} {error}")
-        if isinstance(error, commands.errors.MemberNotFound):
-            return await ctx.send("That isn't a valid user")
-        
-        if isinstance(error, BadArgument):
-            return await ctx.send("You either specify a page or don't specify one at all")
-        
-        # print any other error
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     #Shop
     @commands.command(aliases=['store'])
