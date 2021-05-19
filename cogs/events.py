@@ -43,7 +43,7 @@ class Events(commands.Cog):
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
 
-        if '<@!824010269071507536>' in message.content or 'wiggle' in message.content:
+        if 'wiggle' in message.content:
             if not user.bot:
                 await message.channel.send('leave me alone i quit for now')
                 await message.add_reaction(emoji='<a:blob:829822719372951592>')
