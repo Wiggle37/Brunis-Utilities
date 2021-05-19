@@ -45,7 +45,7 @@ class Events(commands.Cog):
 
         if 'wiggle' in message.content:
             if not user.bot:
-                await message.channel.send('leave me alone i quit for now')
+                await message.channel.send('why you pong meh')
                 await message.add_reaction(emoji='<a:blob:829822719372951592>')
 
             else:
