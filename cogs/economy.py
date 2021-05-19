@@ -193,125 +193,67 @@ class Economy(commands.Cog):
         return await ctx.send(embed = inv_embed)
 
     #Shop
-    @commands.command(aliases=['store'])
-    async def shop(self, ctx, item=None):
-        #Page 1
-        if item == '1' or item is None:
-            embed = discord.Embed(title='Dank Merchants Shop', description='__**Shop Items:**__\n\n<:woodbox:830211928595890206> **Wood Loot Box** - <:dankmerchants:829809749058650152> 50,000\n\n<:ironbox:830197241934512188> **Iron Loot Box** - <:dankmerchants:829809749058650152> 100,000\n\n<:goldbox:830197220405805147> **Gold Loot Box** - <:dankmerchants:829809749058650152> 250,000\n\n<:diamondbox:830197220007477259> **Diamond Loot Box** - <:dankmerchants:829809749058650152> 500,000\n\n<:emeraldbox:830216613755486229> **Emerald Loot Box** - <:dankmerchants:829809749058650152> 1,000,000', color=0x00ff00)
-            embed.set_footer(text='Page 1-1')
-            await ctx.send(embed=embed)
+    @commands.command(aliases = ["store"])
+    async def shop(self, ctx, page: typing.Optional[int], *, item_name = None):
+        if page is None and item_name is None:
+            return await self.shop(ctx, 1)
 
-        '''
-        Boxes
-        '''
-        if item == 'woodbox' or item == 'wooden' or item == 'wdb':
-            embed = discord.Embed(title='Wooden Box', description='A basic wooden box that could find you some loot', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/830211928595890206.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **50,000**')
-            await ctx.send(embed=embed)
+        if page is not None:
+            is_item = False
+        
+        elif item_name is not None:
+            is_item = True
+        
+        if page <= 0:
+            return await ctx.send("You need to key in a valid page")
 
-        if item == 'ironbox' or item == 'irb':
-            embed = discord.Embed(title='Iron Box', description='A solid iron box probally has some good stuff in it', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/830197241934512188.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **100,000**')
-            await ctx.send(embed=embed)
+        for name, item in self.items.items():
+            if not is_item:
+                break
 
-        if item == 'goldbox' or item == 'gdb':
-            embed = discord.Embed(title='Gold Box', description='A solid gold box that must have good loot', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/830197220405805147.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **250,000**')
-            await ctx.send(embed=embed)
+            if item_name.lower().replace(" ", "") not in name.lower().replace(" ", ""):
+                continue
 
-        if item == 'diamondbox' or item == 'dib':
-            embed = discord.Embed(title='Diamond Box', description='A solid diamond box that is bound to have good loot', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/830197220007477259.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **500,000**')
-            await ctx.send(embed=embed)
+            item_info_embed = discord.Embed(
+                title = f"{item.name} ({self.beautify_number(item.get_item_count(ctx.author.id))} owned)",
+                description = item.description,
+                colour = 0x00ff00
+            )
+            
+            item_info_embed.add_field(
+                name = "Buy: ",
+                value = item.purchasable * f"{self.currency.emoji} **{self.beautify_number(item.price)}**" + (not item.purchasable) * "This item cannot be bought",
+                inline = False
+            )
 
-        if item == 'emeraldbox' or item == 'emb':
-            embed = discord.Embed(title='Emerald Box', description='The best box of them all that will have the best loot', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/830216613755486229.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **1,000,000**')
-            await ctx.send(embed=embed)
+            item_info_embed.add_field(
+                name = "Sell: ",
+                value = item.sellable * f"{self.currency.emoji} **{self.beautify_number(item.sell_price)}**" + (not item.sellable) * "This item cannot be sold",
+                inline = False
+            )
 
-        '''
-        Resources
-        '''
-        if item == 'wood' or item == 'woo':
-            embed = discord.Embed(title='Wood', description='Wood can be used for many things', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/835262637851541555.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **NONE**')
-            await ctx.send(embed=embed)
+            item_info_embed.set_thumbnail(url = item.image_url)
+            return await ctx.send(embed = item_info_embed)
+        
+        purchasable_items = [item for name,item in self.items.items() if item.purchasable]
 
-        if item == 'iron' or item == 'iro':
-            embed = discord.Embed(title='Iron', description='Used to make medal could probally sell for some money', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/834958446906441789.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **NONE**')
-            await ctx.send(embed=embed)
+        item_limit_per_page = 5
+        pages_of_shop = len(purchasable_items) // item_limit_per_page + 1
 
-        if item == 'gold' or item == 'gol':
-            embed = discord.Embed(title='Gold', description='A pretty expensive mineral', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/834958470955532338.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **NONE**')
-            await ctx.send(embed=embed)
+        if page > pages_of_shop:
+            return await ctx.send("That's not a valid page number")
 
-        if item == 'diamond' or item == 'dia':
-            embed = discord.Embed(title='Diamond', description='A blue gem worth some money', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/834958491315339294.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **NONE**')
-            await ctx.send(embed=embed)
+        shop_embed = discord.Embed(
+            title = "Dank Merchants Shop",
+            description = "__**Shop Items:**__\n\n",
+            colour = 0x00ff00
+        )
 
-        if item == 'emerald' or item == 'eme':
-            embed = discord.Embed(title='Emerald', description='A green gem worth a bit of money', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/834958503369637941.png?v')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **NONE**')
-            await ctx.send(embed=embed)
+        for item in purchasable_items[(page - 1) * item_limit_per_page: page * item_limit_per_page]:
+            shop_embed.descripton += f"{item.emoji} **{item.name}** - {self.currency.emoji} {self.beautify_number(item.price)}\n\n"
+        shop_embed.set_footer(text = f"Page {page} of {pages_of_shop}")
 
-        '''
-        Tools
-        '''
-        if item == 'woodpick' or item == 'wdp':
-            embed = discord.Embed(title='Wooden Pickaxe', description='The most basic pickaxe you have ever seen', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/835505500035612772.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **10,000**')
-            await ctx.send(embed=embed)
-
-        if item == 'ironpick' or item == 'irp':
-            embed = discord.Embed(title='Iron Pickaxe', description='An entry level pickaxe', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/835505509716197437.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **50,000**')
-            await ctx.send(embed=embed)
-
-        if item == 'goldpick' or item == 'gdp':
-            embed = discord.Embed(title='Gold Pickaxe', description='A very fast pickaxe', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/835505519468740608.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **100,000**')
-            await ctx.send(embed=embed)
-
-        if item == 'diamondpick' or item == 'dmp':
-            embed = discord.Embed(title='Diamond Pickaxe', description='One of the best pickaxes', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/835505528913264661.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **250,000**')
-            await ctx.send(embed=embed)
-
-        if item == 'emeraldpick' or item == 'edp':
-            embed = discord.Embed(title='Emerald Pickaxe', description='The best of the pickaxes', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/835505536744161330.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **500,000**')
-            await ctx.send(embed=embed)
-
-        if item == 'gun':
-            embed = discord.Embed(title='Gun', description='You can use it to go hunting', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/836051483224309790.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **100,000**')
-            await ctx.send(embed=embed)
-
-        if item == 'fishingrod' or item == 'fishingpole' or item == 'fishrod' or item == 'fsd' or item == 'pole':
-            embed = discord.Embed(title='Emerald Pickaxe', description='Have a nice peaceful time while fishing', color=0x00ff00)
-            embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/836051493744148561.png?v=1')
-            embed.add_field(name='Buy:', value='<:dankmerchants:829809749058650152> **75,000**')
-            await ctx.send(embed=embed)
-
+        return await ctx.send(embed = shop_embed)
     #Buy
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
