@@ -9,39 +9,39 @@ from discord.utils import to_json
 General Donation Commands:
 --- Commands for the general public for donations ---
 
-| Command |     | Permissions |     | Description |
-- b!dono    --- [             ] --- Check how much you or someone else has donated
-- b!top     --- [             ] --- Check the top donators for the server in DMC and real money
-- b!init    --- [             ] --- If you are not added into the database add yourself and yourself only into he database
+| Command |     | Description |
+- b!dono    --- how much you or someone else has donated
+- b!top     --- Check the top donators for the server in DMC and real money
+- b!init    --- If you are not added into the database add yourself and yourself only into he database
 
 Donations Management Commands:
 --- Bruni and Bot Dev bypass all requirements for below commands ---
 
-| Command |      | Permissions |
-- b!gda      --- [             ]
-- b!gdr      --- [             ]
-- b!gds      --- [             ]
-- b!gdrs     --- [             ]
+| Command |
+- b!gda
+- b!gdr
+- b!gds
+- b!gdrs
 
-- b!hda      --- [             ]
-- b!hdr      --- [             ]
-- b!hds      --- [             ]
-- b!hdrs     --- [             ]
+- b!hda
+- b!hdr
+- b!hds 
+- b!hdrs
 
-- b!eda      --- [             ]
-- b!edr      --- [             ]
-- b!eds      --- [             ]
-- b!edrs     --- [             ]
+- b!eda
+- b!edr
+- b!eds
+- b!edrs
 
-- b!sda      --- [             ]
-- b!sdr      --- [             ]
-- b!sds      --- [             ]
-- b!sdrs     --- [             ]
+- b!sda
+- b!sdr
+- b!sds
+- b!sdrs
 
-- b!mda      --- [             ]
-- b!mdr      --- [             ]
-- b!mds      --- [             ]
-- b!mdrs     --- [             ]
+- b!mda
+- b!mdr
+- b!mds
+- b!mdrs
 '''
 
 class Dono(commands.Cog):

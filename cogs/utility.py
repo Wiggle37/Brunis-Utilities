@@ -38,7 +38,7 @@ class Utility(commands.Cog):
         else:
             await ctx.message.delete()
             embed = discord.Embed(title=f'Giveaway Donated By {sponser}!', description=f'Message: {msg}', color=0x00ff00)
-            embed.add_field(name='More info:', value=f'Make sure to thank {sponser.mention} in <#784491141022220312> and go to <#785154861922254848> to donate for giveaways and for heists go to <#818269054103978004>')
+            embed.add_field(name='More info:', value=f'- Make sure to thank {sponser.mention} in <#784491141022220312>\n- Go to <#785154861922254848> to donate for giveaways\n- Go to <#818269054103978004> to donate for heists')
             embed.set_thumbnail(url='https://dm0qx8t0i9gc9.cloudfront.net/thumbnails/video/uh59Wh0/stacks-of-money-with-coins-cartoon-illustration-hand-drawn-animation-transparent-cartoon-illustration-hand-drawn-animation-transparent_s289_zlf_thumbnail-1080_07.png')
             await ctx.send('<@&785930653665067038>', embed=embed)
 
