@@ -174,6 +174,9 @@ class Economy(commands.Cog):
                 del user_items[name]
             else:
                 user_items[name] = quantity
+        
+        if user_items == {}:
+            return await ctx.send("You don't have any items!")
 
         for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)).items():
             inv_embed.add_field(
@@ -182,10 +185,7 @@ class Economy(commands.Cog):
                 inline = False
             )
             
-        if inv_embed.fields == []:
-            if page == 1:
-                return await ctx.send("You don't have any items!")
-            
+        if inv_embed.fields == []:            
             return await ctx.send(f"Page {page} doesn’t exist")
         
         total_pages = len(user_items) // item_limit_per_page + 1
