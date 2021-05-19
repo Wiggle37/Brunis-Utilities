@@ -86,17 +86,12 @@ class BumpTracker(commands.Cog):
     async def bumps(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bump.db')
         cursor = dbase.cursor()
-        
         user = (member or ctx.author).id
-
         cursor.execute(f"INSERT INTO bumps (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
-
         cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user}'")
         bump = cursor.fetchone()[0]
-
         cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
         total = cursor.fetchone()[0]
-
         user = await ctx.guild.fetch_member(user)
 
         if bump == 0:
@@ -116,7 +111,30 @@ class BumpTracker(commands.Cog):
             embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
             await ctx.send(embed=embed)
         
-        dbase.commit()
+        dbase.close()
+
+    #Top
+    @commands.command()
+    async def topbumps(self, ctx):
+        dbase = sqlite3.connect("bump.db")
+        cursor = dbase.cursor()
+
+        cursor.execute("SELECT user_id, bump FROM bumps ORDER BY bump DESC")
+        bumpers = cursor.fetchmany(10)
+
+        top_bumpers_embed = discord.Embed(title="Top Bumpers", color=0x00ff00)
+
+        bumper_info = ""
+
+        bumper_info += "__**Server Bumps Leader board**__\n"
+        dank_merchants = self.client.get_guild(784491141022220309)
+        for rank, user in enumerate(bumpers):
+            member = dank_merchants.get_member(int(user[0]))
+            bumper_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
+        
+        top_bumpers_embed.description=bumper_info
+        await ctx.send(embed=top_bumpers_embed)
+
         dbase.close()
 
 def setup(client):
