@@ -178,6 +178,8 @@ class Dono(commands.Cog):
         donation_embed.add_field(name="__**Total Donations:**__", value = f"⏣`{total}` donated in total", inline=False)
         await ctx.send(embed=donation_embed)
 
+        dbase.close()
+
     @dono.error
     async def dono_error(self, ctx, error):
         if error == "Command raised an exception: TypeError: 'NoneType' object is not iterable":
