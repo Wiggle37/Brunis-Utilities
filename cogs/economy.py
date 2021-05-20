@@ -259,213 +259,35 @@ class Economy(commands.Cog):
     #Buy
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def buy(self, ctx, item=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
+    async def buy(self, ctx, count: int, *, item_name):
+        if count <= 0:
+            return await ctx.send("You need to key in an valid amount, dummy")       
 
-        client = self.client
-        member = ctx.author
-        user = ctx.author.id
+        purchasable_items = [name for name, item_class in self.items.items() if item_class.purchasable]
 
-        item.lower()
+        for name in purchasable_items:
+            if item_name.lower().replace(" ", "") not in name.lower().replace(" ", ""):
+                continue
 
-        cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        bal = (result[0])
+            if self.currency.get_amount(ctx.author.id) < self.items[name].price * count:
+                return await ctx.send("You don't have enough money for that LMAO")
 
-        if item == None:
-            await ctx.send('You actully have to name a item to buy it (0)_(0)')
+            self.items[name].purchase_items(ctx.author.id, count)
+            return await ctx.send(f"Bought {count} {name}, paid {self.currency.emoji} {self.items[name].price * count}")
         
-        '''
-        EXCLUSIVE ITEMS
-        '''
-        date = str(datetime.now())[5:10]
-
-        if item == 'bruni' or item == 'brunibox' or item == 'brunisbox':
-            if date == '08-22':
-                await ctx.send("Congrats! You guessed bruni's birthday correct and you got some stuff for her birthday!\nBruni's Box: `1`")
-
-            else:
-                await ctx.send(f"Nope! It is not bruni's birthday")
-
-
-        if item == 'wiggle' or item == 'wigglebox' or item == 'wigglesbox':
-            if date == '03-07':
-                await ctx.send("Congrats! You guessed Wiggle's birthday correct and you got some stuff for his birthday!\nBruni's Box: `1`")
-
-            else:
-                await ctx.send(f"Nope! It is not Wiggle's birthday")
-
-        '''
-        BOXES
-        '''
-        if item == 'wooden' or item == 'wood' or item == 'woo':
-            if bal >= 50000:
-                amount = 50000
-                box = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox + ?;", [user, box, box])
-
-                await ctx.send('Enjoy your wooden box')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'iron' or item == 'iro':
-            if bal >= 100000:
-                amount = 100000
-                box = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox + ?;", [user, box, box])
-
-                await ctx.send('Enjoy your iron box')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'gold' or item == 'gol':
-            if bal >= 250000:
-                amount = 250000
-                box = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox + ?;", [user, box, box])
-
-                await ctx.send('Enjoy your gold box')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'diamond' or item == 'dia':
-            if bal >= 500000:
-                amount = 500000
-                box = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox + ?;", [user, box, box])
-
-                await ctx.send('Enjoy your diamond box')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'emerald' or item == 'eme':
-            if bal >= 1000000:
-                amount = 1000000
-                box = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox + ?;", [user, box, box])
-
-                await ctx.send('Enjoy your emerald box')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        '''
-        TOOLS
-        '''
-        if item == 'woodpick' or item == 'wdp':
-            if bal >= 10000:
-                amount = 10000
-                pick = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO tools (user_id, woodpick) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodpick = woodpick + ?;", [user, pick, pick])
-
-                await ctx.send('Enjoy wood pickaxe')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'ironpick' or item == 'irp':
-            if bal >= 50000:
-                amount = 50000
-                pick = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO tools (user_id, ironpick) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironpick = ironpick + ?;", [user, pick, pick])
-
-                await ctx.send('Enjoy iron pickaxe')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'goldpick' or item == 'gdp':
-            if bal >= 100000:
-                amount = 100000
-                pick = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO tools (user_id, goldpick) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldpick = goldpick + ?;", [user, pick, pick])
-
-                await ctx.send('Enjoy gold pickaxe')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'diamondpick' or item == 'dmp':
-            if bal >= 250000:
-                amount = 250000
-                pick = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO tools (user_id, diamondpick) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondpick = diamondpick + ?;", [user, pick, pick])
-
-                await ctx.send('Enjoy diamond pickaxe')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'emeraldpick' or item == 'edp':
-            if bal >= 500000:
-                amount = 500000
-                pick = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO tools (user_id, emeraldpick) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldpick = emeraldpick + ?;", [user, pick, pick])
-
-                await ctx.send('Enjoy emerald pickaxe')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'gun':
-            if bal >= 100000:
-                amount = 100000
-                gun = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO tools (user_id, gun) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gun = gun + ?;", [user, gun, gun])
-
-                await ctx.send('Enjoy gun')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        if item == 'fishingrod' or item == 'fishingpole' or item == 'fishrod' or item == 'fsd' or item == 'pole':
-            if bal >= 75000:
-                amount = 75000
-                pole = 1
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                cursor.execute("INSERT INTO tools (user_id, gun) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gun = gun + ?;", [user, pole, pole])
-
-                await ctx.send('Enjoy fishing pole')
-
-            else:
-                await ctx.send('You dont have enough money to buy that!')
-
-        dbase.commit()
-        dbase.close()
+        return await ctx.send("That wasn't a valid item to buy")
 
     @buy.error
     async def buy_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
-            await ctx.send(embed=embed)
+            return await ctx.send(embed=embed)
+        
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            return await ctx.send("It's `b!buy <amount> <item>`")
+        
+        if isinstance(error, commands.errors.BadArgument):
+            return await ctx.send("You need to key in an amount of items to buy")
 
     #Use
     @commands.command()
