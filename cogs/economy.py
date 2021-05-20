@@ -234,6 +234,9 @@ class Economy(commands.Cog):
             item_info_embed.set_thumbnail(url = item.image_url)
             return await ctx.send(embed = item_info_embed)
         
+        if is_item:
+            return await ctx.send("That's not a valid item")
+        
         purchasable_items = [item for item in self.items.values() if item.purchasable]
 
         item_limit_per_page = 5
