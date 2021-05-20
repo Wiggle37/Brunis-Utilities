@@ -199,10 +199,8 @@ class Economy(commands.Cog):
         if page is None and item_name is None:
             return await self.shop(ctx, 1)
 
-        if page is not None:
-            is_item = False
-        
-        elif item_name is not None:
+        is_item = False
+        if page is None and item_name is not None:
             is_item = True
         
         if page is not None and page <= 0:
@@ -241,7 +239,7 @@ class Economy(commands.Cog):
         item_limit_per_page = 5
         pages_of_shop = len(purchasable_items) // item_limit_per_page + 1
 
-        if page is not None and page > pages_of_shop:
+        if page > pages_of_shop:
             return await ctx.send("That's not a valid page number")
 
         shop_embed = discord.Embed(
