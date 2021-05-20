@@ -273,7 +273,7 @@ class Economy(commands.Cog):
                 return await ctx.send("You don't have enough money for that LMAO")
 
             self.items[name].purchase_items(ctx.author.id, count)
-            return await ctx.send(f"Bought {count} {name}, paid {self.currency.emoji} {self.items[name].price * count}")
+            return await ctx.send(f"Bought {count} {name}, paid {self.currency.emoji} {self.beautify_number(self.items[name].price * count)}")
         
         return await ctx.send("That wasn't a valid item to buy")
 
@@ -292,238 +292,81 @@ class Economy(commands.Cog):
         # print any other error
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+       
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def sell(self, ctx, count: int, *, item_name):
+        if count <= 0:
+            return await ctx.send("You need to key in an valid amount, dummy")       
+
+        sellable_items = [name for name, item_class in self.items.items() if item_class.sellable]
+
+        for name in sellable_items:
+            if item_name.lower().replace(" ", "") not in name.lower().replace(" ", ""):
+                continue
+
+            if self.items[name].get_item_count(ctx.author.id) < count:
+                return await ctx.send("You literally don't have that many items smh")
+
+            self.items[name].sell_items(ctx.author.id, count)
+            return await ctx.send(f"Sold {count} {name}, got {self.currency.emoji} {self.beautify_number(self.items[name].price * count)}")
         
+        return await ctx.send("That wasn't a valid item to sell")
+
+    @sell.error
+    async def sell_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            return await ctx.send(embed=embed)
+        
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            return await ctx.send("It's `b!sell <amount> <item>`")
+        
+        if isinstance(error, commands.errors.BadArgument):
+            return await ctx.send("You need to key in an amount of items to sell")
+
+        # print any other error
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+    
+    
     #Use
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def use(self, ctx, item=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
+    async def use(self, ctx,  count: typing.Optional[int] = 1, *, item_name):
+        if count <= 0:
+            return await ctx.send("You can’t use that number of items, dummy")
 
-        user = ctx.author.id
+        for name, item_class in self.items.items():
+            if item_name.lower().replace(" ", "") not in name.lower().replace(" ", ""):
+                continue
 
-        if item == None:
-            await ctx.send('You have to give an item to use (0)_(0)')
+            if item_class.table != "boxes": # the only items that can be used thus far
+                return await ctx.send("That item cannot be used!")
 
-        #Wooden Box
-        if item == 'wooden' or item == 'wood':
-            cursor.execute(f"SELECT woodbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
-            result = (result[0])
+            if item_class.get_item_count(ctx.author.id) < count:
+                return await ctx.send("You literally don't have that enough items to use")
+            
+            response = item_class.usage(ctx.author.id, count) 
 
-            if result > 0:
-                box = 1
+            return await ctx.send(response)
 
-                cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox - ?;", [user, box, box])
-                
-                coins = random.randint(12500, 25000)
-                appleamount = random.randint(0, 5)
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
-                cursor.execute("INSERT INTO items (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-
-                await ctx.send(f'Box Contents:\n***Coins:*** `{coins}`\n***Apples: `{appleamount}`***')
-
-            else:
-                await ctx.send('Hate to break it to you but you dont really own one of those')
-
-        #Iron Box
-        if item == 'iron':
-            cursor.execute(f"SELECT ironbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
-            result = (result[0])
-
-            if result > 0:
-                box = 1
-                cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox - ?;", [user, box, box])
-
-                coins = random.randint(25000, 50000)
-                appleamount = random.randint(0, 10)
-                duckamount = random.randint(1, 5)
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
-                cursor.execute("INSERT INTO items (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
-
-                await ctx.send(f'Box Contents:\nCoins: `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`')
-
-            else:
-                await ctx.send('Hate to break it to you but you dont really own one of those')
-
-        #Gold Box
-        if item == 'gold':
-            cursor.execute(f"SELECT goldbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
-            result = (result[0])
-
-            if result > 0:
-                box = 1
-                cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox - ?;", [user, box, box])
-
-                coins = random.randint(50000, 100000)
-                appleamount = random.randint(0, 15)
-                duckamount = random.randint(1, 10)
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
-                cursor.execute("INSERT INTO items (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
-
-                await ctx.send(f'Box Contents:\nCoins: `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`')
-
-            else:
-                await ctx.send('Hate to break it to you but you dont really own one of those')
-
-        #Diamond Box
-        if item == 'diamond':
-            cursor.execute(f"SELECT diamondbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
-            result = (result[0])
-
-            if result > 0:
-                box = 1
-                cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox - ?;", [user, box, box])
-
-                coins = random.randint(100000, 250000)
-                appleamount = random.randint(1, 25)
-                duckamount = random.randint(1, 25)
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
-                cursor.execute("INSERT INTO items (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
-
-                await ctx.send(f'Box Contents:\n***Coins:*** `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`')
-
-            else:
-                await ctx.send('Hate to break it to you but you dont really own one of those')
-
-        #Emerald Box
-        if item == 'emerald':
-            cursor.execute(f"SELECT emeraldbox FROM boxes WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
-            result = (result[0])
-
-            if result > 0:
-                box = 1
-                cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox - ?;", [user, box, box])
-
-                coins = random.randint(250000, 500000)
-                appleamount = random.randint(1, 50)
-                duckamount = random.randint(1, 10)
-                donutamount = random.randint(0, 1)
-
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, coins, coins])
-                cursor.execute("INSERT INTO items (user_id, apple) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET apple = apple + ?;", [user, appleamount, appleamount])
-                cursor.execute("INSERT INTO items (user_id, duck) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET duck = duck + ?;", [user, duckamount, duckamount])
-                cursor.execute("INSERT INTO multis (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut + ?;", [user, donutamount, donutamount])
-
-                await ctx.send(f'Box Contents:\n***Coins:*** `{coins}`\n***Apples:*** `{appleamount}`\n***Ducks:*** `{duckamount}`\n***Donuts:*** `{donutamount}`')
-
-            else:
-                await ctx.send('Hate to break it to you but you dont really own one of those')
-
-        dbase.commit()
-        dbase.close()
+        return await ctx.send("That's not a valid item")
+    
 
     @use.error
     async def use_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
-            await ctx.send(embed=embed)
+            return await ctx.send(embed=embed)
 
-
-    #Sell
-    @commands.command()
-    async def sell(self, ctx, item=None, amount=1):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
-
-        user = ctx.author.id
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            return await ctx.send("It's `b!use (amount) <item>`")
         
-        if item is None:
-            await ctx.send('What are you trying to sell? LMAO')
+        # print any other error
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
-        else:
-            if amount < 0:
-                await ctx.send('Dont even think about it')
-
-            else:
-                if item == 'wood':
-                    cursor.execute(f"SELECT wood FROM materials WHERE user_id = '{ctx.author.id}'")
-                    result = cursor.fetchone()
-                    result = int(result[0])
-
-                    if amount > result:
-                        await ctx.send(f'You dont even have that many wood you have `{result}`')
-
-                    else:
-                        cursor.execute("INSERT INTO materials (user_id, wood) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET wood = wood - ?;", [user, amount, amount])
-                        total = amount * 50
-                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, total, total])
-
-                        await ctx.send(f'You sold **{amount} {item}** and made <:dankmerchants:829809749058650152> `{total}`')
-
-                if item == 'iron':
-                    cursor.execute(f"SELECT iron FROM materials WHERE user_id = '{ctx.author.id}'")
-                    result = cursor.fetchone()
-                    result = int(result[0])
-
-                    if amount > result:
-                        await ctx.send(f'You dont even have that many iron you have `{result}`')
-
-                    else:
-                        cursor.execute("INSERT INTO materials (user_id, iron) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET iron = iron - ?;", [user, amount, amount])
-                        total = amount * 100
-                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, total, total])
-
-                        await ctx.send(f'You sold **{amount} {item}** and made <:dankmerchants:829809749058650152> `{total}`')
-
-                if item == 'gold':
-                    cursor.execute(f"SELECT gold FROM materials WHERE user_id = '{ctx.author.id}'")
-                    result = cursor.fetchone()
-                    result = int(result[0])
-
-                    if amount > result:
-                        await ctx.send(f'You dont even have that many gold you have `{result}`')
-
-                    else:
-                        cursor.execute("INSERT INTO materials (user_id, gold) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gold = gold - ?;", [user, amount, amount])
-                        total = amount * 250
-                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, total, total])
-
-                        await ctx.send(f'You sold **{amount} {item}** and made <:dankmerchants:829809749058650152> `{total}`')
-
-                if item == 'diamond':
-                    cursor.execute(f"SELECT diamond FROM materials WHERE user_id = '{ctx.author.id}'")
-                    result = cursor.fetchone()
-                    result = int(result[0])
-
-                    if amount > result:
-                        await ctx.send(f'You dont even have that many diamond you have `{result}`')
-
-                    else:
-                        cursor.execute("INSERT INTO materials (user_id, diamond) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamond = diamond - ?;", [user, amount, amount])
-                        total = amount * 500
-                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, total, total])
-
-                        await ctx.send(f'You sold **{amount} {item}** and made <:dankmerchants:829809749058650152> `{total}`')
-
-                if item == 'emerald':
-                    cursor.execute(f"SELECT emerald FROM materials WHERE user_id = '{ctx.author.id}'")
-                    result = cursor.fetchone()
-                    result = int(result[0])
-
-                    if amount > result:
-                        await ctx.send(f'You dont even have that many emerald you have `{result}`')
-
-                    else:
-                        cursor.execute("INSERT INTO materials (user_id, emerald) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emerald = emerald - ?;", [user, amount, amount])
-                        total = amount * 1000
-                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, total, total])
-
-                        await ctx.send(f'You sold **{amount} {item}** and made <:dankmerchants:829809749058650152> `{total}`')
-
-        dbase.commit()
-        dbase.close()
 
     '''
     Giving
