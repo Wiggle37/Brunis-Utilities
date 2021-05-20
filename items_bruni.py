@@ -277,49 +277,49 @@ class misc(item):
 
 class apple(misc):
     name = "Apple"
-    description = None
-    image_url = None
-    emoji = None
+    description = "An apple that does pretty much nothing for now"
+    image_url = "https://cdn.discordapp.com/emojis/844760895951470612.png?v"
+    emoji = '<:apple:844760895951470612>'
     db_name = "apple"
         
 
 class duck(misc):
     name = "Duck"
-    description = None
-    image_url = None
-    emoji = None 
+    description = "QUACK"
+    image_url = "https://cdn.discordapp.com/emojis/844761271378116639.png?v=1"
+    emoji = "<:duck:844761271378116639>" 
     db_name = "duck"
 
 
 class goose(misc):
     name = "Goose"
     description = None
-    image_url = None
-    emoji = None
+    image_url = "https://cdn.discordapp.com/emojis/844762270549671956.png?v=1"
+    emoji = "<:goose:844762270549671956>"
     db_name = "goose"
 
 
 class chicken(misc):
     name = "Chicken"
-    description = None
-    image_url = None
-    emoji = None
+    description = "UHHH *chicken noises*"
+    image_url = "https://cdn.discordapp.com/emojis/844763374092943381.png?v=1"
+    emoji = "<:chicken:844763374092943381>"
     db_name = "chicken"
 
 
 class smallFish(misc):
     name = "Small fish"
-    description = None
-    image_url = None
-    emoji = None
+    description = "A small fish you can get from fishing"
+    image_url = "https://cdn.discordapp.com/emojis/835999014846726193.png?v=1"
+    emoji = "<:smallfish:835999014846726193>"
     db_name = "smallfish"
 
 
 class mediumFish(misc):
     name = "Medium Fish"
-    description = None
-    image_url = None
-    emoji = None
+    description = "An average fish you can get from fishing"
+    image_url = "https://cdn.discordapp.com/emojis/835999003858305124.png?v=1"
+    emoji = "<:mediumfish:835999003858305124>"
     db_name = "mediumfish"
 
 
