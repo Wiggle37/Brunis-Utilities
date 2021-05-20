@@ -309,7 +309,7 @@ class Economy(commands.Cog):
                 return await ctx.send("You literally don't have that many items smh")
 
             self.items[name].sell_items(ctx.author.id, count)
-            return await ctx.send(f"Sold {count} {name}, got {self.currency.emoji} {self.beautify_number(self.items[name].price * count)}")
+            return await ctx.send(f"Sold {count} {name}, got {self.currency.emoji} {self.beautify_number(self.items[name].sell_price * count)}")
         
         return await ctx.send("That wasn't a valid item to sell")
 
