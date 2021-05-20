@@ -204,7 +204,7 @@ class Economy(commands.Cog):
         elif item_name is not None:
             is_item = True
         
-        if page <= 0:
+        if page is not None and page <= 0:
             return await ctx.send("You need to key in a valid page")
 
         for name, item in self.items.items():
@@ -250,7 +250,7 @@ class Economy(commands.Cog):
         )
 
         for item in purchasable_items[(page - 1) * item_limit_per_page: page * item_limit_per_page]:
-            shop_embed.descripton += f"{item.emoji} **{item.name}** - {self.currency.emoji} {self.beautify_number(item.price)}\n\n"
+            shop_embed.description += f"{item.emoji} **{item.name}** - {self.currency.emoji} {self.beautify_number(item.price)}\n\n"
         shop_embed.set_footer(text = f"Page {page} of {pages_of_shop}")
 
         return await ctx.send(embed = shop_embed)
