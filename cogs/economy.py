@@ -31,6 +31,7 @@ class Economy(commands.Cog):
             return False
     
     def beautify_number(self, num):
+        if num is None: return ""
         return '{:,}'.format(num)
 
     '''
