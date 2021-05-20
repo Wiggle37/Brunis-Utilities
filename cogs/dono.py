@@ -225,7 +225,7 @@ class Dono(commands.Cog):
     '''
     #Dono Set
     @commands.command(aliases=['gds'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -262,7 +262,7 @@ class Dono(commands.Cog):
 
     #Dono Add
     @commands.command(aliases=['gda'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -299,7 +299,7 @@ class Dono(commands.Cog):
 
     #Dono Remove
     @commands.command(aliases=['gdr'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -336,7 +336,7 @@ class Dono(commands.Cog):
 
     #Dono Reset
     @commands.command(aliases=['gdrs'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -371,7 +371,7 @@ class Dono(commands.Cog):
     '''
     #Dono Set
     @commands.command(aliases=['hds'])
-    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manager, Bruni, Bot Dev
+    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -408,7 +408,7 @@ class Dono(commands.Cog):
 
     #Dono Add
     @commands.command(aliases=['hda'])
-    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manger, Bruni, Bot Dev
+    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -445,7 +445,7 @@ class Dono(commands.Cog):
 
     #Dono Remove
     @commands.command(aliases=['hdr'])
-    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manger, Bruni, Bot Dev
+    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -482,7 +482,7 @@ class Dono(commands.Cog):
 
     #Dono Reset
     @commands.command(aliases=['hdrs'])
-    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633) #Heist Manger, Bruni, Bot Dev
+    @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -518,7 +518,7 @@ class Dono(commands.Cog):
     '''
     #Dono Set
     @commands.command(aliases=['eds'])
-    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manager, Bruni, Bot Dev
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def event_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -556,7 +556,7 @@ class Dono(commands.Cog):
 
     #Dono Add
     @commands.command(aliases=['eda'])
-    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Mod Admin, Co-Owner
     async def event_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -594,7 +594,7 @@ class Dono(commands.Cog):
 
     #Dono Remove
     @commands.command(aliases=['edr'])
-    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Modr Admin, Co-Owner
     async def event_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -632,7 +632,7 @@ class Dono(commands.Cog):
 
     #Dono Reset
     @commands.command(aliases=['edrs'])
-    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633) #Event Manger, Bruni, Bot Dev
+    @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def event_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -667,7 +667,7 @@ class Dono(commands.Cog):
     '''
     #Dono Set
     @commands.command(aliases=['sds'])
-    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -704,7 +704,7 @@ class Dono(commands.Cog):
 
     #Giveaway Dono Add
     @commands.command(aliases=['sda'])
-    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -741,7 +741,7 @@ class Dono(commands.Cog):
 
     #Dono Remove
     @commands.command(aliases=['sdr'])
-    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_remove(self, ctx, member: discord.Member, amount: int=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -778,7 +778,7 @@ class Dono(commands.Cog):
 
     #Dono Reset
     @commands.command(aliases=['sdrs'])
-    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -808,12 +808,13 @@ class Dono(commands.Cog):
             await ctx.send('There are one or more required arguments that are missing')
         if isinstance(error, commands.MissingPermissions):
             await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
+
     '''
     MONEY DONATIONS
     '''
     #Dono Set
     @commands.command(aliases=['mds'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -853,7 +854,7 @@ class Dono(commands.Cog):
 
     #Dono Add
     @commands.command(aliases=['mda'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -891,7 +892,7 @@ class Dono(commands.Cog):
 
     #Dono Remove
     @commands.command(aliases=['mdr'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -928,7 +929,7 @@ class Dono(commands.Cog):
 
     #Dono Reset
     @commands.command(aliases=['mdrs'])
-    @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633) #Giveaway Manager, Bruni, Bot Dev
+    @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
