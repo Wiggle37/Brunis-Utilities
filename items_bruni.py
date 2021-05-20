@@ -325,9 +325,9 @@ class mediumFish(misc):
 
 class largeFish(misc):
     name = "Large Fish"
-    description = None
-    image_url = None
-    emoji = None
+    description = "The bigger of the fish that you can get from fishing"
+    image_url = "https://cdn.discordapp.com/emojis/835998981951062037.png?v=1"
+    emoji = "<:largefish:835998981951062037:>"
     db_name = "largefish"
 
 
