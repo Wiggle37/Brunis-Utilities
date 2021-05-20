@@ -241,7 +241,7 @@ class Economy(commands.Cog):
         item_limit_per_page = 5
         pages_of_shop = len(purchasable_items) // item_limit_per_page + 1
 
-        if page > pages_of_shop:
+        if page is not None and page > pages_of_shop:
             return await ctx.send("That's not a valid page number")
 
         shop_embed = discord.Embed(
