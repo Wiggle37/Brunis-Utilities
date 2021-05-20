@@ -165,7 +165,7 @@ class Info(commands.Cog):
     @commands.command()
     async def credits(self, ctx):
         inv_embed = discord.Embed(title='__**Brunis Utilities Credits**__', description='Who helped make the bot', color=0xf47fff)
-        inv_embed.add_field(name='__Devs:__', value='<@!765322777329664089> ➞ The owner of the bot\n<@!531317158530121738> ➞ Developer', inline=False)
+        inv_embed.add_field(name='__Devs:__', value='<@!824010269071507536> ➞ The owner of the bot\n<@!531317158530121738> ➞ Main Developer', inline=False)
         await ctx.send(embed=inv_embed)
 
 def setup(client):
