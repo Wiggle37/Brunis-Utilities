@@ -289,6 +289,10 @@ class Economy(commands.Cog):
         if isinstance(error, commands.errors.BadArgument):
             return await ctx.send("You need to key in an amount of items to buy")
 
+        # print any other error
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+        
     #Use
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
