@@ -204,7 +204,7 @@ class Economy(commands.Cog):
         elif item_name is not None:
             is_item = True
         
-        if page <= 0:
+        if page is not None and page <= 0:
             return await ctx.send("You need to key in a valid page")
 
         for name, item in self.items.items():
