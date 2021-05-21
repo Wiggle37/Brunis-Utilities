@@ -1,4 +1,5 @@
 import discord
+from discord.errors import PrivilegedIntentsRequired
 from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType, BadArgument
 import asyncio
@@ -6,7 +7,7 @@ import sqlite3
 import random
 from datetime import datetime
 from discord.ext.commands.core import command
-from items_bruni import doughnut, economy_items, currency
+from items_bruni import diamondPick, doughnut, economy_items, currency, emeraldPick, goldPick, ironPick, woodPick
 from itertools import islice
 import traceback
 import sys
@@ -335,7 +336,7 @@ class Economy(commands.Cog):
     #Use
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def use(self, ctx,  count: typing.Optional[int] = 1, *, item_name):
+    async def use(self, ctx, count: typing.Optional[int] = 1, *, item_name):
         if count <= 0:
             return await ctx.send("You can’t use that number of items, dummy")
 
@@ -419,7 +420,7 @@ class Economy(commands.Cog):
             return await ctx.send("Key in a valid number of items to gift")
         
         try:
-            member = self.memberConverter.convert(item_and_member[-1])
+            member = await self.memberConverter.convert(ctx, item_and_member[-1])
         except commands.errors.MemberNotFound:
             return await ctx.send("That's not a valid user")
         
@@ -435,7 +436,7 @@ class Economy(commands.Cog):
             item_class.increase_item(member.id, count)
             item_class.decrease_item(ctx.author.id, count)
 
-            return await ctx.send(f"You gave **{member.name}** {self.beautify_number(count)} {item_class.emoji}{item_class.name}")
+            return await ctx.send(f"You gave **{member.name}** {self.beautify_number(count)} {item_class.emoji} {item_class.name}")
 
         return await ctx.send("That's not a valid item")
 
@@ -521,7 +522,6 @@ class Economy(commands.Cog):
         if bal < bet:
             return await ctx.send('You dont have enough money to do that')
 
-
         win = random.choice([True, False])
 
         if win:
@@ -563,102 +563,86 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)
     async def work(self, ctx):
-        client = self.client
-
-        user = ctx.author.id
-
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
-
-        yes_no = [
-                'yes',
-                'no'
-            ]
-
-        await ctx.reply('What would you like to do to work?\n`Mine`\n`Chop`\n`Hunt`\n`Fish`')
-
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
 
-        msg = await client.wait_for('message', check=check, timeout=15)
+        await ctx.reply('What would you like to do to work?\n`Mine`\n`Chop`\n`Hunt`\n`Fish`\nuse lowercase')
+        msg = await self.client.wait_for('message', check=check, timeout=15)
 
+        if msg.clean_content.lower() == 'mine':
+            wood = woodPick.get_item_count(ctx.author.id)
+            iron = ironPick.get_item_count(ctx.author.id)
+            gold = goldPick.get_item_count(ctx.author.id)
+            diamond = diamondPick.get_item_count(ctx.author.id)
+            emerald = emeraldPick.get_item_count(ctx.author.id)
+
+            if wood > 0:
+                iron.increase_amount(ctx.author.id, 1)
+
+                await ctx.send('You went mining and found 1 iron')
+
+            elif iron > 0:
+                ironamt = random.randint(1, 5)
+
+                gold.increase_amount(ctx.author.id, ironamt)
+
+                await ctx.send(f'You went Mining and found {ironamt} gold')
+
+            elif gold > 0:
+                ironamt = random.randint(1, 7)
+                goldamt = random.randint(1, 3)
+
+                iron.increase_amount(ctx.author.id, ironamt)
+                gold.increase_amount(ctx.author.id, goldamt)
+
+                await ctx.send(f'You went mining and found {ironamt} iron and {goldamt} gold')
+
+            elif diamond > 0:
+                ironamt = random.randint(3, 10)
+                goldamt = random.randint(1, 7)
+                diamondamt = random.randint(1, 3)
+
+                iron.increase_amount(ctx.author.id, ironamt)
+                gold.increase_amount(ctx.author.id, goldamt)
+                diamond.increase_amount(ctx.author.id, diamondamt)
+
+                await ctx.send(f'You went mining and found {ironamt} iron, {goldamt} gold, and {diamondamt} diamonds')
+
+            elif emerald > 0:
+                ironamt = random.randint(3, 15)
+                goldamt = random.randint(1, 10)
+                diamondamt = random.randint(1, 7)
+                emeraldamt = random.randint(1, 5)
+
+                iron.increase_amount(ctx.author.id, ironamt)
+                gold.increase_amount(ctx.author.id, goldamt)
+                diamond.increase_amount(ctx.author.id, diamondamt)
+                emerald.increase_amount(ctx.author.id, emeraldamt)
+
+                await ctx.send(f'You went mining and found {ironamt} iron, {goldamt} gold, {diamondamt} diamonds, and {emeraldamt} emeralds')
+
+            else:
+                await ctx.send('Yeah so you dont really have anything to mine with, LMAO')
+
+        if msg.clean_content.lower() == 'chop':
+            pass
+
+        if msg.clean_content.lower() == 'hunt':
+            pass
+
+        if msg.clean_content.lower() == 'fish':
+            pass
+    '''
+    #Work
+    @commands.command()
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    async def work(self, ctx):
+        def check(msg):
+            return msg.author == ctx.author and msg.channel == ctx.channel
+
+        await ctx.reply('What would you like to do to work?\n`Mine`\n`Chop`\n`Hunt`\n`Fish`')
+        msg = await self.client.wait_for('message', check=check, timeout=15)
         try:
-            #Mine
-            if msg.clean_content.lower() == 'mine':
-                cursor.execute(f"SELECT woodpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                woodpick = cursor.fetchone()
-                woodpick = (woodpick[0])
-
-                if woodpick < 1:
-                    await ctx.send('Umm You need at least a wood pickaxe to go mining do `b!buy woodpick`')
-
-                else:
-                    cursor.execute(f"SELECT ironpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                    ironpick = cursor.fetchone()
-                    ironpick = (ironpick[0])
-
-                    if ironpick < 1:
-                        iron = random.randint(1, 1)
-
-                        cursor.execute("INSERT INTO materials (user_id, iron) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET iron = iron + ?;", [user, iron, iron])
-
-                        await ctx.send(f'You had an wood pick on you and got some loot\n`{iron}` iron')
-
-                    else:
-                        cursor.execute(f"SELECT goldpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                        goldpick = cursor.fetchone()
-                        goldpick = (goldpick[0])
-
-                        if goldpick < 1:
-                            iron = random.randint(1, 3)
-
-                            cursor.execute("INSERT INTO materials (user_id, iron) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET iron = iron + ?;", [user, iron, iron])
-
-                            await ctx.send(f'You had an iron pick on you and got some loot\n`{iron}` iron')
-
-                        else:
-                            cursor.execute(f"SELECT diamondpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                            diamondpick = cursor.fetchone()
-                            diamondpick = (diamondpick[0])
-
-                            if diamondpick < 1:
-                                gold = random.randint(1, 3)
-                                iron = random.randint(1, 5)
-
-                                cursor.execute("INSERT INTO materials (user_id, gold) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gold = gold + ?;", [user, gold, gold])
-                                cursor.execute("INSERT INTO materials (user_id, iron) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET iron = iron + ?;", [user, iron, iron])
-
-                                await ctx.send(f'You had an gold pick on you and got some loot\n`{gold}` gold\n`{iron}` iron')
-
-                            else:
-                                cursor.execute(f"SELECT emeraldpick FROM tools WHERE user_id = '{ctx.author.id}'")
-                                emeraldpick = cursor.fetchone()
-                                emeraldpick = (emeraldpick[0])
-
-                                if emeraldpick < 1:
-                                    diamond = random.randint(1, 7)
-                                    gold = random.randint(3, 5)
-                                    iron = random.randint(3, 7)
-
-                                    cursor.execute("INSERT INTO materials (user_id, diamond) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamond = diamond + ?;", [user, diamond, diamond])
-                                    cursor.execute("INSERT INTO materials (user_id, gold) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gold = gold + ?;", [user, gold, gold])
-                                    cursor.execute("INSERT INTO materials (user_id, iron) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET iron = iron + ?;", [user, iron, iron])
-
-                                    await ctx.send(f'You had an diamond pick on you and got some loot\n`{diamond}` diamond\n`{gold}` gold\n`{iron}` iron')
-
-                                else:
-                                    emerald = random.randint(1, 3)
-                                    diamond = random.randint(1, 15)
-                                    gold = random.randint(3, 20)
-                                    iron = random.randint(5, 15)
-
-                                    cursor.execute("INSERT INTO materials (user_id, emerald) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emerald = emerald + ?;", [user, emerald, emerald])
-                                    cursor.execute("INSERT INTO materials (user_id, diamond) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamond = diamond + ?;", [user, diamond, diamond])
-                                    cursor.execute("INSERT INTO materials (user_id, gold) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gold = gold + ?;", [user, gold, gold])
-                                    cursor.execute("INSERT INTO materials (user_id, iron) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET iron = iron + ?;", [user, iron, iron])
-
-                                    await ctx.send(f'You had an EMERALD pick on you and got some loot\n`{emerald}` emerald\n`{diamond}` diamond\n`{gold}` gold\n`{iron}` iron')
-                    
             #Chop
             if msg.clean_content.lower() == 'chop':
                 amount = random.randint(1, 10)
@@ -729,14 +713,12 @@ class Economy(commands.Cog):
         except asyncio.TimeoutError:
             await ctx.send('Well you didnt respond in time dumby')
 
-        dbase.commit()
-        dbase.close()
-
     @work.error
     async def work_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Why do you want to be working so much GEEZ\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
+    '''
 
     #Slots
     @commands.command()

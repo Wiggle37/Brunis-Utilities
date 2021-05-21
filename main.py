@@ -14,7 +14,7 @@ repo.remotes.origin.pull()
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(
-    command_prefix=['b!', 'B!'],
+    command_prefix=['b!', 'B!', 'b ', 'B '],
     intents=intents,
     case_insensitive=True,
     )
