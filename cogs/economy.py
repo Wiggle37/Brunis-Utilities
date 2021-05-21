@@ -5,7 +5,9 @@ import asyncio
 import sqlite3
 import random
 from datetime import datetime
-from items_bruni import economy_items, currency
+
+from discord.ext.commands.core import command
+from items_bruni import doughnut, economy_items, currency
 from itertools import islice
 import traceback
 import sys
@@ -576,95 +578,54 @@ class Economy(commands.Cog):
     #Bet
     @commands.command()
     @commands.cooldown(1, 8, commands.BucketType.user)
-    async def bet(self, ctx, bet: int=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
-
-        user = ctx.author.id
-
-        winner = [
-            'yes',
-            'no'
-        ]
-
-        cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{ctx.author.id}'")
-        doughnut_result = cursor.fetchone()
-        doughnut_result = (doughnut_result[0])
-
-        cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
-        result = cursor.fetchone()
-        result = (result[0])
-
-        if bet == None:
-            await ctx.reply('You actully have to bet something dumb dumb (0)_(0)')
+    async def bet(self, ctx, bet: str=None):
+        bet = self.is_valid_int(bet)
+        if bet == False:
+            await ctx.send('That is not a valid number')
 
         else:
-            if bet < 0:
-                await ctx.send('Dont even try me')
+            if bet > 500000:
+                await ctx.send('That max you can bet is 500k at a time')
 
             else:
+                bal = self.currency.get_amount(ctx.author.id)
 
-                if bet < 100:
-                    await ctx.reply('You have to bet at least 100')
+                if bal < bet:
+                    await ctx.send('You dont have enough money to do that')
 
                 else:
+                    win = random.choice(['yes', 'no'])
 
-                    if result < bet:
-                        await ctx.reply('You dont have enough money to do that!')
+                    if win == 'yes':
+                        amount = bet * 1.5
+
+                        dougnut_amount = doughnut.get_item_count(ctx.author.id)
+                        if dougnut_amount > 0 and dougnut_amount < 5:
+                            new_amount = int(amount * (1 + (0.05 * dougnut_amount)))
+
+                            self.currency.add(ctx.author.id, new_amount)
+
+                            embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
+                            embed.add_field(name='Your payout was:', value=f'<:dankmerchants:829809749058650152> `{int(amount)}`\n\nYou had <:doughnut:831895771442839552> {dougnut_amount} doughnuts that gave you a multi and you ended up getting: <:dankmerchants:829809749058650152>** {int(new_amount)}**')
+                            await ctx.reply(embed=embed)
+
+
+                        if dougnut_amount >= 5:
+                            new_amount = int(amount * (1 + (0.05 * 5)))
+
+                            self.currency.add(ctx.author.id, new_amount)
+
+                            embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
+                            embed.add_field(name='Your payout was:', value=f'<:dankmerchants:829809749058650152> `{int(amount)}`\n\nBut you had at least <:doughnut:831895771442839552> 5 donuts with you so that got you to <:dankmerchants:829809749058650152>** {int(new_amount)}**')
+                            await ctx.reply(embed=embed)
+
 
                     else:
+                        self.currency.subtract(ctx.author.id, bet)
 
-                        if bet <= 250000:
-                            new_bet = bet * 1.5
-                            amount = random.randint(bet, new_bet)
-                            
-                            win = random.choice(winner)
-
-                            if win == 'yes':
-                                if doughnut_result > 0:
-                                    if doughnut_result > 5:
-
-                                        max = 5
-                                        new_amount = amount * (1 + (0.05 * max))
-                                        new_amount = int(new_amount)
-
-                                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, new_amount, new_amount])
-
-                                        embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
-                                        embed.add_field(name='Your payout was:', value=f'<:dankmerchants:829809749058650152> `{amount}`\n\nBut you had at least <:doughnut:831895771442839552> 5 donuts with you so that got you to <:dankmerchants:829809749058650152>** {int(new_amount)}**')
-                                        await ctx.reply(embed=embed)
-
-                                    else:
-
-                                        new_amount = amount * (1 + (0.05 * doughnut_result))
-                                        new_amount = int(new_amount)
-
-                                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, new_amount, new_amount])
-
-                                        embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
-                                        embed.add_field(name='Your payout was:', value=f'<:dankmerchants:829809749058650152> `{amount}`\n\nBut you had <:doughnut:831895771442839552> **{doughnut_result}** donut(s) with you so that got you to <:dankmerchants:829809749058650152>** {int(new_amount)}**')
-                                        await ctx.reply(embed=embed)
-
-                                else:
-                                    cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, amount, amount])
-
-                                    embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
-                                    embed.add_field(name='Your payout was:', value=f'<:dankmerchants:829809749058650152> `{amount}`')
-                                    await ctx.reply(embed=embed)
-
-                            if win == 'no':
-
-                                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, bet, bet])
-
-                                embed = discord.Embed(title='Bet Results', description='You lost', color=0xff0000)
-                                embed.add_field(name='You lost:', value=f'<:dankmerchants:829809749058650152> `{bet}`')
-                                await ctx.reply(embed=embed)
-
-                        if bet > 500000:
-                            await ctx.reply('Woah there the max you can bet is 250k at a time!')
-
-        dbase.commit()
-        dbase.close()
+                        embed = discord.Embed(title='Bet Results', description='You lost, sucks', color=0xff0000)
+                        embed.add_field(name='You lost:', value=f'<:dankmerchants:829809749058650152> `{bet}`')
+                        await ctx.reply(embed=embed)
 
     @bet.error
     async def bet_error(self, ctx, error):
