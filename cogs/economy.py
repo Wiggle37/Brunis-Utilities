@@ -510,10 +510,8 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 35, commands.BucketType.user)
     async def beg(self, ctx):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
-
-        user = ctx.author.id
+        doughnut_amount = doughnut.get_item_count(ctx.author.id)
+        amount = random.randint(100, 1000)
 
         names = [
             'Lily',
@@ -531,43 +529,26 @@ class Economy(commands.Cog):
             'Ethereal',
             'DUKEØFDØØM',
             'Adit',
-            'Tommy'
+            'Tommy',
+            'Julesi'
         ]
 
-        amount = random.randint(100, 1000)
+        if doughnut_amount <= 0:
+            self.currency.add(ctx.author.id, int(amount))
 
-        cursor.execute(f"SELECT doughnut FROM multis WHERE user_id = '{ctx.author.id}'")
-        doughnut_amount = cursor.fetchone()
-        doughnut_amount = (doughnut_amount[0])
+            await ctx.send(f'**{random.choice(names)}** gave you <:dankmerchants:829809749058650152> {int(amount)}')
 
-        if doughnut_amount > 0:
-            if doughnut_amount > 5:
-                max = 5
-                new_amount = amount * (1 + (0.05 * max))
-                new_amount = int(new_amount)
+        if doughnut_amount > 0 and doughnut_amount < 5:
+            new_amount = int(amount * (1 + 0.05 * doughnut_amount))
+            self.currency.add(ctx.author.id, int(new_amount))
 
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, new_amount, new_amount])
+            await ctx.send(f'**{random.choice(names)}** gave you <:dankmerchants:829809749058650152> {int(amount)} but you had <:doughnut:831895771442839552> {doughnut_amount} with you that ended up giveing you a total of {int(new_amount)}')
 
-                amount = ('{:,}'.format(amount))
-                await ctx.reply(f'{random.choice(names)} gave you <:dankmerchants:829809749058650152> **{amount}**!\n\nBut you happened to have at least <:doughnut:831895771442839552> 5 donut(s) on you that got you to <:dankmerchants:829809749058650152> **{int(new_amount)}**')
-            
-            else:
-                new_amount = amount * (1 + (0.05 * doughnut_amount))
-                new_amount = int(new_amount)
+        if doughnut_amount > 5:
+            new_amount = int(amount * (1 + (0.05 * 5)))
+            self.currency.add(ctx.author.id, int(new_amount))
 
-                cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, new_amount, new_amount])
-
-                amount = ('{:,}'.format(amount))
-                await ctx.reply(f'{random.choice(names)} gave you <:dankmerchants:829809749058650152> **{amount}**!\n\nBut you happened to have <:doughnut:831895771442839552> **{doughnut_amount}** donut(s) on you that got you to <:dankmerchants:829809749058650152> **{int(new_amount)}**')
-
-        else:
-            cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [user, amount, amount])
-
-            amount = ('{:,}'.format(amount))
-            await ctx.reply(f'{random.choice(names)} gave you <:dankmerchants:829809749058650152> **{amount}**!')
-
-        dbase.commit()
-        dbase.close()
+            await ctx.send(f'**{random.choice(names)}** gave you <:dankmerchants:829809749058650152> {amount}')
 
     @beg.error
     async def beg_error(self, ctx, error):
