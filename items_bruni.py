@@ -349,7 +349,7 @@ class boxes(item):
         cursor = dbase.cursor()
         for item, item_range in cls.possible_items.items():
             total_items = sum([random.randint(item_range[0], item_range[1]) for num in range(count)])
-            cursor.execute(f"UPDATE {item.table} SET {item.db_name} = {item.db_name} + ? WHERE user_id == ?", [total_items, user_id])
+            cursor.execute(f"UPDATE {item.table} SET {item.db_name} = {item.db_name} - ? WHERE user_id == ?", [total_items, user_id])
             response += f"\n***{item.name}:*** `{total_items}`"
 
         dbase.commit()
