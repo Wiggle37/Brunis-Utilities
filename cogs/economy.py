@@ -373,6 +373,7 @@ class Economy(commands.Cog):
     '''
     Giving
     '''
+    #Give
     @commands.command()
     async def give(self, ctx, member: discord.Member, amount: int):
         if member == ctx.author:
@@ -390,7 +391,7 @@ class Economy(commands.Cog):
         self.currency.add(member.id, after_taxes)
         self.currency.subtract(ctx.author.id, amount)
 
-        return await ctx.send(f"You gave {member.name} {self.currency.emoji} {after_taxes}, after a {tax_rate}% tax rate")
+        return await ctx.send(f"You gave **{member.name}** {self.currency.emoji} **{after_taxes}**, after a {tax_rate}% tax rate")
 
 
     @give.error
@@ -408,7 +409,7 @@ class Economy(commands.Cog):
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
-
+    #Gift
     @commands.command()
     async def gift(self, ctx, count: int, *item_and_member):    
         if item_and_member == () or len(item_and_member) < 2:
@@ -507,54 +508,50 @@ class Economy(commands.Cog):
     #Bet
     @commands.command()
     @commands.cooldown(1, 8, commands.BucketType.user)
-    async def bet(self, ctx, bet: str=None):
+    async def bet(self, ctx, bet = None):
         bet = self.is_valid_int(bet)
         if bet == False:
-            await ctx.send('That is not a valid number')
+            return await ctx.send('That is not a valid number')
 
-        else:
-            if bet > 500000:
-                await ctx.send('That max you can bet is 500k at a time')
+        if bet > 500000:
+            return await ctx.send('That max you can bet is 500k at a time')
+    
+        bal = self.currency.get_amount(ctx.author.id)
 
-            else:
-                bal = self.currency.get_amount(ctx.author.id)
-
-                if bal < bet:
-                    await ctx.send('You dont have enough money to do that')
-
-                else:
-                    win = random.choice(['yes', 'no'])
-
-                    if win == 'yes':
-                        amount = bet * 1.5
-
-                        dougnut_amount = doughnut.get_item_count(ctx.author.id)
-                        if dougnut_amount > 0 and dougnut_amount < 5:
-                            new_amount = int(amount * (1 + (0.05 * dougnut_amount)))
-
-                            self.currency.add(ctx.author.id, new_amount)
-
-                            embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
-                            embed.add_field(name='Your payout was:', value=f'<:dankmerchants:829809749058650152> `{int(amount)}`\n\nYou had <:doughnut:831895771442839552> {dougnut_amount} doughnuts that gave you a multi and you ended up getting: <:dankmerchants:829809749058650152>** {int(new_amount)}**')
-                            await ctx.reply(embed=embed)
+        if bal < bet:
+            return await ctx.send('You dont have enough money to do that')
 
 
-                        if dougnut_amount >= 5:
-                            new_amount = int(amount * (1 + (0.05 * 5)))
+        win = random.choice([True, False])
 
-                            self.currency.add(ctx.author.id, new_amount)
+        if win:
+            win_amount = int(bet * 1.5)
+            doughnut = self.items["Doughnut"]
+            doughnut_amount = doughnut.get_item_count(ctx.author.id)
+            capped = False
 
-                            embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
-                            embed.add_field(name='Your payout was:', value=f'<:dankmerchants:829809749058650152> `{int(amount)}`\n\nBut you had at least <:doughnut:831895771442839552> 5 donuts with you so that got you to <:dankmerchants:829809749058650152>** {int(new_amount)}**')
-                            await ctx.reply(embed=embed)
+            if doughnut_amount > 5:
+                capped = True
+            
+            new_amount = int(win_amount * (1 + (0.05 * min(doughnut_amount, 5))))
+            self.currency.add(ctx.author.id, new_amount)
+
+            bet_embed = discord.Embed(title='Bet Results', description='You Won', color=0x00ff00)
+            bet_display = f"{self.currency.emoji} `{self.beautify_number(win_amount)}`"
+            
+            if not capped and doughnut_amount != 0:
+                bet_display += f"\n\nYou had {doughnut.emoji} {doughnut_amount} doughnuts that gave you a multi {self.currency.emoji}** {self.beautify_number(new_amount)}**"
+            elif capped:
+                bet_display += f'\n\nBut you had at least {doughnut.emoji} 5 donuts with you so that got you to {self.currency.emoji}** {self.beautify_number(new_amount)}**'
 
 
-                    else:
-                        self.currency.subtract(ctx.author.id, bet)
+            bet_embed.add_field(name = "Your payout was", value = bet_display)
+            return await ctx.reply(embed = bet_embed)
 
-                        embed = discord.Embed(title='Bet Results', description='You lost, sucks', color=0xff0000)
-                        embed.add_field(name='You lost:', value=f'<:dankmerchants:829809749058650152> `{bet}`')
-                        await ctx.reply(embed=embed)
+        self.currency.subtract(ctx.author.id, bet)
+        bet_embed = discord.Embed(title='Bet Results', description='You lost, sucks', color=0xff0000)
+        bet_embed.add_field(name='You lost:', value=f'{self.currency.emoji} `{self.beautify_number(bet)}`')
+        return await ctx.reply(embed = bet_embed)
 
     @bet.error
     async def bet_error(self, ctx, error):
