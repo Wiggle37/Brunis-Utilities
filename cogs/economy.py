@@ -373,135 +373,83 @@ class Economy(commands.Cog):
     '''
     Giving
     '''
-    #Give
     @commands.command()
-    async def give(self, ctx, member: discord.Member, amount: str=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
+    async def give(self, ctx, member: discord.Member, amount: int):
+        if member == ctx.author:
+            return await ctx.send("Why would you want to give yourself money?")
+        
+        if amount <= 0:
+            return await ctx.send("Key in a valid amount to enter")
+        
+        if self.currency.get_amount(ctx.author.id) < amount:
+            return await ctx.send("You don't have enough money for that!")
+        
+        tax_rate = 8 # in percentages
+        after_taxes = round(amount * (100-tax_rate)/100)
 
-        amount = self.is_valid_int(amount)
-        if amount == False:
-            await ctx.send('That isnt a valid number')
+        self.currency.add(member.id, after_taxes)
+        self.currency.subtract(ctx.author.id, amount)
 
-        else:
-            cursor.execute(f"SELECT balance FROM economy WHERE user_id = '{ctx.author.id}'")
-            result = cursor.fetchone()
+        return await ctx.send(f"You gave {member.name} {self.currency.emoji} {after_taxes}, after a {tax_rate}% tax rate")
 
-            if result[0] < amount:
-                await ctx.send('You dont have enough money to do that')
 
-            else:
-                if member == None:
-                    await ctx.reply('You actully have to give stuff to someone')
+    @give.error
+    async def give_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            return await ctx.send("It's `b!give <user> <amount>`")
+        
+        if isinstance(error, commands.errors.MemberNotFound):
+            return await ctx.send("That isn't a valid user")
+        
+        if isinstance(error, BadArgument):
+            return await ctx.send("You have to type in an amount to give")
+        
+        # print any other error
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+    
 
-                else:
-                    if amount < 0:
-                        await ctx.send('Dont even try me dumbass')
-
-                    else:
-                        user = ctx.author.id
-                        member_id = member.id
-
-                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance - ?;", [user, amount, amount])
-                        cursor.execute("INSERT INTO economy (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?;", [member_id, amount, amount])
-                        
-                        await ctx.send(f'{ctx.author.mention} you gave **{member}** <:dankmerchants:829809749058650152> **{amount}**')
-
-                        channel = await member.create_dm()
-                    
-                        dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\nYou got <:dankmerchants:829809749058650152> **{amount}** from {ctx.message.author}', color=0x00ff00)
-                        await channel.send(embed=dm_embed)
-
-            dbase.commit()
-            dbase.close()
-
-    #Gift
     @commands.command()
-    async def gift(self, ctx, amount: int=None, item=None, member: discord.Member=None):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
+    async def gift(self, ctx, count: int, *item_and_member):    
+        if item_and_member == () or len(item_and_member) < 2:
+            return await ctx.send("It's `b!gift <amount> <item> <user>`")
+        
+        if count <= 0:
+            return await ctx.send("Key in a valid number of items to gift")
+        
+        try:
+            member = commands.MemberConverter(item_and_member[-1])
+        except commands.errors.MemberNotFound:
+            return await ctx.send("That's not a valid user")
+        
+        item_name = "".join(item_and_member[:-1])
 
-        member_id = member.id
-        user = ctx.author.id
+        for name, item_class in self.items.items():
+            if item_name.lower().replace(" ", "") not in name.lower().replace(" ", ""):
+                continue
 
-        if member == None:
-            await ctx.reply('You actully have to give stuff to someone')
-
-        else:
-            if amount < 0:
-                await ctx.send('Dont even try me')
-
-            else:
-                if item == 'wood' or item == 'wooden' or item == 'woo':
-                    cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO boxes (user_id, woodbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET woodbox = woodbox + ?;", [member_id, amount, amount])
-
-                    channel = await member.create_dm()
+            if item_class.get_item_count(ctx.author.id) < count:
+                return await ctx.send("You don't have that many items")
             
-                    dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\n{amount} <:woodbox:830211928595890206> wooden box(es)', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
-                    
-                    await ctx.send(f'You gave **{member}** {amount} wooden boxe(es) <:woodbox:830211928595890206>')
+            item_class.increase_item(member.id, count)
+            item_class.decrease_item(ctx.author.id, count)
 
-                if item == 'iron' or item == 'iro':
-                    cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO boxes (user_id, ironbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET ironbox = ironbox + ?;", [member_id, amount, amount])
+            return await ctx.send(f"You gave {member.name} {count} {item_class.name}")
 
-                    channel = await member.create_dm()
-            
-                    dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\n{amount} <:ironbox:830197241934512188> iron box(es)', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
-                    
-
-                    await ctx.send(f'You gave **{member}** {amount} iron box(es) <:ironbox:830197241934512188>')
+        return await ctx.send("That's not a valid item")
 
 
-                if item == 'gold' or item == 'gol':
-                    cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO boxes (user_id, goldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET goldbox = goldbox + ?;", [member_id, amount, amount])
-
-                    channel = await member.create_dm()
-            
-                    dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\n{amount} <:goldbox:830197220405805147> gold box(es)', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
-
-                    await ctx.send(f'You gave **{member} {amount} gold box(es) <:goldbox:830197220405805147>')
-
-                if item == 'diamond' or item == 'dia':
-                    cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO boxes (user_id, diamondbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET diamondbox = diamondbox + ?;", [member_id, amount, amount])
-
-                    channel = await member.create_dm()
-            
-                    dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\n{amount} <:diamondbox:830197220007477259> diamond box(es)', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
-
-                    await ctx.send(f'You gave **{member} {amount} diamond box(es) <:diamondbox:830197220007477259>')
-
-                if item == 'emerald' or item == 'eme':
-                    cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO boxes (user_id, emeraldbox) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET emeraldbox = emeraldbox + ?;", [member_id, amount, amount])
-
-                    channel = await member.create_dm()
-            
-                    dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\n{amount} <:emeraldbox:830216613755486229> emerald box(es)', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
-
-                    await ctx.send(f'You gave **{member}** {amount} emerald box(es) <:emeraldbox:830216613755486229>')
-
-                if item == 'donut' or item == 'doughnut' or item == 'dough' or item == 'don':
-                    cursor.execute("INSERT INTO multis (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut - ?;", [user, amount, amount])
-                    cursor.execute("INSERT INTO multis (user_id, doughnut) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET doughnut = doughnut + ?;", [member_id, amount, amount])
-
-                    channel = await member.create_dm()
-            
-                    dm_embed = discord.Embed(title=f'You have a gift!', description=f'You have a gift from {ctx.message.author}\n{amount} <:doughnut:831895771442839552> donut(s)', color=0x00ff00)
-                    await channel.send(embed=dm_embed)
-
-                    await ctx.send(f'You gave **{member}** {amount} donut(s) <:doughnut:831895771442839552>')
-
-        dbase.commit()
-        dbase.close()
+    @gift.error
+    async def gift_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            return await ctx.send("It's `b!gift <amount> <item> <user>`")
+        
+        if isinstance(error, BadArgument):
+            return await ctx.send("You have to type in a number of items you want to give")
+        
+        # print any other error
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     '''
     Money Making
