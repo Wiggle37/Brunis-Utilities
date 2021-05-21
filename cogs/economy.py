@@ -18,6 +18,7 @@ class Economy(commands.Cog):
         self.client = client
         self.items = economy_items
         self.currency = currency
+        self.memberConverter = commands.MemberConverter()
 
     '''
     Functions
@@ -390,7 +391,7 @@ class Economy(commands.Cog):
         self.currency.add(member.id, after_taxes)
         self.currency.subtract(ctx.author.id, amount)
 
-        return await ctx.send(f"You gave **{member.name}** {self.currency.emoji} **{after_taxes}**, after a {tax_rate}% tax rate")
+        return await ctx.send(f"You gave **{member.name}** {self.currency.emoji} **{self.beautify_number(after_taxes)}**, after a {tax_rate}% tax rate")
 
 
     @give.error
@@ -418,7 +419,7 @@ class Economy(commands.Cog):
             return await ctx.send("Key in a valid number of items to gift")
         
         try:
-            member = commands.MemberConverter(item_and_member[-1])
+            member = self.memberConverter.convert(item_and_member[-1])
         except commands.errors.MemberNotFound:
             return await ctx.send("That's not a valid user")
         
@@ -434,7 +435,7 @@ class Economy(commands.Cog):
             item_class.increase_item(member.id, count)
             item_class.decrease_item(ctx.author.id, count)
 
-            return await ctx.send(f"You gave {member.name} {count} {item_class.name}")
+            return await ctx.send(f"You gave **{member.name}** {self.beautify_number(count)} {item_class.emoji}{item_class.name}")
 
         return await ctx.send("That's not a valid item")
 
