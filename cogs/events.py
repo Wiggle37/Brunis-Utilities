@@ -22,7 +22,7 @@ class Events(commands.Cog):
                 await channel.send(embed=dm_embed)
 
                 reason = 'Account to young in age'
-                await member.ban(reason=reason)
+                await member.kick(reason=reason)
                 await self.client.get_channel(784491141022220312).send(f'{member.mention} was banned\nReason: Account age to young')
 
             else:
@@ -45,7 +45,7 @@ class Events(commands.Cog):
 
         if 'wiggle' in message.content:
             if not user.bot:
-                await message.channel.send('why you pong meh')
+                await message.channel.send('why you be saying my name, huh?')
                 await message.add_reaction(emoji='<a:blob:829822719372951592>')
 
             else:
