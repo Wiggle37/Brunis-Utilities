@@ -60,7 +60,7 @@ class Events(commands.Cog):
         if 'dyno' in message.content:
             await message.channel.send('gae')
 
-
+    
 
 def setup(client):
     client.add_cog(Events(client))

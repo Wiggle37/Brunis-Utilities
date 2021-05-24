@@ -9,7 +9,7 @@ class Admin(commands.Cog):
 
     #Add Role
     @commands.command(aliases=['ar'])
-    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633) #Admin, Mod, Bruni, Bot Dev
+    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
     async def addrole(self, ctx, member: discord.Member=None, *, role:discord.Role=None):
         client = self.client
         await member.add_roles(role)
@@ -17,7 +17,7 @@ class Admin(commands.Cog):
 
     #Remove Role
     @commands.command(aliases=['rr'])
-    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633) #Admin, Mod, Bruni, Bot Dev
+    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
     async def removerole(self, ctx, member: discord.Member=None, *, role:discord.Role=None):
         client = self.client
         await member.remove_roles(role)
@@ -25,7 +25,7 @@ class Admin(commands.Cog):
 
     #Purge
     @commands.command()
-    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633) #Admin, Mod, Bruni, Bot Dev
+    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
     async def purge(self, ctx, amount=1):
         if amount > 1000:
             await ctx.send(f'Please choose a number under 1000 to purge.\nYour number was: {amount}')

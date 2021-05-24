@@ -518,41 +518,56 @@ class Economy(commands.Cog):
             await ctx.send('Thats not a valid number')
 
         else:
-            bal = self.currency.get_amount(ctx.author.id)
-            
-            if bal < bet:
-                await ctx.send('Yeh so you dont really have enough money to do that there')
+            if bet > 100000:
+                await ctx.send('max is 100k')
 
             else:
-                outcome1 = random.choice(['👑', '😩', '🥵', '🍔', '<:dankmerchants:829809749058650152>'])
-                outcome2 = random.choice(['👑', '😩', '🥵', '🍔', '<:dankmerchants:829809749058650152>'])
-                outcome3 = random.choice(['👑', '😩', '🥵', '🍔', '<:dankmerchants:829809749058650152>'])
+                bal = self.currency.get_amount(ctx.author.id)
+                
+                if bal < bet:
+                    await ctx.send('Yeh so you dont really have enough money to do that there')
 
-                if outcome1 == outcome2 == outcome3:
-                    amount = int(bet * 5)
-                    self.currency.add(ctx.author.id, amount)
+                else:
+                    outcome1 = random.choice(['👑', '😩', '🥵', '🍔', '<:dankmerchants:829809749058650152>'])
+                    outcome2 = random.choice(['👑', '😩', '🥵', '🍔', '<:dankmerchants:829809749058650152>'])
+                    outcome3 = random.choice(['👑', '😩', '🥵', '🍔', '<:dankmerchants:829809749058650152>'])
 
-                    embed = discord.Embed(title='You Won!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou won: {self.currency.emoji} `{amount}`', color=0x00ff00)
+                    win = False
 
-                if outcome1 == outcome2 or outcome1 == outcome2 or outcome1 == outcome3 or outcome2 == outcome2 or outcome2 == outcome3 or outcome3 == outcome3:
-                    amount = int(bet * 1.5)
-                    self.currency.add(ctx.author.id, amount)
+                    if outcome1 == outcome2 == outcome3:
+                        amount = int(bet * 5)
+                        self.currency.add(ctx.author.id, amount)
+                        win = True
 
-                    embed = discord.Embed(title='You Won Some!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: {self.currency.emoji} `{amount}`', color=0x00ff00)
+                        embed = discord.Embed(title='You Won!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou won: {self.currency.emoji} `{amount}`', color=0x00ff00)
 
-                if outcome1 == '<:dankmerchants:829809749058650152>' and outcome2 == '<:dankmerchants:829809749058650152>' and outcome3 == '<:dankmerchants:829809749058650152>':
-                    amount = int(bet * 10)
-                    self.currency.add(ctx.author.id, amount)
+                    if outcome1 == outcome2 or outcome1 == outcome2 or outcome1 == outcome3:
+                        amount = int(bet * 1.5)
+                        self.currency.add(ctx.author.id, amount)
+                        win = True
 
-                    embed = discord.Embed(title='You Won The Jackpot!!!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: {self.currency.emoji} `{amount}`')
+                        embed = discord.Embed(title='You Won Some!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: {self.currency.emoji} `{amount}`', color=0x00ff00)
 
-                await ctx.send(embed=embed)
+                    if outcome1 == '<:dankmerchants:829809749058650152>' and outcome2 == '<:dankmerchants:829809749058650152>' and outcome3 == '<:dankmerchants:829809749058650152>':
+                        amount = int(bet * 10)
+                        self.currency.add(ctx.author.id, amount)
+                        win = True
+
+                        embed = discord.Embed(title='You Won The Jackpot!!!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: {self.currency.emoji} `{amount}`')
+
+                    elif win == False:
+                        self.currency.subtract(ctx.author.id, bet)
+
+                        embed = discord.Embed(title='You Lost!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Lost: {self.currency.emoji} `{bet}`', color=0xff000)
+
+                    await ctx.send(embed=embed)
     
     @slots.error
     async def slots_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'If I let you go now you wouldnt have much money\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
+    
 
     #Dig
     @commands.command()
