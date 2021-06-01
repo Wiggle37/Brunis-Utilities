@@ -142,7 +142,7 @@ class Economy(commands.Cog):
         if inv_embed.fields == []:            
             return await ctx.send(f"Page {page} doesn’t exist")
         
-        total_pages = len(user_items) // item_limit_per_page + 1
+        total_pages = len(user_items) // item_limit_per_page + 1 * (len(user_items) % item_limit_per_page != 0)
         inv_embed.set_footer(text = f"Page {page} of {total_pages}")
         return await ctx.send(embed = inv_embed)
 
@@ -193,7 +193,7 @@ class Economy(commands.Cog):
         purchasable_items = [item for item in self.items.values() if item.purchasable]
 
         item_limit_per_page = 5
-        pages_of_shop = len(purchasable_items) // item_limit_per_page + 1
+        pages_of_shop = len(purchasable_items) // item_limit_per_page + 1 * (len(purchasable_items) % item_limit_per_page != 0)
 
         if page > pages_of_shop:
             return await ctx.send("That's not a valid page number")
@@ -430,7 +430,8 @@ class Economy(commands.Cog):
             'DUKEØFDØØM',
             'Adit',
             'Tommy',
-            'Julesi'
+            'Julesi',
+            'Firecracker'
         ]
 
         if doughnut_amount <= 0:
