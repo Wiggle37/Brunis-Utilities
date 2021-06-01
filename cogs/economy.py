@@ -461,6 +461,9 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 8, commands.BucketType.user)
     async def bet(self, ctx, bet = None):
+        if bet.lower() == "max" or bet.lower() == "all":
+            return await self.slots(ctx, min(100000, self.currency.get_amount(ctx.author.id)))
+        
         bet = self.is_valid_int(bet)
         if bet == False:
             return await ctx.send('That is not a valid number')
@@ -513,7 +516,10 @@ class Economy(commands.Cog):
     #Slots
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def slots(self, ctx, bet: str=None):
+    async def slots(self, ctx, bet = None):
+        if bet.lower() == "max" or bet.lower() == "all":
+            return await self.slots(ctx, min(100000, self.currency.get_amount(ctx.author.id)))
+        
         bet = self.is_valid_int(bet)
         if bet == False:
             await ctx.send('Thats not a valid number')
