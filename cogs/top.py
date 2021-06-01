@@ -2,7 +2,6 @@ import discord
 from discord import embeds
 from discord.ext import commands
 import sqlite3
-
 from discord.ext.commands.core import before_invoke
 
 class Top(commands.Cog):
@@ -29,7 +28,8 @@ class Top(commands.Cog):
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
-            await ctx.send(embed=top_donors_embed)
+            dbase.close()
+            return await ctx.send(embed=top_donors_embed)
 
         if board.lower() == 'money' or board.lower() == 'moneys':
             dbase = sqlite3.connect("dono.db")
@@ -47,9 +47,8 @@ class Top(commands.Cog):
                 donor_info += f"**{rank + 1}. {member}**: `${'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
-            await ctx.send(embed=top_donors_embed)
-
             dbase.close()
+            return await ctx.send(embed=top_donors_embed)
 
         if board.lower() == 'bumps' or board.lower() == 'bump':
             dbase = sqlite3.connect("bump.db")
@@ -68,9 +67,29 @@ class Top(commands.Cog):
                 bumper_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
             
             top_bumpers_embed.description=bumper_info
-            await ctx.send(embed=top_bumpers_embed)
-
             dbase.close()
+            
+            return await ctx.send(embed=top_bumpers_embed)
+        
+        if board.lower() == 'special':
+            dbase = sqlite3.connect("dono.db")
+            cursor = dbase.cursor()
+
+            cursor.execute("SELECT user_id, special FROM donations ORDER BY special DESC")
+            special_donors = cursor.fetchmany(10)
+
+            top_donors_embed = discord.Embed(title="Top Special Donators", color=0x00ff00)
+            donor_info = ""
+
+            donor_info += "__**Special Donations Leader Board**__\n"
+            for rank, user in enumerate(special_donors):
+                member = ctx.guild.get_member(int(user[0]))
+                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
+
+            top_donors_embed.description=donor_info
+            dbase.close()
+            return await ctx.send(embed=top_donors_embed)
+
 
 def setup(client):
     client.add_cog(Top(client))
