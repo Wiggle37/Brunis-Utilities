@@ -1,4 +1,0 @@
-discord
-python-dotenv
-aiohttp-requests
-requests

@@ -1,4 +1,3 @@
-from os import curdir
 import discord
 from discord import Activity, ActivityType, Color, Embed, User
 from discord.ext import commands
@@ -7,7 +6,6 @@ import asyncio
 import sqlite3
 import os
 
-###Bot###
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(
@@ -18,32 +16,27 @@ client = commands.Bot(
     )
 client.remove_command('help')
 
-###On Ready###
 @client.event
 async def on_ready():
     print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
 
-###Cog Loader###
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
         print(f'cog.{filename[:-3]} loaded')
 
-#Load
 @client.command()
 @commands.is_owner()
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f'Loaded **{extension}**')
 
-#Unload
 @client.command()
 @commands.is_owner()
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f'Unloaded **{extension}**')
 
-#Reload
 @client.command()
 @commands.is_owner()
 async def reload(ctx, extension):
@@ -65,5 +58,4 @@ dbase = sqlite3.connect('bot.db')
 cursor = dbase.cursor()
 cursor.execute("SELECT token FROM token WHERE bot == bot")
 token = cursor.fetchone()[0]
-
 client.run(token)
