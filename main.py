@@ -1,14 +1,11 @@
+from os import curdir
 import discord
 from discord import Activity, ActivityType, Color, Embed, User
 from discord.ext import commands
 from discord.ext.commands import Bot
 import asyncio
+import sqlite3
 import os
-from dotenv import load_dotenv
-import git 
-
-repo = git.Repo(r"C:\Users\Miste\Documents\GitHub\Brunis-Utilities")
-repo.remotes.origin.pull()
 
 ###Bot###
 intents = discord.Intents.default()
@@ -62,17 +59,11 @@ async def status():
 
         await asyncio.sleep(30)
 
-async def botping():
-    await client.wait_until_ready()
-    while True:
-        await client.get_channel(841422269972742175).send(f'**Current Ping:** {round(client.latency*1000)}ms')
-        print(f'Current Latency: {round(client.latency*1000)}ms')
-
-        await asyncio.sleep(600)
-
-client.loop.create_task(botping())
 client.loop.create_task(status())
 
-load_dotenv()
-Bot_Token = os.getenv('BOT_TOKEN')
-client.run(Bot_Token)
+dbase = sqlite3.connect('bot.db')
+cursor = dbase.cursor()
+cursor.execute("SELECT token FROM token WHERE bot == bot")
+token = cursor.fetchone()[0]
+
+client.run(token)

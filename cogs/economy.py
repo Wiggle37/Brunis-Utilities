@@ -418,7 +418,7 @@ class Economy(commands.Cog):
             'Darkside',
             'Dark',
             'Neon',
-            'London',
+            'PHYCHO',
             'Dank Mazen',
             'Bruni',
             'Wiggle',
@@ -575,7 +575,6 @@ class Economy(commands.Cog):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'If I let you go now you wouldnt have much money\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
     
-
     #Dig
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)

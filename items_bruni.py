@@ -331,6 +331,16 @@ class largeFish(misc):
     db_name = "largefish"
 
 
+class iphone(misc):
+    name = 'iPhone'
+    decription = 'Flex on the broke bitches'
+    image_url = 'https://cdn.discordapp.com/emojis/849373167913926728.png?v=1'
+    emoji = '<:iphone:849373167913926728>'
+    db_name = 'iphone'
+    purchasable = True
+    price = 20000000
+
+
 class boxes(item):
     table = "boxes"
     purchasable = True
@@ -444,6 +454,5 @@ items_classes = [
 economy_items = {}
 for i in items_classes:
     economy_items[i.name] = i
-
 
 economy_items = dict(sorted(economy_items.items())) # sorts in alphabetical order
