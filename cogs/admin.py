@@ -1,9 +1,7 @@
-from asyncio.windows_events import NULL
 import discord
 from discord.ext import commands
 import time
 import sqlite3
-
 from discord.ext.commands.core import command
 
 class Admin(commands.Cog):
@@ -41,11 +39,7 @@ class Admin(commands.Cog):
             await ctx.channel.purge(limit=amount)
 
             purge_embed = discord.Embed(title='Purged Messages', description=f'{amount} message(s) purged', color=0x00ff00)
-            await ctx.send(embed=purge_embed)
-
-            time.sleep(2)
-
-            await ctx.channel.purge(limit=1)
+            await ctx.send(embed=purge_embed, delete_after=1)
 
     #Lock
     @commands.command()
@@ -54,10 +48,6 @@ class Admin(commands.Cog):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
         await ctx.send('Channel locked')
 
-    @lock.error
-    async def error(self, ctx, error):
-        await ctx.send(f'There was an error\n{error}')
-
     #Unlock
     @commands.command()
     @commands.has_any_role(791516118120267806)
@@ -65,14 +55,10 @@ class Admin(commands.Cog):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
         await ctx.send('Channel unlocked')
 
-    @unlock.error
-    async def error(self, ctx, error):
-        await ctx.send(f'There was an error\n{error}')
-
     #Add Auto Reponse
     @commands.command()
     @commands.has_any_role(791516118120267806)
-    async def autor(self, ctx, trigger, *, response):
+    async def ara(self, ctx, trigger, *, response):
         dbsae = sqlite3.connect('reactions.db')
         cursor = dbsae.cursor()
 
@@ -93,8 +79,25 @@ class Admin(commands.Cog):
     #Remove Auto Response
     @commands.command()
     @commands.has_any_role(791516118120267806)
-    async def remover(self, trigger):
-        pass
+    async def arr(self, ctx, trigger):
+        dbsae = sqlite3.connect('reactions.db')
+        cursor = dbsae.cursor()
+
+        cursor.execute(f"SELECT trigger FROM reactions WHERE trigger == ?", [trigger])
+        exist = cursor.fetchone()
+        if exist is None:
+            await ctx.send("This trigger doesn't exist what are you doing?")
+
+        elif exist[0] == trigger:
+            cursor.execute(f"DELETE FROM reactions WHERE trigger == '{trigger}'")
+
+            await ctx.send('Trigger Deleted')
+
+        else:
+            await ctx.send('That is not a trigger currently added')
+
+        dbsae.commit()
+        dbsae.close()
 
 def setup(client):
     client.add_cog(Admin(client))

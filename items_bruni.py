@@ -448,7 +448,8 @@ items_classes = [
     wood, iron, gold, diamond, emerald,
     woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingRod,
     doughnut, brunisBackpack, 
-    apple, duck, goose, chicken, smallFish, mediumFish, largeFish
+    apple, duck, goose, chicken, smallFish, mediumFish, largeFish,
+    iphone
 ]
 
 economy_items = {}
