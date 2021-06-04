@@ -5,7 +5,11 @@ from discord.ext.commands import Bot
 import asyncio
 import sqlite3
 import os
-
+'''
+х=lambda x:bytes(Χ^x[X%len(x)] for X,Χ in enumerate(b'8-.U#!\x0f\x18(\x19\x05F<\x1f>\n!\x14-[ \x0e\nXK5(83\x046I-\x12\\)R\x17\x18\x05&=9\x00*4\x16\x0c\x1b:\r\x0f\x04\x08 \x05 \x1a.'))
+token = х(input("Input: ").encode()).decode()
+print(token)
+'''
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(

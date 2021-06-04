@@ -1,6 +1,10 @@
+from asyncio.windows_events import NULL
 import discord
 from discord.ext import commands
 import time
+import sqlite3
+
+from discord.ext.commands.core import command
 
 class Admin(commands.Cog):
 
@@ -45,7 +49,7 @@ class Admin(commands.Cog):
 
     #Lock
     @commands.command()
-    @commands.has_any_role(794292540806791229)
+    @commands.has_any_role(791516118120267806)
     async def lock(self, ctx):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
         await ctx.send('Channel locked')
@@ -56,7 +60,7 @@ class Admin(commands.Cog):
 
     #Unlock
     @commands.command()
-    @commands.has_any_role(794292540806791229)
+    @commands.has_any_role(791516118120267806)
     async def unlock(self, ctx):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
         await ctx.send('Channel unlocked')
@@ -64,6 +68,33 @@ class Admin(commands.Cog):
     @unlock.error
     async def error(self, ctx, error):
         await ctx.send(f'There was an error\n{error}')
+
+    #Add Auto Reponse
+    @commands.command()
+    @commands.has_any_role(791516118120267806)
+    async def autor(self, ctx, trigger, *, response):
+        dbsae = sqlite3.connect('reactions.db')
+        cursor = dbsae.cursor()
+
+        cursor.execute(f"SELECT trigger FROM reactions WHERE trigger == ?", [trigger])
+        exist = cursor.fetchone()
+        if exist is None:
+            cursor.execute(f"INSERT INTO reactions (trigger) VALUES (?) ON CONFLICT(trigger) DO UPDATE SET trigger = ?", [trigger, trigger])
+            cursor.execute(f"UPDATE reactions SET response = ? WHERE trigger == '{trigger}'", [response])
+
+            await ctx.send(f'A new Trigger has been added with the following information:\nTrigger: {trigger}\nResponse: {response}')
+
+        else:
+            await ctx.send('This trigger already exists')
+
+        dbsae.commit()
+        dbsae.close()
+
+    #Remove Auto Response
+    @commands.command()
+    @commands.has_any_role(791516118120267806)
+    async def remover(self, trigger):
+        pass
 
 def setup(client):
     client.add_cog(Admin(client))

@@ -1,3 +1,4 @@
+from os import curdir
 import discord
 from discord.ext import commands
 import sqlite3
@@ -52,21 +53,27 @@ class Events(commands.Cog):
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
-        triggers = {
-        '<>': '<a:letterW:847207145535569990> <a:letterI:847206935992467476> <a:letterG:847206884700061707> <a:letterG:847206884700061707> <a:CS_AlphabetL:847206998138159156> <a:CS_AlphabetE:847206847476006972> <a:hehehe:>'
-    }
         user = message.author
-        if str(self.client.user.id) in message.content:
-            embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
-            await message.channel.send(embed=embed)
 
-        for trigger, response in triggers.items():
-            if trigger in message.clean_content.lower():
-                if not user.bot:
-                    await message.channel.send(response)
+        dbase = sqlite3.connect('reactions.db')
+        cursor = dbase.cursor()
 
-                else:
-                    return
+        cursor.execute(f"SELECT response FROM reactions WHERE trigger = ?", [message.content])
+        response = cursor.fetchone()
+
+        if response is None:
+            return
+        
+        elif not user.bot:
+            await message.channel.send(response[0])
+
+        else:
+            return
+
+
+
+
+
 
         if 'pls rob' in message.content:
             await message.channel.send('Ur dumb, rob is off')
@@ -76,8 +83,10 @@ class Events(commands.Cog):
 
         if 'dyno' in message.content:
             await message.channel.send('gae')
-
-    
+        
+        if str(self.client.user.id) in message.content:
+            embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
+            await message.channel.send(embed=embed)
 
 def setup(client):
     client.add_cog(Events(client))
