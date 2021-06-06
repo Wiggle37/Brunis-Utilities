@@ -182,6 +182,7 @@ class token(materials):
     emoji = '<:token:851194663066271765>'
     db_name = 'token'
     sellable = False
+    sell_price = None
 
 
 class tools(item):
