@@ -56,7 +56,7 @@ class Events(commands.Cog):
         user = message.author
         dbase = sqlite3.connect('reactions.db')
         cursor = dbase.cursor()
-        '''
+        
         cursor.execute(f"SELECT trigger FROM reactions")
         response = cursor.fetchall()
         print(response)
@@ -65,7 +65,7 @@ class Events(commands.Cog):
 
         else:
             return
-        '''
+        
 
 
 
