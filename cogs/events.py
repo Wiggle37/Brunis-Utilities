@@ -1,5 +1,6 @@
 from os import curdir
 import discord
+from discord import reaction
 from discord.ext import commands
 import sqlite3
 import time
@@ -57,10 +58,11 @@ class Events(commands.Cog):
         dbase = sqlite3.connect('reactions.db')
         cursor = dbase.cursor()
         
-        cursor.execute(f"SELECT trigger FROM reactions")
+        cursor.execute(f"SELECT trigger, response FROM reactions")
         response = cursor.fetchall()
-        print(response)
-        if response in message.clean_content.lower() and not user.bot:
+
+        if message.clean_content.lower() in response:
+            print('hmmm')
             await message.channel.send('testing :)')
 
         else:
