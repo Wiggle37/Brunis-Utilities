@@ -58,30 +58,24 @@ class Events(commands.Cog):
         dbase = sqlite3.connect('reactions.db')
         cursor = dbase.cursor()
         
-        cursor.execute(f"SELECT trigger, response FROM reactions")
-        response = cursor.fetchall()
+        cursor.execute(f"SELECT response FROM reactions WHERE trigger == '{message.clean_content.lower()}'")
+        response = cursor.fetchone()
 
-        if message.clean_content.lower() in response:
-            print('hmmm')
-            await message.channel.send('testing :)')
+        if response is None:
+            return
 
         else:
-            return
-        
+            await message.channel.send(response[0])
 
 
 
 
 
-        if 'pls rob' in message.content:
-            await message.channel.send('Ur dumb, rob is off')
 
-        if 'pls steal' in message.content:
-            await message.channel.send('Just why are you dumb')
 
-        if 'dyno' in message.content:
-            await message.channel.send('gae')
-        
+
+
+
         if str(self.client.user.id) in message.content:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
