@@ -11,14 +11,14 @@ class Top(commands.Cog):
 
     @commands.command()
     async def tops(self, ctx, board='donor'):
-        if board.lower() == 'donor' or board.lower() == 'dank' or board.lower() == 'donors':
+        if board.lower() == 'donor' or board.lower() == 'dank' or board.lower() == 'donors' or board.lower() == 'total':
             dbase = sqlite3.connect("dono.db")
             cursor = dbase.cursor()
 
             cursor.execute("SELECT user_id, total FROM donations ORDER BY total DESC")
             dank_donors = cursor.fetchmany(25)
 
-            top_donors_embed = discord.Embed(title="Top donors!", color=0x00ff00)
+            top_donors_embed = discord.Embed(title="Top Total donors!", color=0x00ff00)
             donor_info = ""
 
             donor_info += "__**Dank Memer Donations Leader Board**__\n"
@@ -82,6 +82,63 @@ class Top(commands.Cog):
             donor_info = ""
 
             donor_info += "__**Special Donations Leader Board**__\n"
+            for rank, user in enumerate(special_donors):
+                member = ctx.guild.get_member(int(user[0]))
+                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
+
+            top_donors_embed.description=donor_info
+            dbase.close()
+            return await ctx.send(embed=top_donors_embed)
+
+        if board.lower() == 'heist':
+            dbase = sqlite3.connect("dono.db")
+            cursor = dbase.cursor()
+
+            cursor.execute("SELECT user_id, heist FROM donations ORDER BY heist DESC")
+            special_donors = cursor.fetchmany(10)
+
+            top_donors_embed = discord.Embed(title="Top Heist Donators", color=0x00ff00)
+            donor_info = ""
+
+            donor_info += "__**Heist Donations Leader Board**__\n"
+            for rank, user in enumerate(special_donors):
+                member = ctx.guild.get_member(int(user[0]))
+                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
+
+            top_donors_embed.description=donor_info
+            dbase.close()
+            return await ctx.send(embed=top_donors_embed)
+
+        if board.lower() == 'event':
+            dbase = sqlite3.connect("dono.db")
+            cursor = dbase.cursor()
+
+            cursor.execute("SELECT user_id, event FROM donations ORDER BY event DESC")
+            special_donors = cursor.fetchmany(10)
+
+            top_donors_embed = discord.Embed(title="Top Event Donators", color=0x00ff00)
+            donor_info = ""
+
+            donor_info += "__**Event Donations Leader Board**__\n"
+            for rank, user in enumerate(special_donors):
+                member = ctx.guild.get_member(int(user[0]))
+                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
+
+            top_donors_embed.description=donor_info
+            dbase.close()
+            return await ctx.send(embed=top_donors_embed)
+
+        if board.lower() == 'gaw' or board.lower() == 'givaway':
+            dbase = sqlite3.connect("dono.db")
+            cursor = dbase.cursor()
+
+            cursor.execute("SELECT user_id, gaw FROM donations ORDER BY gaw DESC")
+            special_donors = cursor.fetchmany(10)
+
+            top_donors_embed = discord.Embed(title="Top Giveaway Donators", color=0x00ff00)
+            donor_info = ""
+
+            donor_info += "__**Giveaway Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
                 member = ctx.guild.get_member(int(user[0]))
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"

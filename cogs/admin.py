@@ -57,7 +57,7 @@ class Admin(commands.Cog):
 
     #Add Auto Reponse
     @commands.command()
-    @commands.has_any_role(791516118120267806)
+    @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def ara(self, ctx, trigger, *, response):
         dbsae = sqlite3.connect('reactions.db')
         cursor = dbsae.cursor()
@@ -78,7 +78,7 @@ class Admin(commands.Cog):
 
     #Remove Auto Response
     @commands.command()
-    @commands.has_any_role(791516118120267806)
+    @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def arr(self, ctx, trigger):
         dbsae = sqlite3.connect('reactions.db')
         cursor = dbsae.cursor()

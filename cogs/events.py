@@ -54,22 +54,18 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         user = message.author
-
         dbase = sqlite3.connect('reactions.db')
         cursor = dbase.cursor()
-
-        cursor.execute(f"SELECT response FROM reactions WHERE trigger = ?", [message.content])
-        response = cursor.fetchone()
-
-        if response is None:
-            return
-        
-        elif not user.bot:
-            await message.channel.send(response[0])
+        '''
+        cursor.execute(f"SELECT trigger FROM reactions")
+        response = cursor.fetchall()
+        print(response)
+        if response in message.clean_content.lower() and not user.bot:
+            await message.channel.send('testing :)')
 
         else:
             return
-
+        '''
 
 
 

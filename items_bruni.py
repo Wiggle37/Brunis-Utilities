@@ -333,7 +333,7 @@ class largeFish(misc):
 
 class iphone(misc):
     name = 'iPhone'
-    decription = 'Flex on the broke bitches'
+    description = 'Flex on the broke bitches'
     image_url = 'https://cdn.discordapp.com/emojis/849373167913926728.png?v=1'
     emoji = '<:iphone:849373167913926728>'
     db_name = 'iphone'
