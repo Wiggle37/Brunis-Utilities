@@ -611,6 +611,12 @@ class Economy(commands.Cog):
             self.currency.add(ctx.author.id, amount)
 
             await ctx.send(f'You went digging in the dirt and found {itemamount} {item.emoji} {item.name} and {self.currency.emoji} {amount}')
+    
+    @dig.error
+    async def dig_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            await ctx.send(embed=embed)
 
     #Chop
     @commands.command()
