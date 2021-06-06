@@ -1,18 +1,19 @@
 import discord
-from discord import embeds
-from discord.errors import PrivilegedIntentsRequired
+from discord import *
 from discord.ext import commands
-from discord.ext.commands import cooldown, BucketType, BadArgument
+from discord.ext.commands import *
+from discord.errors import *
+from discord.ext.commands.core import *
 import asyncio
 import sqlite3
 import random
 from datetime import datetime
-from discord.ext.commands.core import command
-from items_bruni import diamondPick, doughnut, economy_items, currency, emeraldPick, diamondPick, goldPick, ironPick, woodPick
 from itertools import islice
 import traceback
 import sys
 import typing
+
+from items_bruni import *
 
 class Economy(commands.Cog):
 
@@ -89,7 +90,7 @@ class Economy(commands.Cog):
 
         
     #Rich
-    @commands.command()
+    @commands.command(aliases=['lb'])
     async def rich(self, ctx):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
@@ -209,6 +210,7 @@ class Economy(commands.Cog):
         shop_embed.set_footer(text = f"Page {page} of {pages_of_shop}")
 
         return await ctx.send(embed = shop_embed)
+
     #Buy
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -462,6 +464,10 @@ class Economy(commands.Cog):
     @commands.cooldown(1, 8, commands.BucketType.user)
     async def bet(self, ctx, bet = None):
         if bet.lower() == "max" or bet.lower() == "all":
+            # typecasting amount to string to preserve invocation style
+            return await self.bet(ctx, str(min(500000, self.currency.get_amount(ctx.author.id))))
+
+        if bet.lower() == "max" or bet.lower() == "all":
             return await self.slots(ctx, min(100000, self.currency.get_amount(ctx.author.id)))
         
         bet = self.is_valid_int(bet)
@@ -518,7 +524,8 @@ class Economy(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def slots(self, ctx, bet = None):
         if bet.lower() == "max" or bet.lower() == "all":
-            return await self.slots(ctx, min(100000, self.currency.get_amount(ctx.author.id)))
+            # typecasting amount to string to preserve invocation style
+            return await self.slots(ctx, str(min(100000, self.currency.get_amount(ctx.author.id))))
         
         bet = self.is_valid_int(bet)
         if bet == False:
@@ -548,14 +555,14 @@ class Economy(commands.Cog):
 
                         embed = discord.Embed(title='You Won!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou won: {self.currency.emoji} `{amount}`', color=0x00ff00)
 
-                    if outcome1 == outcome2 or outcome1 == outcome2 or outcome1 == outcome3:
+                    elif outcome1 == outcome2 or outcome1 == outcome2 or outcome1 == outcome3 or outcome2 == outcome3:
                         amount = int(bet * 1.5)
                         self.currency.add(ctx.author.id, amount)
                         win = True
 
                         embed = discord.Embed(title='You Won Some!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: {self.currency.emoji} `{amount}`', color=0x00ff00)
 
-                    if outcome1 == '<:dankmerchants:829809749058650152>' and outcome2 == '<:dankmerchants:829809749058650152>' and outcome3 == '<:dankmerchants:829809749058650152>':
+                    elif outcome1 == '<:dankmerchants:829809749058650152>' and outcome2 == '<:dankmerchants:829809749058650152>' and outcome3 == '<:dankmerchants:829809749058650152>':
                         amount = int(bet * 10)
                         self.currency.add(ctx.author.id, amount)
                         win = True
@@ -574,30 +581,124 @@ class Economy(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'If I let you go now you wouldnt have much money\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
+
+    #Work
+    @commands.command()
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    async def work(self, ctx):
+        pass
+
+    #Mine
+    @commands.command()
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    async def mine(self, ctx):
+        pass
     
     #Dig
     @commands.command()
-    @commands.cooldown(1, 15, commands.BucketType.user)
+    @commands.cooldown(1, 30, commands.BucketType.user)
     async def dig(self, ctx):
-        pass
+        shovelcheck = shovel.get_item_count(ctx.author.id)
+        if shovelcheck < 1:
+            await ctx.send('You need to buy a shovel to do this, run the command `b!buy 1 shovel`')
+
+        else:
+            amount = random.randint(1, 5000)
+            item = random.choice([token, ironBox, goldBox, apple, emerald])
+            itemamount = random.randint(1, 3)
+
+            item.increase_item(ctx.author.id, itemamount)
+            self.currency.add(ctx.author.id, amount)
+
+            await ctx.send(f'You went digging in the dirt and found {itemamount} {item.emoji} {item.name} and {self.currency.emoji} {amount}')
 
     #Chop
     @commands.command()
     @commands.cooldown(1, 15, BucketType.user)
     async def chop(self, ctx):
-        pass
+        axecheck = axe.get_item_count(ctx.author.id)
+        if axecheck < 1:
+            await ctx.send('You still need to buy an an axe, to do that run the command `b!buy 1 axe`')
+
+        else:
+            amount = random.randint(1, 7)
+            wood.increase_item(ctx.author.id, amount)
+
+            await ctx.send(f'You went to go chop down some trees and got {amount} {wood.emoji} {wood.name}')
+
+    @chop.error
+    async def chop_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No stop choping the trees before you are all tired out\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            await ctx.send(embed=embed)
 
     #Hunt
     @commands.command()
     @commands.cooldown(1, 15, BucketType.user)
     async def hunt(self, ctx):
-        pass
+        def check(m):
+            return m.content == "hello" and m.channel == m.channel
+
+        guncheck = gun.get_item_count(ctx.author.id)
+        if guncheck < 1:
+            await ctx.send('You need to buy a gun first! `b!buy 1 gun`')
+
+        else:
+            event = random.choice([True, False])
+            if event:
+                await ctx.send(f"OH NO THERE WAS A WILD {random.choice(['Goose', 'Duck', 'Chicken'])} came to woop you, QUICK what do you do?\n`1.` Shoot it and have a chance of living and gettings some loot\n`2.` Run away like a baby and get nothing")
+                msg = await self.client.wait_for("message", check=check)
+
+                if msg.clean_content.lower() == 'shoot':
+                    action = random.choice(['hit', 'missed'])
+
+                    if action == 'hit':
+                        animal = random.choice([duck, goose, chicken])
+                        animal.increase_item(ctx.author.id, 3)
+                        await ctx.send(f'You hit the shot and got 3 {animal.name} {animal.name}s')
+
+                    if action == 'missed':
+                        await ctx.send("You missed your shot but the animal didn's care about you so you lost nothing")
+
+                if msg.clean_content.lower() == 'run':
+                    await ctx.send('You ran away like a baby and got nothing, LOL')
+
+                elif msg.clean_content.lower() != 'shoot' or msg.clean_content.lower() != 'run':
+                    amount = gun.get_item_count(ctx.author.id)
+                    gun.decrease_item(ctx, amount)
+                    await ctx.send("You didn't chose a valid option so you lost you all of your guns because you lost the fight")
+
+            if not event:
+                animal = random.choice([duck, goose, chicken])
+                animal.increase_item(ctx.author.id, 1)
+                await ctx.send(f'There were no problems along the way and you hunted in peace and got 1 {animal.emoji} {animal.name}')
+
+    @hunt.error
+    async def hunt_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No stop hunting before you are all tired out\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            await ctx.send(embed=embed)
 
     #Fish
     @commands.command()
     @commands.cooldown(1, 15, BucketType.user)
     async def fish(self, ctx):
-        pass
+        rodcheck = fishingRod.get_item_count(ctx.author.id)
+        if rodcheck < 1:
+            await ctx.send("Buy a fishing rob by running the command: `b!buy 1 pole`")
+
+        else:
+            amount = random.randint(1, 5)
+            fishtype = random.choice([smallFish, mediumFish, largeFish])
+            fishtype.increase_item(ctx.author.id, amount)
+
+            await ctx.send(f'You went fishing and got {fishtype.emoji} {fishtype.name}')
+
+    @fish.error
+    async def fish_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No stop fish before you are all tired out\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            await ctx.send(embed=embed)
 
 def setup(client):
     client.add_cog(Economy(client))

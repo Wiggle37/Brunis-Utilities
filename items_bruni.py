@@ -1,6 +1,8 @@
 import sqlite3
 import random
 
+from discord import emoji
+
 # dict of items for economy at the end
 
 """
@@ -173,6 +175,15 @@ class emerald(materials):
     sell_price = 1000
 
 
+class token(materials):
+    name = 'Token'
+    description = 'Use these to buy some perks in the server'
+    image_url = 'https://cdn.discordapp.com/emojis/851194663066271765.png?v=1'
+    emoji = '<:token:851194663066271765>'
+    db_name = 'token'
+    sellable = False
+
+
 class tools(item):
     table = "tools"
     purchasable = True
@@ -241,6 +252,23 @@ class fishingRod(tools):
     emoji = "<:fishingpole:836051493744148561>"
     db_name = "fishingpole"
     price = 75000
+
+class axe(tools):
+    name = 'Axe'
+    description = 'An axe to chop some trees down'
+    image_url = 'https://cdn.discordapp.com/emojis/851165794346729473.png?v=1'
+    emoji = '<:axe:851165794346729473>'
+    db_name = 'axe'
+    price = 100000
+
+
+class shovel(tools):
+    name = 'Shovel'
+    description = 'Go dig in the dirt and find some stuff maybe'
+    image_url = 'https://cdn.discordapp.com/emojis/851172303873900564.png?v=1'
+    emoji = '<:shovel:851172303873900564>'
+    db_name = 'shovel'
+    price = 100000
 
 
 class multis(item):
@@ -327,18 +355,58 @@ class largeFish(misc):
     name = "Large Fish"
     description = "The bigger of the fish that you can get from fishing"
     image_url = "https://cdn.discordapp.com/emojis/835998981951062037.png?v=1"
-    emoji = "<:largefish:835998981951062037:>"
+    emoji = "<:largefish:835998981951062037>"
     db_name = "largefish"
 
 
 class iphone(misc):
     name = 'iPhone'
-    description = 'Flex on the broke bitches'
+    description = 'Flex on the broke bitches\nSuggested by <@!801115086327644231>'
     image_url = 'https://cdn.discordapp.com/emojis/849373167913926728.png?v=1'
     emoji = '<:iphone:849373167913926728>'
     db_name = 'iphone'
     purchasable = True
     price = 20000000
+
+
+class milkXmocha(misc):
+    name = 'Milk and Mocha'
+    description = 'A cute little collectors item\nSuggested by <@!732627627235606629>'
+    image_url = 'https://cdn.discordapp.com/attachments/842372286265688096/850376992234930247/765171502671986709.png'
+    emoji = '<:mm:851087059836862515>'
+    db_name = 'milkMocha'
+    purchasable = True
+    price = 2000000
+
+
+class rainbowblob(misc):
+    name = 'Rainbow Blob'
+    description = 'A rainbow blob that dances and nothing else'
+    image_url = 'https://cdn.discordapp.com/emojis/829822719372951592.gif?v=1'
+    emoji = '<a:blob:829822719372951592>'
+    db_name = 'blob'
+    purchasable = True
+    price = 1000000000
+
+
+class bananadance(misc):
+    name = 'Dancing Banana'
+    description = 'Just a dancing banana'
+    image_url = 'https://cdn.discordapp.com/emojis/851094311466434560.gif?v=1'
+    emoji = '<a:bananadance:851094311466434560>'
+    db_name = 'bananadance'
+    purchasable = True
+    price = 500000000
+
+
+class merchant(misc):
+    name = 'Merchant Coin'
+    description = 'This coin means everything, you are one of the richest people ever!'
+    image_url = 'https://cdn.discordapp.com/emojis/810162519623991347.png?v=1'
+    emoji = '<:dankmerchants:810162519623991347>'
+    db_name = 'merchant'
+    purchasable = True
+    price = 10000000000
 
 
 class boxes(item):
@@ -361,7 +429,7 @@ class boxes(item):
         for item, item_range in cls.possible_items.items():
             total_items = sum([random.randint(item_range[0], item_range[1]) for num in range(count)])
             cursor.execute(f"UPDATE {item.table} SET {item.db_name} = {item.db_name} + ? WHERE user_id == ?", [total_items, user_id])
-            response += f"\n***{item.name}:*** `{total_items}`"
+            response += f"\n***{item.emoji} {item.name}:*** `{total_items}`"
 
         dbase.commit()
         dbase.close()
@@ -446,10 +514,11 @@ items_classes = [
     woodenBox, ironBox, goldBox, diamondBox, emeraldBox,
     wiggle, bruni,
     wood, iron, gold, diamond, emerald,
-    woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingRod,
+    woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingRod, axe, shovel,
     doughnut, brunisBackpack, 
     apple, duck, goose, chicken, smallFish, mediumFish, largeFish,
-    iphone
+    iphone, milkXmocha, rainbowblob, bananadance, merchant,
+    token
 ]
 
 economy_items = {}
