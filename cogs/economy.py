@@ -560,7 +560,7 @@ class Economy(commands.Cog):
                         self.currency.add(ctx.author.id, amount)
                         win = True
 
-                        embed = discord.Embed(title='You Won Some!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: {self.currency.emoji} `{amount}`', color=0x00ff00)
+                        embed = discord.Embed(title='You Won Some!', description=f'Outcome:\n{outcome1} {outcome2} {outcome3}\n\nYou Won: {self.currency.emoji} `{amount}`', color=0xffff00)
 
                     elif outcome1 == '<:dankmerchants:829809749058650152>' and outcome2 == '<:dankmerchants:829809749058650152>' and outcome3 == '<:dankmerchants:829809749058650152>':
                         amount = int(bet * 10)
@@ -586,13 +586,13 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)
     async def work(self, ctx):
-        pass
+        await ctx.send('Wiggle is working on it')
 
     #Mine
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)
     async def mine(self, ctx):
-        pass
+        await ctx.send('Wiggle is working on it')
     
     #Dig
     @commands.command()
