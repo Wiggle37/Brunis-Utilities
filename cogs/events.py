@@ -80,5 +80,23 @@ class Events(commands.Cog):
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
 
+    #Other Server Prevention
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        guilds = [
+            784491141022220309, # Merchants
+            831346501702647888, # Merchants Ban Appeal
+            824723149891174411, # Ban Royale
+            810233137988239430, # Brunis Support
+            844759955815006219, # Brunis Emojis
+        ]
+
+        if guild.id in guilds:
+            return
+        
+        else:
+            await guild.leave()
+            print('Someone got the invite link again somehow *smh*')
+
 def setup(client):
     client.add_cog(Events(client))
