@@ -20,10 +20,10 @@ client.remove_command('help')
 async def on_ready():
     print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
 
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        client.load_extension(f'cogs.{filename[:-3]}')
-        print(f'cog.{filename[:-3]} loaded')
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            client.load_extension(f'cogs.{filename[:-3]}')
+            print(f'cog.{filename[:-3]} loaded')
 
 @client.command()
 @commands.is_owner()
