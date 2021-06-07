@@ -58,7 +58,7 @@ class Events(commands.Cog):
         dbase = sqlite3.connect('reactions.db')
         cursor = dbase.cursor()
         
-        cursor.execute(f"SELECT response FROM reactions WHERE trigger == '{message.clean_content.lower()}'")
+        cursor.execute(f"SELECT response FROM reactions WHERE trigger == '{message.content}'")
         response = cursor.fetchone()
 
         if response is None:
