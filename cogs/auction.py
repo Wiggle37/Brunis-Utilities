@@ -12,7 +12,7 @@ class Auction(commands.Cog):
         self.client = client
         self.auctioner_role = client.get_guild(784491141022220309).get_role(800496416740605993)
         self.emoji = "\U0001f3e6"
-        self.auction_message = None
+        self.auction_message_id = None
         self.auction_in_progress = False
         self.started_bidding = False
         self.auction_amount = 1
@@ -58,7 +58,10 @@ class Auction(commands.Cog):
                 # if the auction halts while waiting and someone reacts to the message
 
                 if self.auction_in_progress:
-                    await self.add_auction_role(user)
+                    # await self.add_auction_role(user)
+                    channel = await self.client.get_channel(789227950636793887)
+                    guild = await self.client.get_guild(784491141022220309)
+                    await channel.set_permissions(guild.default_role, send_messages = True)
 
             except asyncio.TimeoutError:
                 pass
@@ -188,7 +191,10 @@ class Auction(commands.Cog):
         for reaction in auction_message.reactions:
             if str(reaction.emoji) == self.emoji:
                 for user in await reaction.users().flatten():
-                    await user.remove_roles(self.auctioner_role)
+                    # await user.remove_roles(self.auctioner_role)
+                    channel = await self.client.get_channel(789227950636793887)
+                    guild = await self.client.get_guild(784491141022220309)
+                    await channel.set_permissions(guild.default_role, send_messages = False)
         
         auction_end_embed = discord.Embed(
             title = "Auction ended!",
