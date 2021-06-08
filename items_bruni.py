@@ -175,11 +175,11 @@ class emerald(materials):
     sell_price = 1000
 
 
-class token(materials):
-    name = 'Token'
+class butilCoin(materials):
+    name = "Bruni's Utilities Coin"
     description = 'Use these to buy some perks in the server'
-    image_url = 'https://cdn.discordapp.com/emojis/851194663066271765.png?v=1'
-    emoji = '<:token:851194663066271765>'
+    image_url = 'https://cdn.discordapp.com/emojis/851599382633250856.png?v=1'
+    emoji = '<:brunisutils:851599382633250856>'
     db_name = 'token'
     sellable = False
     sell_price = None
@@ -519,7 +519,7 @@ items_classes = [
     doughnut, brunisBackpack, 
     apple, duck, goose, chicken, smallFish, mediumFish, largeFish,
     iphone, milkXmocha, rainbowblob, bananadance, merchant,
-    token
+    butilCoin
 ]
 
 economy_items = {}

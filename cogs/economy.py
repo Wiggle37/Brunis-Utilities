@@ -604,7 +604,7 @@ class Economy(commands.Cog):
 
         else:
             amount = random.randint(1, 5000)
-            item = random.choice([token, ironBox, goldBox, apple, emerald])
+            item = random.choice([butilCoin, ironBox, goldBox, apple, emerald])
             itemamount = random.randint(1, 3)
 
             item.increase_item(ctx.author.id, itemamount)
