@@ -19,7 +19,7 @@ class Auction(commands.Cog):
         self.highest_bidder = None
     
     def reset(self):
-        self.auction_message = None
+        self.auction_message_id = None
         self.auction_in_progress = False
         self.started_bidding = False
         self.auction_amount = 1
@@ -58,10 +58,7 @@ class Auction(commands.Cog):
                 # if the auction halts while waiting and someone reacts to the message
 
                 if self.auction_in_progress:
-                    # await self.add_auction_role(user)
-                    channel = await self.client.get_channel(789227950636793887)
-                    guild = await self.client.get_guild(784491141022220309)
-                    await channel.set_permissions(guild.default_role, send_messages = True)
+                    await self.add_auction_role(user)
 
             except asyncio.TimeoutError:
                 pass
@@ -115,6 +112,12 @@ class Auction(commands.Cog):
             value = f"Bidding for: {item}\nStarting bid is at ⏣**{self.beautify_number(self.auction_amount)}**\nMay the best bidder win!",
             inline = False
         )
+
+        auction_embed.add_field(
+            name = "Timings for calls",
+            value = "First call will be at 15 seconds after last bid, second call at 10 seconds and final call at 5 seconds",
+            inline = False
+        )
         
         auction_message = await ctx.send(embed = auction_embed)
         await auction_message.add_reaction(self.emoji)
@@ -125,11 +128,16 @@ class Auction(commands.Cog):
         except asyncio.TimeoutError:
             return await ctx.send("Well looks like nobody wants auctions")
 
+        # gets the updated reactions
+        auction_message = await ctx.fetch_message(self.auction_message_id)
+
         # adds all the roles to people
         for reaction in auction_message.reactions:
             if str(reaction.emoji) == self.emoji:
                 for user in await reaction.users().flatten():
                     await self.add_auction_role(user)
+        
+        await ctx.send("Let the bidding begin! `b!bid <amount>` to bid.\nPsst, you can use `m` and `k` to denote millions and thousands")
         
         await asyncio.gather(
             self.give_auction_role(auction_message.id, self.emoji),
@@ -147,7 +155,7 @@ class Auction(commands.Cog):
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
-    @commands.command(aliases = ["a"])
+    @commands.command(aliases = ["a", "bid"])
     async def auction(self, ctx, bid):
         if not self.auction_in_progress:
             return
