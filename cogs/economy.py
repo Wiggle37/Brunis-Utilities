@@ -486,7 +486,6 @@ class Economy(commands.Cog):
 
         if win:
             win_amount = int(bet * 1.5)
-            doughnut = self.items["Doughnut"]
             doughnut_amount = doughnut.get_item_count(ctx.author.id)
             capped = False
 

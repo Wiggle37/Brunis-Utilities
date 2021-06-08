@@ -175,16 +175,6 @@ class emerald(materials):
     sell_price = 1000
 
 
-class butilCoin(materials):
-    name = "Bruni's Utilities Coin"
-    description = 'Use these to buy some perks in the server'
-    image_url = 'https://cdn.discordapp.com/emojis/851599382633250856.png?v=1'
-    emoji = '<:brunisutils:851599382633250856>'
-    db_name = 'token'
-    sellable = False
-    sell_price = None
-
-
 class tools(item):
     table = "tools"
     purchasable = True
@@ -286,6 +276,8 @@ class doughnut(multis):
     image_url = "https://cdn.discordapp.com/emojis/831895771442839552.png?v=1"
     emoji = "<:doughnut:831895771442839552>"
     db_name = "doughnut"
+    multi = 0.05
+    cap = 2
 
 
 class brunisBackpack(multis):
@@ -294,6 +286,17 @@ class brunisBackpack(multis):
     image_url = "https://cdn.discordapp.com/emojis/834948572826828830.png?v=1"
     emoji = "<:brunisbackpack:834948572826828830>"
     db_name = "brunisbackpack"
+    multi = 0.10
+    cap = 1
+
+class butilCoin(multis):
+    name = "Bruni's Utilities Coin"
+    description = 'Use these to buy some perks in the server'
+    image_url = 'https://cdn.discordapp.com/emojis/851599382633250856.png?v=1'
+    emoji = '<:brunisutils:851599382633250856>'
+    db_name = 'token'
+    multi = 0.05
+    cap = 2
 
 
 class misc(item):
