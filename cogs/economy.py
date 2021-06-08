@@ -462,13 +462,54 @@ class Economy(commands.Cog):
     #Bet
     @commands.command()
     @commands.cooldown(1, 8, commands.BucketType.user)
-    async def bet(self, ctx, bet = None):
+    async def bet(self, ctx, bet):
         if bet.lower() == "max" or bet.lower() == "all":
             # typecasting amount to string to preserve invocation style
             return await self.bet(ctx, str(min(500000, self.currency.get_amount(ctx.author.id))))
 
+        bet = self.is_valid_int(bet)
+        if bet is False:
+            await ctx.send('Please enter a valid number')
+
+        if bet > 500000:
+            await ctx.send('The max bet is 500k at a time')
+
+        bal = self.currency.get_amount(ctx.author.id)
+        if bal < bet:
+            await ctx.send("You don't even have enough money to do that")
+        
+        win = random.choice([True, False])
+        if win:
+            doughnut_amount = doughnut.get_item_count(ctx.author.id)
+            token_amount = butilCoin.get_item_count(ctx.author.id)
+
+            doughnut_capped = False
+            token_capped = False
+
+            if token_amount > 2:
+                token_capped = True
+            if doughnut_amount > 2:
+                doughnut_capped = True
+
+            elif not doughnut_capped and not token_capped:
+                pass
+
+            if doughnut_capped and token_capped:
+                pass
+
+        if not win:
+            self.currency.subtract(ctx.author.id, bet)
+            bet_embed = discord.Embed(title='Bet Results', description='You lost, sucks', color=0xff0000)
+            bet_embed.add_field(name='You lost:', value=f'{self.currency.emoji} `{self.beautify_number(bet)}`')
+            return await ctx.reply(embed = bet_embed)
+
+    #Bet
+    @commands.command()
+    @commands.cooldown(1, 8, commands.BucketType.user)
+    async def bet(self, ctx, bet = None):
         if bet.lower() == "max" or bet.lower() == "all":
-            return await self.slots(ctx, min(100000, self.currency.get_amount(ctx.author.id)))
+            # typecasting amount to string to preserve invocation style
+            return await self.bet(ctx, str(min(500000, self.currency.get_amount(ctx.author.id))))
         
         bet = self.is_valid_int(bet)
         if bet == False:

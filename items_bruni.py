@@ -277,6 +277,7 @@ class doughnut(multis):
     emoji = "<:doughnut:831895771442839552>"
     db_name = "doughnut"
     multi = 0.05
+    multiD = "5%"
     cap = 2
 
 
@@ -287,6 +288,7 @@ class brunisBackpack(multis):
     emoji = "<:brunisbackpack:834948572826828830>"
     db_name = "brunisbackpack"
     multi = 0.10
+    multiD = "10%"
     cap = 1
 
 class butilCoin(multis):
@@ -296,6 +298,7 @@ class butilCoin(multis):
     emoji = '<:brunisutils:851599382633250856>'
     db_name = 'token'
     multi = 0.05
+    multiD = "5%"
     cap = 2
 
 
