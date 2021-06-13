@@ -26,17 +26,19 @@ class HeistStarter(commands.Cog):
         
         await message.channel.set_permissions(message.guild.default_role, send_messages = True)
         await message.channel.edit(slowmode_delay = 300)
-        await message.channel.send("Good luck!<a:rainbowheart:792504452900323329>")
+        await message.channel.send("Good luck bank robbing this person! <a:rainbowheart:792504452900323329>")
 
         results = await self.get_heist_results(message)
         await message.channel.set_permissions(message.guild.default_role, send_messages = False)
 
         if results is None:
-            await message.channel.send("Damn dank's probably dead")
+            await message.channel.send("Damn dank's probably dead right now you must have to wait a little bit")
         elif "you're not popular enough" in results.content or "for an unsuccessful robbery" in results.content:
-            await message.channel.send("Well that sucks")
+            await message.channel.send("Well that sucks you didn't get enough people to join you heist, try again later I guess")
         else: 
-            await message.channel.send("I hope that was a good heist!")
+            msg = await message.channel.send("I hope that was a good heist!")
+            msg.add_reaction('✅')
+            msg.add_reaction('❌')
  
         
 def setup(client):

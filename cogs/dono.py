@@ -201,7 +201,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -225,25 +225,32 @@ class Dono(commands.Cog):
     @commands.command(aliases=['gda'])
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
+        print('1')
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
         self.get_user(ctx, member)
         amount = self.is_valid_int(amount)
+        print('2')
         if amount == False:
             await ctx.send('Not a valid number there bud')
+            print('4435453')
 
         else:
+            print('3')
             user = member.id
             cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw + ?;", [user, amount, amount])
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
+            print('4')
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
+            print('4325234')
 
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
+            print('23423')
 
             embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
             await self.client.get_channel(838440247507288095).send(embed=embed)
@@ -308,7 +315,7 @@ class Dono(commands.Cog):
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
-        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+        await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
         dbase.commit()
 
@@ -347,7 +354,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -384,7 +391,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -421,7 +428,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -455,7 +462,7 @@ class Dono(commands.Cog):
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
-        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+        await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
         dbase.commit()
 
@@ -496,7 +503,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -532,7 +539,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -570,7 +577,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -604,7 +611,7 @@ class Dono(commands.Cog):
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
-        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+        await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
         dbase.commit()
 
@@ -643,7 +650,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -680,7 +687,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -717,7 +724,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -750,7 +757,7 @@ class Dono(commands.Cog):
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
-        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+        await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
         dbase.commit()
 
@@ -791,7 +798,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -831,7 +838,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -868,7 +875,7 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
@@ -901,7 +908,7 @@ class Dono(commands.Cog):
         cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
         message = ctx.message
-        await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+        await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
         dbase.commit()
 

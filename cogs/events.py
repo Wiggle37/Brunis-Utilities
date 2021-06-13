@@ -29,7 +29,7 @@ class Events(commands.Cog):
             if time.time() - member.created_at.timestamp() < 1814400:
                 channel = await member.create_dm()
                     
-                dm_embed = discord.Embed(title=f'You were banned from dank merchants', description=f'You were banned because your account was too young\nYou will be unbanned when your account is over the age of 3 weeks old(21 days)\nIn the mean time you can join (this)[https://discord.gg/ubtz7gK2js] server if you have anymore questions', color=0x00ff00)
+                dm_embed = discord.Embed(title=f'You were banned from dank merchants', description=f'You were banned because your account was too young\nYou will be unbanned when your account is over the age of 3 weeks old(21 days)\nIn the mean time you can join [this](https://discord.gg/ubtz7gK2js) server if you have anymore questions', color=0x00ff00)
                 await channel.send(embed=dm_embed)
 
                 reason = 'Account to young in age'
@@ -49,33 +49,48 @@ class Events(commands.Cog):
         
         else:
             return
+
+    @commands.Cog.listener("on_message")
+    async def text_response(self, message):
+        dbase = sqlite3.connect('autoresponse.db')
+        cur = dbase.cursor()
+
+        cur.execute("SELECT trigger, response FROM text")
+        text_response = cur.fetchall()
+        dbase.close()
+
+        if text_response is None:
+            return
+
+        cleaned_content = message.clean_content.lower()
+
+        for trigger, response in text_response:
+            if trigger in cleaned_content:
+                await message.channel.send(response)
+        
+    @commands.Cog.listener("on_message")
+    async def emoji_react(self, message):
+        dbase = sqlite3.connect('autoresponse.db')
+        cur = dbase.cursor()
+
+        cur.execute("SELECT trigger, emoji FROM emoji")
+        emoji_react = cur.fetchall()
+        dbase.close()
+
+        if emoji_react is None:
+            return
+
+        cleaned_content = message.clean_content.lower()
+
+        for trigger, emoji in emoji_react:
+            if trigger in cleaned_content:
+                await message.add_reaction(emoji)
     
     
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
         user = message.author
-        dbase = sqlite3.connect('reactions.db')
-        cursor = dbase.cursor()
-        
-        cursor.execute(f"SELECT response FROM reactions WHERE trigger == ?", [message.content])
-        response = cursor.fetchone()
-
-        if response is None:
-            return
-
-        else:
-            await message.channel.send(response[0])
-
-
-
-
-
-
-
-
-
-
         if str(self.client.user.id) in message.content:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)

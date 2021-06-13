@@ -55,17 +55,21 @@ class Admin(commands.Cog):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
         await ctx.send('Channel unlocked')
 
-    #Add Auto Reponse
+
+
+
+
+    #Text Add Auto Reponse
     @commands.command()
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def ara(self, ctx, trigger, *, response):
-        dbsae = sqlite3.connect('reactions.db')
+        dbsae = sqlite3.connect('autoresponse.db')
         cursor = dbsae.cursor()
 
-        cursor.execute(f"SELECT trigger FROM reactions WHERE trigger == ?", [trigger])
+        cursor.execute(f"SELECT trigger FROM text WHERE trigger == ?", [trigger])
         exist = cursor.fetchone()
         if exist is None:
-            cursor.execute(f"INSERT INTO reactions (trigger) VALUES (?) ON CONFLICT(trigger) DO UPDATE SET trigger = ?", [trigger, trigger])
+            cursor.execute(f"INSERT INTO text (trigger) VALUES (?) ON CONFLICT(trigger) DO UPDATE SET trigger = ?", [trigger, trigger])
             cursor.execute(f"UPDATE reactions SET response = ? WHERE trigger == '{trigger}'", [response])
 
             await ctx.send(f'A new Trigger has been added with the following information:\nTrigger: {trigger}\nResponse: {response}')
@@ -76,20 +80,20 @@ class Admin(commands.Cog):
         dbsae.commit()
         dbsae.close()
 
-    #Remove Auto Response
+    #Text Remove Auto Response
     @commands.command()
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def arr(self, ctx, trigger):
-        dbsae = sqlite3.connect('reactions.db')
+        dbsae = sqlite3.connect('autoresponse.db')
         cursor = dbsae.cursor()
 
-        cursor.execute(f"SELECT trigger FROM reactions WHERE trigger == ?", [trigger])
+        cursor.execute(f"SELECT trigger FROM text WHERE trigger == ?", [trigger])
         exist = cursor.fetchone()
         if exist is None:
             await ctx.send("This trigger doesn't exist what are you doing?")
 
         elif exist[0] == trigger:
-            cursor.execute(f"DELETE FROM reactions WHERE trigger == '{trigger}'")
+            cursor.execute(f"DELETE FROM text WHERE trigger == '{trigger}'")
 
             await ctx.send('Trigger Deleted')
 
@@ -98,6 +102,18 @@ class Admin(commands.Cog):
 
         dbsae.commit()
         dbsae.close()
+
+
+
+
+    #Emoji Add Auto Response
+    @commands.command()
+    @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
+    async def aea(self, ctx, trigger, emoji):
+        dbase = sqlite3.connect('autoresponse.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT ")
 
 def setup(client):
     client.add_cog(Admin(client))

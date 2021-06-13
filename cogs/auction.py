@@ -44,7 +44,7 @@ class Auction(commands.Cog):
             return str(reaction.emoji) == emoji and reaction.message.id == message_id
         
         reaction, user = await self.client.wait_for("reaction_add", check=check)
-        if reaction.count < 6:
+        if reaction.count < 4:
             return await self.five_reactions(message_id, emoji)
 
 
@@ -108,7 +108,7 @@ class Auction(commands.Cog):
         )
 
         auction_embed.add_field(
-            name = "Roles will be given out when 5 people have reacted",
+            name = "Roles will be given out when 3 people have reacted",
             value = f"Bidding for: {item}\nStarting bid is at ⏣**{self.beautify_number(self.auction_amount)}**\nMay the best bidder win!",
             inline = False
         )
@@ -126,6 +126,7 @@ class Auction(commands.Cog):
         try:
             await asyncio.wait_for(self.five_reactions(auction_message.id, self.emoji), 300)
         except asyncio.TimeoutError:
+            self.reset()
             return await ctx.send("Well looks like nobody wants auctions")
 
         # gets the updated reactions
@@ -199,10 +200,7 @@ class Auction(commands.Cog):
         for reaction in auction_message.reactions:
             if str(reaction.emoji) == self.emoji:
                 for user in await reaction.users().flatten():
-                    # await user.remove_roles(self.auctioner_role)
-                    channel = await self.client.get_channel(789227950636793887)
-                    guild = await self.client.get_guild(784491141022220309)
-                    await channel.set_permissions(guild.default_role, send_messages = False)
+                    await user.remove_roles(self.auctioner_role)
         
         auction_end_embed = discord.Embed(
             title = "Auction ended!",

@@ -1,5 +1,7 @@
+from os import curdir
 import sqlite3
 import random
+from typing import ClassVar
 
 from discord import emoji
 
@@ -95,7 +97,7 @@ class currency:
     name = "Coins"
     table = "economy"
     db_name = "balance"
-    emoji = "<:dankmerchants:829809749058650152>"
+    emoji = "<:dankmerchant:852680899966271488>"
 
     @classmethod
     def add(cls, user_id, amount):
@@ -133,17 +135,17 @@ class materials(item):
 class wood(materials):
     name = "Wood"
     description = "Wood can be used for many things"
-    image_url = "https://cdn.discordapp.com/emojis/835262637851541555.png?v=1"
-    emoji = "<:mwood:835262637851541555>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061876236360.png?v=1"
+    emoji = "<:bwood:852681061876236360>"
     db_name = "wood"
     sell_price = 50
 
 
 class iron(materials):
     name = "Iron"
-    description = "Used to make medal could probally sell for some money"
-    image_url = "https://cdn.discordapp.com/emojis/834958446906441789.png?v=1"
-    emoji = "<:iron:834958446906441789>"
+    description = "Used to make medal could probally sell for some good money"
+    image_url = "https://cdn.discordapp.com/emojis/852681061318262825.png?v=1"
+    emoji = "<:iron:852681061318262825>"
     db_name = "iron"
     sell_price = 100
 
@@ -151,8 +153,8 @@ class iron(materials):
 class gold(materials):
     name = "Gold"
     description = "A pretty expensive mineral"
-    image_url = "https://cdn.discordapp.com/emojis/834958470955532338.png?v=1"
-    emoji = "<:gold:834958470955532338>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061305679922.png?v=1"
+    emoji = "<:gold:852681061305679922>"
     db_name = "gold"
     sell_price = 250
 
@@ -160,8 +162,8 @@ class gold(materials):
 class diamond(materials):
     name = "Diamond"
     description = "A blue gem worth some money"
-    image_url = "https://cdn.discordapp.com/emojis/834958491315339294.png?v=1"
-    emoji = "<:diamond:834958491315339294>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061565726720.png?v=1"
+    emoji = "<:diamond:852681061565726720>"
     db_name = "diamond"
     sell_price = 500
 
@@ -169,8 +171,8 @@ class diamond(materials):
 class emerald(materials):
     name = "Emerald"
     description = "A green gem worth a bit of money"
-    image_url = "https://cdn.discordapp.com/emojis/834958503369637941.png?v=1"
-    emoji = "<:emerald:834958503369637941>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061296898061.png?v=1"
+    emoji = "<:emerald:852681061296898061>"
     db_name = "emerald"
     sell_price = 1000
 
@@ -185,8 +187,8 @@ class tools(item):
 class woodPick(tools):
     name = "Wooden Pickaxe"
     description = "The most basic pickaxe you have ever seen"
-    image_url = "https://cdn.discordapp.com/emojis/835505500035612772.png?v=1" 
-    emoji = "<:woodpick:835505500035612772>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061439504424.png?v=1" 
+    emoji = "<:woodpick:852681061439504424>"
     db_name = "woodpick"
     price = 10000
 
@@ -194,8 +196,8 @@ class woodPick(tools):
 class ironPick(tools):
     name = "Iron Pickaxe"
     description = "An entry level pickaxe"
-    image_url = "https://cdn.discordapp.com/emojis/835505509716197437.png?v=1"
-    emoji = "<:ironpick:835505509716197437>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061702828032.png?v=1"
+    emoji = "<:ironpick:852681061702828032>"
     db_name = "ironpick"
     price = 50000
 
@@ -203,8 +205,8 @@ class ironPick(tools):
 class goldPick(tools):
     name = "Gold Pickaxe"
     description = "A very fast pickaxe"
-    image_url = "https://cdn.discordapp.com/emojis/835505519468740608.png?v=1"
-    emoji = "<:goldpick:835505519468740608>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061585649714.png?v=1"
+    emoji = "<:goldpick:852681061585649714>"
     db_name = "goldpick"
     price = 100000
 
@@ -212,8 +214,8 @@ class goldPick(tools):
 class diamondPick(tools):
     name = "Diamond Pickaxe"
     description = "One of the best pickaxes"
-    image_url = "https://cdn.discordapp.com/emojis/835505528913264661.png?v=1"
-    emoji = "<:diamondpick:835505528913264661>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061351555174.png?v=1"
+    emoji = "<:diamondpick:852681061351555174>"
     db_name = "diamondpick"
     price = 250000
 
@@ -221,8 +223,8 @@ class diamondPick(tools):
 class emeraldPick(tools):
     name = "Emerald Pickaxe"
     description = "The best of the pickaxes"
-    image_url = "https://cdn.discordapp.com/emojis/835505536744161330.png?v=1"
-    emoji = "<:emeraldpick:835505536744161330>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061690507325.png?v=1"
+    emoji = "<:emeraldpick:852681061690507325>"
     db_name = "emeraldpick"
     price = 500000
 
@@ -230,8 +232,8 @@ class emeraldPick(tools):
 class gun(tools):
     name = "Gun"
     description = "You can use it to go hunting"
-    image_url = "https://cdn.discordapp.com/emojis/836051483224309790.png?v=1" 
-    emoji = "<:gun:836051483224309790>"
+    image_url = "https://cdn.discordapp.com/emojis/852701370535903273.png?v=1" 
+    emoji = "<:bgun:852701370535903273>"
     db_name = "gun"
     price = 100000
     
@@ -239,8 +241,8 @@ class gun(tools):
 class fishingRod(tools):
     name = "Fishing Pole"
     description = "Have a nice peaceful time while fishing"
-    image_url = "https://cdn.discordapp.com/emojis/836051493744148561.png?v=1"
-    emoji = "<:fishingpole:836051493744148561>"
+    image_url = "https://cdn.discordapp.com/emojis/852701358455914516.png?v=1"
+    emoji = "<:fishingpole:852701358455914516>"
     db_name = "fishingpole"
     price = 75000
 
@@ -269,6 +271,31 @@ class multis(item):
     sellable = False
     sell_price = None
 
+    @classmethod
+    def get_multi(cls, user_id):
+        dbase = sqlite3.connect('economy.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT doughnut FROM multis WHERE user_id == '{user_id}'")
+        doughnut_amount = cursor.fetchone()[0]
+
+        cursor.execute(f"SELECT token FROM multis WHERE user_id == '{user_id}'")
+        token_amount = cursor.fetchone()[0]
+
+        cursor.execute(f"SELECT brunisbackpack FROM multis WHERE user_id == '{user_id}'")
+        backpack_amount = cursor.fetchone()[0]
+
+        if doughnut_amount <= 0 and token_amount <= 0 and backpack_amount <= 0:
+            return 0.01
+
+        elif doughnut_amount > doughnut.cap or token_amount > butilCoin.cap or backpack_amount > brunisBackpack.cap:
+            return (doughnut.cap * doughnut.multi) + (doughnut.cap * butilCoin.multi) + (doughnut.cap * brunisBackpack.multi)
+
+        elif doughnut_amount < doughnut.cap or token_amount < butilCoin.cap and backpack_amount < brunisBackpack.cap:
+            return (doughnut_amount * doughnut.multi) + (token_amount * butilCoin.multi) + (backpack_amount * brunisBackpack.multi)
+
+        dbase.close()
+
 
 class doughnut(multis):
     name = "Doughnut"
@@ -277,7 +304,6 @@ class doughnut(multis):
     emoji = "<:doughnut:831895771442839552>"
     db_name = "doughnut"
     multi = 0.05
-    multiD = "5%"
     cap = 2
 
 
@@ -288,8 +314,8 @@ class brunisBackpack(multis):
     emoji = "<:brunisbackpack:834948572826828830>"
     db_name = "brunisbackpack"
     multi = 0.10
-    multiD = "10%"
     cap = 1
+
 
 class butilCoin(multis):
     name = "Bruni's Utilities Coin"
@@ -298,7 +324,6 @@ class butilCoin(multis):
     emoji = '<:brunisutils:851599382633250856>'
     db_name = 'token'
     multi = 0.05
-    multiD = "5%"
     cap = 2
 
 
@@ -345,24 +370,24 @@ class chicken(misc):
 class smallFish(misc):
     name = "Small fish"
     description = "A small fish you can get from fishing"
-    image_url = "https://cdn.discordapp.com/emojis/835999014846726193.png?v=1"
-    emoji = "<:smallfish:835999014846726193>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061795495936.png?v=1"
+    emoji = "<:smallfish:852681061795495936>"
     db_name = "smallfish"
 
 
 class mediumFish(misc):
     name = "Medium Fish"
     description = "An average fish you can get from fishing"
-    image_url = "https://cdn.discordapp.com/emojis/835999003858305124.png?v=1"
-    emoji = "<:mediumfish:835999003858305124>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061481578527.png?v=1"
+    emoji = "<:mediumfish:852681061481578527>"
     db_name = "mediumfish"
 
 
 class largeFish(misc):
     name = "Large Fish"
     description = "The bigger of the fish that you can get from fishing"
-    image_url = "https://cdn.discordapp.com/emojis/835998981951062037.png?v=1"
-    emoji = "<:largefish:835998981951062037>"
+    image_url = "https://cdn.discordapp.com/emojis/852681062253330452.png?v=1"
+    emoji = "<:largefish:852681062253330452>"
     db_name = "largefish"
 
 
@@ -416,6 +441,64 @@ class merchant(misc):
     price = 10000000000
 
 
+class squirt(misc):
+    name = 'Squirt'
+    description = 'Watcha ur eyes popin out <:thonk:797856990327734302>\nSuggested by <@!840223106345336882>'
+    image_url = 'https://cdn.discordapp.com/emojis/800524219497840681.gif?v=1'
+    emoji = '<a:squirt:800524219497840681>'
+    db_name = 'squirt'
+    purchasable = True
+    price = 4000000
+
+
+class badgeHeart(misc):
+    name = 'Badge of Hearts'
+    description = "If you have this badge you have discord addiction ~~don't deny it you know it's true~~\nSuggested by <@!833900274099290113>"
+    image_url = 'https://cdn.discordapp.com/emojis/790751950689271819.png?v=1'
+    emoji = '<:ty:790751950689271819>'
+    db_name = 'hearts'
+    purchasable = True
+    price = 100000000
+
+
+class dukesBadge(misc):
+    name = "Duke's Badge"
+    description = "The badge of Dukie\nSuggested by <@!716525960643739798>"
+    image_url = 'https://cdn.discordapp.com/emojis/852514326156804137.gif?v=1'
+    emoji = '<a:dukebadge:852514326156804137>'
+    db_name = 'dukesbadge'
+
+
+class snowflake(misc):
+    name = 'Snowflake'
+    description = 'Just a snowflake\nSuggested by <@!716525960643739798>'
+    image_url = 'https://cdn.discordapp.com/emojis/852514325855207475.png?v=1'
+    emoji = '<:bsnowflake:852514325855207475>'
+    db_name = 'snowflake'
+    purchasable = True
+    price = 50000000
+
+
+class uwuOwo(misc):
+    name = 'UwU OwO Girl'
+    description = '\nSuggested by <@!716525960643739798>'
+    image_url = 'https://cdn.discordapp.com/emojis/852514326267035648.png?v=1'
+    emoji = '<:uwuowo:852514326267035648>'
+    db_name = 'uwuowo'
+    purchasable = True
+    price = 300000000
+
+
+class darksbadge(misc):
+    name = "Dark's Badge"
+    description = "Well pretty easy to explain it's Dark's badge\nSuggested by <@!840223106345336882>"
+    image_url = 'https://cdn.discordapp.com/emojis/852080742108233768.gif?v=1'
+    emoji = '<a:DarkOP:852080742108233768>'
+    db_name = 'darksbadge'
+    purchasable = True
+    price = 69000000
+
+
 class boxes(item):
     table = "boxes"
     purchasable = True
@@ -446,8 +529,8 @@ class boxes(item):
 class woodenBox(boxes):
     name = "Wooden box"
     description = "A basic wooden box that could find you some loot"
-    image_url = "https://cdn.discordapp.com/emojis/830211928595890206.png?v=1"
-    emoji = "<:woodbox:830211928595890206>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061254168616.png?v=1"
+    emoji = "<:woodbox:852681061254168616>"
     db_name = "woodbox"
     price = 50000
     possible_items = {currency: [12500, 25000], apple: [0, 5]}
@@ -456,8 +539,8 @@ class woodenBox(boxes):
 class ironBox(boxes):
     name = "Iron box"
     description = "A solid iron box probally has some good stuff in it"
-    image_url = "https://cdn.discordapp.com/emojis/830197241934512188.png?v=1"
-    emoji = "<:ironbox:830197241934512188>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061308563516.png?v=1"
+    emoji = "<:ironbox:852681061308563516>"
     db_name = "ironbox"
     price = 100000
     possible_items = {currency: [25000, 50000], apple: [0, 10], duck: [1, 5]}
@@ -466,8 +549,8 @@ class ironBox(boxes):
 class goldBox(boxes):
     name = "Gold box"
     description = "A solid gold box that must have good loot"
-    image_url = "https://cdn.discordapp.com/emojis/830197220405805147.png?v=1"
-    emoji = "<:goldbox:830197220405805147>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061036195850.png?v=1"
+    emoji = "<:goldbox:852681061036195850>"
     db_name = "goldbox"
     price = 250000
     possible_items = {currency: [50000, 100000], apple: [0, 15], duck: [1, 10]}
@@ -476,8 +559,8 @@ class goldBox(boxes):
 class diamondBox(boxes):
     name = "Diamond box"
     description = "A solid diamond box that is bound to have good loot"
-    image_url = "https://cdn.discordapp.com/emojis/830197220007477259.png?v=1"
-    emoji = "<:diamondbox:830197220007477259>"
+    image_url = "https://cdn.discordapp.com/emojis/852681061032525865.png?v=1"
+    emoji = "<:diamondbox:852681061032525865>"
     db_name = "diamondbox"
     price = 500000
     possible_items = {currency: [100000, 250000], apple: [1, 25], duck: [1, 25]}
@@ -486,8 +569,8 @@ class diamondBox(boxes):
 class emeraldBox(boxes):
     name = "Emerald box"
     description = "The best box of them all that will have the best loot"
-    image_url = "https://cdn.discordapp.com/emojis/830216613755486229.png?v=1"
-    emoji = "<:emeraldbox:830216613755486229>"
+    image_url = "https://cdn.discordapp.com/emojis/852681060998971423.png?v=1"
+    emoji = "<:emeraldbox:852681060998971423>"
     db_name = "emeraldbox"
     price = 1000000
     possible_items = {currency: [250000, 500000], apple: [1, 50], duck: [1, 10], doughnut: [0, 1]}
@@ -517,15 +600,25 @@ class bruni(boxes):
     purchasable = False
 
 
+class babyBox(boxes):
+    name = 'Baby Box'
+    description = 'A box full of some stuff but in a baby box\nSuggested by <@!716525960643739798>'
+    image_url = 'https://cdn.discordapp.com/emojis/852514326282895402.gif?v=1'
+    emoji = '<a:babybox:852514325855207475>'
+    db_name = 'babybox'
+    price = None
+    possible_items = {currency: [1000000, 5000000], iron: [2, 7], doughnut: [1, 2]}
+    purchasable = False
+
+
 items_classes = [
-    woodenBox, ironBox, goldBox, diamondBox, emeraldBox,
+    woodenBox, ironBox, goldBox, diamondBox, emeraldBox, babyBox,
     wiggle, bruni,
     wood, iron, gold, diamond, emerald,
     woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingRod, axe, shovel,
-    doughnut, brunisBackpack, 
+    doughnut, brunisBackpack, butilCoin,
     apple, duck, goose, chicken, smallFish, mediumFish, largeFish,
-    iphone, milkXmocha, rainbowblob, bananadance, merchant,
-    butilCoin
+    iphone, milkXmocha, rainbowblob, bananadance, merchant, squirt, badgeHeart, uwuOwo, dukesBadge, snowflake, darksbadge
 ]
 
 economy_items = {}
