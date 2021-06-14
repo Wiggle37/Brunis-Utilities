@@ -32,7 +32,7 @@ class Events(commands.Cog):
 
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
-                await self.client.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. <@!{member.id}>s account was made {int(days)} ago')
+                await self.client.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. <@!{member.id}>s account was made {int(days)} days ago')
 
             else:
                 channel = await member.create_dm()
