@@ -35,8 +35,12 @@ class HeistStarter(commands.Cog):
             await message.channel.send("Damn dank's probably dead right now you must have to wait a little bit")
         elif "you're not popular enough" in results.content or "for an unsuccessful robbery" in results.content:
             await message.channel.send("Well that sucks you didn't get enough people to join you heist, try again later I guess")
-        else: 
-            msg = await message.channel.send("I hope that was a good heist!")
+        else:
+            msg = ""
+            if message.channel.id == 792948346268286986:
+                msg += "\n\nRemember freeloaders get a 7 day ban so don't free load also to support us vote for us [here](https://top.gg/servers/784491141022220309/vote)"
+
+            msg = await message.channel.send(f"I hope that was a good heist!")
             await msg.add_reaction('✅')
             await msg.add_reaction('❌')
  
