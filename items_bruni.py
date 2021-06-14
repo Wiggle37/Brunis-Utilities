@@ -499,6 +499,15 @@ class darksbadge(misc):
     price = 69000000
 
 
+class clover(misc):
+    name = 'Clover'
+    description = 'Suggested by <@!561620028601008148>'
+    image_url = 'https://cdn.discordapp.com/emojis/853798056662794240.png?v=1'
+    db_name = 'clover'
+    purchasable = True
+    price = 50000
+
+
 class boxes(item):
     table = "boxes"
     purchasable = True
@@ -618,7 +627,7 @@ items_classes = [
     woodPick, ironPick, goldPick, diamondPick, emeraldPick, gun, fishingRod, axe, shovel,
     doughnut, brunisBackpack, butilCoin,
     apple, duck, goose, chicken, smallFish, mediumFish, largeFish,
-    iphone, milkXmocha, rainbowblob, bananadance, merchant, squirt, badgeHeart, uwuOwo, dukesBadge, snowflake, darksbadge
+    iphone, milkXmocha, rainbowblob, bananadance, merchant, squirt, badgeHeart, uwuOwo, dukesBadge, snowflake, darksbadge, clover
 ]
 
 economy_items = {}

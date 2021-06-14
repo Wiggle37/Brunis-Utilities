@@ -1,9 +1,12 @@
-from os import curdir
+from os import curdir, error
 import discord
 from discord import reaction
 from discord.ext import commands
 import sqlite3
 import time
+from discord.ext.commands.core import command
+
+from discord.ext.commands.errors import MissingAnyRole
 
 class Events(commands.Cog):
 
@@ -18,12 +21,7 @@ class Events(commands.Cog):
     async def on_member_join(self, member):
         seconds = time.time() - member.created_at.timestamp()
         seconds_in_day = 60 * 60 * 24
-        seconds_in_hour = 60 * 60
-        seconds_in_minute = 60
-
         days = seconds // seconds_in_day
-        hours = (seconds - (days * seconds_in_day)) // seconds_in_hour
-        minutes = (seconds - (days * seconds_in_day) - (hours * seconds_in_hour)) // seconds_in_minute
 
         if member.guild.id == 784491141022220309:
             if time.time() - member.created_at.timestamp() < 1814400:
@@ -34,7 +32,7 @@ class Events(commands.Cog):
 
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
-                await self.client.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. <@!{member.id}>s account was made {int(days)} days {int(hours)} hours {int(minutes)} minutes ago')
+                await self.client.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. <@!{member.id}>s account was made {int(days)} ago')
 
             else:
                 channel = await member.create_dm()
@@ -44,7 +42,7 @@ class Events(commands.Cog):
                 join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
                 join_embed.set_thumbnail(url=member.avatar_url)
                 join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\nAnd go get some roles in <#784547669619507201> to get notified when certain things happen\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and ask your question and they will be there as soon as possible!')
-                join_embed.add_field(name=f'__**User Info:**__', value=f'Time Created: {int(days)} days {int(hours)} hours {int(minutes)} minutes ago\nUser ID: {member.id}', inline=False)
+                join_embed.add_field(name=f'__**User Info:**__', value=f'Time Created: {int(days)} days ago\nUser ID: {member.id}', inline=False)
                 await self.client.get_channel(784491141022220312).send(f'{member.mention}', embed=join_embed)
         
         else:
@@ -62,7 +60,7 @@ class Events(commands.Cog):
         if text_response is None:
             return
 
-        cleaned_content = message.clean_content.lower()
+        cleaned_content = message.content.lower()
 
         for trigger, response in text_response:
             if trigger in cleaned_content:
@@ -80,7 +78,7 @@ class Events(commands.Cog):
         if emoji_react is None:
             return
 
-        cleaned_content = message.clean_content.lower()
+        cleaned_content = message.content.lower()
 
         for trigger, emoji in emoji_react:
             if trigger in cleaned_content:

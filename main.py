@@ -1,7 +1,5 @@
 import discord
-from discord import Activity, ActivityType, Color, Embed, User
 from discord.ext import commands
-from discord.ext.commands import Bot
 import asyncio
 import sqlite3
 import os
@@ -18,12 +16,14 @@ client.remove_command('help')
 
 @client.event
 async def on_ready():
-    print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
+    print(f'\n\-/ Loading... \-/\n')
 
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             client.load_extension(f'cogs.{filename[:-3]}')
             print(f'cog.{filename[:-3]} loaded')
+    
+    print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
 
 @client.command()
 @commands.is_owner()

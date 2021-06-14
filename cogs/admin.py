@@ -59,7 +59,6 @@ class Admin(commands.Cog):
 
 
 
-    #Text Add Auto Reponse
     @commands.command()
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def ara(self, ctx, trigger, *, response):
@@ -80,12 +79,11 @@ class Admin(commands.Cog):
         dbsae.commit()
         dbsae.close()
 
-    #Text Remove Auto Response
     @commands.command()
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def arr(self, ctx, trigger):
-        dbsae = sqlite3.connect('autoresponse.db')
-        cursor = dbsae.cursor()
+        dbase = sqlite3.connect('autoresponse.db')
+        cursor = dbase.cursor()
 
         cursor.execute(f"SELECT trigger FROM text WHERE trigger == ?", [trigger])
         exist = cursor.fetchone()
@@ -100,11 +98,8 @@ class Admin(commands.Cog):
         else:
             await ctx.send('That is not a trigger currently added')
 
-        dbsae.commit()
-        dbsae.close()
-
-
-
+        dbase.commit()
+        dbase.close()
 
     #Emoji Add Auto Response
     @commands.command()
@@ -113,7 +108,65 @@ class Admin(commands.Cog):
         dbase = sqlite3.connect('autoresponse.db')
         cursor = dbase.cursor()
 
-        cursor.execute(f"SELECT ")
+        cursor.execute(f"SELECT trigger FROM emoji WHERE trigger == ?", [trigger])
+        exist = cursor.fetchone()
+        if exist is None:
+            cursor.execute(f"INSERT INTO emoji (trigger) VALUES (?) ON CONFLICT(trigger) DO UPDATE SET trigger = ?", [trigger, trigger])
+            cursor.execute(f"UPDATE emoji SET emoji = ? WHERE trigger == '{trigger}'", [emoji])
+
+            await ctx.send('Emoji response added!')
+
+        elif exist != None:
+            return await ctx.send('This trigger already exists!')
+
+        dbase.commit()
+        dbase.close()
+
+    @commands.command()
+    @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
+    async def aer(self, ctx, trigger):
+        dbase = sqlite3.connect('autoresponse.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT trigger FROM emoji WHERE trigger == ?", [trigger])
+        exist = cursor.fetchone()
+        if exist is None:
+            await ctx.send("This trigger doesn't exist what are you doing?")
+
+        elif exist[0] == trigger:
+            cursor.execute(f"DELETE FROM emoji WHERE trigger == '{trigger}'")
+
+            await ctx.send('Trigger Deleted')
+
+        else:
+            await ctx.send('That is not a trigger currently added')
+
+        dbase.commit()
+        dbase.close()
+
+    @commands.command(aliases=['arl'])
+    async def arlist(self, ctx, list=None):
+        dbase = sqlite3.connect('autoresponse.db')
+        cursor = dbase.cursor()
+        response = ''
+
+        if list is None:
+            cursor.execute(f"SELECT trigger FROM text")
+            list = cursor.fetchall()
+
+            for i in list:
+                response += f'{i}\n'
+
+        elif list == 'emoji':
+            cursor.execute(f"SELECT trigger FROM emoji")
+            list = cursor.fetchall()
+
+            for i in list:
+                response += f'{i}\n'
+
+        await ctx.send(response)
+
+        dbase.close()
 
 def setup(client):
     client.add_cog(Admin(client))

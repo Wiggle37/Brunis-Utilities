@@ -25,7 +25,7 @@ class HeistStarter(commands.Cog):
             return
         
         await message.channel.set_permissions(message.guild.default_role, send_messages = True)
-        await message.channel.edit(slowmode_delay = 300)
+        await message.channel.edit(slowmode_delay = 6000)
         await message.channel.send("Good luck bank robbing this person! <a:rainbowheart:792504452900323329>")
 
         results = await self.get_heist_results(message)
@@ -37,8 +37,8 @@ class HeistStarter(commands.Cog):
             await message.channel.send("Well that sucks you didn't get enough people to join you heist, try again later I guess")
         else: 
             msg = await message.channel.send("I hope that was a good heist!")
-            msg.add_reaction('✅')
-            msg.add_reaction('❌')
+            await msg.add_reaction('✅')
+            await msg.add_reaction('❌')
  
         
 def setup(client):

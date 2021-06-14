@@ -1,9 +1,6 @@
 import discord
 from discord.ext import commands
 import sqlite3
-from functools import total_ordering
-from os import curdir
-from discord.utils import to_json
 
 class Dono(commands.Cog):
 
@@ -115,8 +112,8 @@ class Dono(commands.Cog):
     DONATIONS CHECK
     '''
     #Check Dono
-    @commands.command(aliases=['d'])
-    async def dono(self, ctx, member: discord.Member=None):
+    @commands.command(aliases=['d', 'dono', 'donation'])
+    async def donations(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect("dono.db")
         cursor = dbase.cursor()
         user = member or ctx.author
@@ -141,7 +138,7 @@ class Dono(commands.Cog):
 
         dbase.close()
 
-    @dono.error
+    @donations.error
     async def dono_error(self, ctx, error):
         if error == "Command raised an exception: TypeError: 'NoneType' object is not iterable":
             await ctx.send('Use the command `b!init` to be added to the db, sorry for the error')
@@ -185,9 +182,9 @@ class Dono(commands.Cog):
     GIVEAWAY DONATIONS
     '''
     #Dono Set
-    @commands.command(aliases=['gds'])
+    @commands.command(name='gds')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
-    async def gaw_dono_set(self, ctx, member: discord.Member, amount: str=None):
+    async def gaw_dono_set(self, ctx, member: discord.Member, amount: str):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
         self.get_user(ctx, member)
@@ -208,65 +205,38 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @gaw_dono_set.error
-    async def gaw_dono_set_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
-
     #Dono Add
-    @commands.command(aliases=['gda'])
+    @commands.command(name='gda')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
-        print('1')
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
         self.get_user(ctx, member)
         amount = self.is_valid_int(amount)
-        print('2')
         if amount == False:
             await ctx.send('Not a valid number there bud')
-            print('4435453')
 
         else:
-            print('3')
             user = member.id
             cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw + ?;", [user, amount, amount])
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
-            print('4')
 
             message = ctx.message
             await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
-            print('4325234')
 
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-            print('23423')
-
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
 
         dbase.close()
         await self.roles(ctx, member)
 
-    @gaw_dono_add.error
-    async def gaw_dono_add_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
-
     #Dono Remove
-    @commands.command(aliases=['gdr'])
+    @commands.command(names='gda')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -282,28 +252,18 @@ class Dono(commands.Cog):
             cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {user}")
 
             message = ctx.message
-            await message.add_reaction(emoji='<a:check~1:828448588488769588>')
+            await message.add_reaction(emoji='<a:greencheck:853007357709910086>')
 
             dbase.commit()
 
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @gaw_dono_remove.error
-    async def gaw_dono_remove_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
-
     #Dono Reset
-    @commands.command(aliases=['gdrs'])
+    @commands.command(name='gdrs')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -321,24 +281,14 @@ class Dono(commands.Cog):
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Giveaway\n**Amount Set:** 0\n\n**Updated by: {ctx.author}**', color=0x00ff00)
-        await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
-
-    @gaw_dono_reset.error
-    async def gaw_dono_reset_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
 
     '''
     HEIST DONATIONS
     '''
     #Dono Set
-    @commands.command(aliases=['hds'])
+    @commands.command(name='hds')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -361,21 +311,11 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThe have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @heist_dono_set.error
-    async def heist_dono_set_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
-
     #Dono Add
-    @commands.command(aliases=['hda'])
+    @commands.command(name='hda')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -398,21 +338,11 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @heist_dono_add.error
-    async def heist_dono_add_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly heist managers can use this command')
-
     #Dono Remove
-    @commands.command(aliases=['hdr'])
+    @commands.command(name='hdr')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -435,21 +365,11 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @heist_dono_remove.error
-    async def heist_dono_remove_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly heist managers can use this command')
-
     #Dono Reset
-    @commands.command(aliases=['hdrs'])
+    @commands.command(name='hdrs')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -468,24 +388,14 @@ class Dono(commands.Cog):
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Heist\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-        await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
-
-    @heist_dono_reset.error
-    async def heist_dono_reset_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly heist managers can use this command')
 
     '''
     EVENT DONATIONS
     '''
     #Dono Set
-    @commands.command(aliases=['eds'])
+    @commands.command(name='eds')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def event_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -509,21 +419,11 @@ class Dono(commands.Cog):
 
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(amount)}")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @event_dono_set.error
-    async def event_dono_set_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
-
     #Dono Add
-    @commands.command(aliases=['eda'])
+    @commands.command(name='eda')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Mod Admin, Co-Owner
     async def event_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -546,22 +446,11 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
-
         await self.roles(ctx, member)
 
-    @event_dono_add.error
-    async def event_dono_add_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
-
     #Dono Remove
-    @commands.command(aliases=['edr'])
+    @commands.command(name='edr')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Modr Admin, Co-Owner
     async def event_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -582,24 +471,13 @@ class Dono(commands.Cog):
             dbase.commit()
 
             total = self.get_amount(ctx, member)
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**")
-
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
+            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(total)}**")
 
         dbase.close()
-
         await self.roles(ctx, member)
 
-    @event_dono_remove.error
-    async def event_dono_remove_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
-
     #Dono Reset
-    @commands.command(aliases=['edrs'])
+    @commands.command(name='edrs')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def event_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -617,24 +495,14 @@ class Dono(commands.Cog):
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Event\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-        await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
-
-    @event_dono_reset.error
-    async def event_dono_reset_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly event managers can use this command')
 
     '''
     SPECIAL EVENT
     '''
     #Dono Set
-    @commands.command(aliases=['sds'])
+    @commands.command(name='sds')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -657,21 +525,11 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @special_dono_set.error
-    async def special_dono_set_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
-
-    #Giveaway Dono Add
-    @commands.command(aliases=['sda'])
+    #Dono Add
+    @commands.command(name='sda')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -694,21 +552,11 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @special_dono_add.error
-    async def special_event_dono_add_remove(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
-
     #Dono Remove
-    @commands.command(aliases=['sdr'])
+    @commands.command(name='sdr')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_remove(self, ctx, member: discord.Member, amount: int=None):
         dbase = sqlite3.connect('dono.db')
@@ -731,21 +579,11 @@ class Dono(commands.Cog):
             total = self.get_amount(ctx, member)
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @special_dono_remove.error
-    async def special_event_dono_set_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
-
     #Dono Reset
-    @commands.command(aliases=['sdrs'])
+    @commands.command(name='sdrs')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -763,25 +601,15 @@ class Dono(commands.Cog):
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Special Event\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-        await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
 
         await self.roles(ctx, member)
-
-    @special_dono_reset.error
-    async def special_event_dono_reset_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway, heist, and event managers can use this command')
 
     '''
     MONEY DONATIONS
     '''
     #Dono Set
-    @commands.command(aliases=['mds'])
+    @commands.command(name='mds')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -807,21 +635,11 @@ class Dono(commands.Cog):
 
             await self.roles(ctx, member)
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Set:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @money_dono_set.error
-    async def money_dono_set_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
-
     #Dono Add
-    @commands.command(aliases=['mda'])
+    @commands.command(name='mda')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -845,21 +663,11 @@ class Dono(commands.Cog):
             amount = ('{:,}'.format(amount))
             await ctx.send(f"Donation note added for **{member}**\nThe amount added was **${amount}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Added:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @money_dono_add.error
-    async def money_dono_add_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
-
     #Dono Remove
-    @commands.command(aliases=['mdr'])
+    @commands.command(name='mdr')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -882,21 +690,11 @@ class Dono(commands.Cog):
             amount = ('{:,}'.format(amount))
             await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **${amount}**")
 
-            embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Removed:** {amount}\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-            await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
 
-    @money_dono_remove.error
-    async def money_dono_remove_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
-
     #Dono Reset
-    @commands.command(aliases=['mdrs'])
+    @commands.command(name='mdrs')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -914,18 +712,8 @@ class Dono(commands.Cog):
 
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **$0**")
 
-        embed = discord.Embed(title=f'Donations Updated For {member}', description=f'**Member:** {member}\n**Category:** Money\n**Amount Set:** 0\n\n**Updated by:** {ctx.author}', color=0x00ff00)
-        await self.client.get_channel(838440247507288095).send(embed=embed)
-
         dbase.close()
         await self.roles(ctx, member)
-
-    @money_dono_reset.error
-    async def money_dono_reset_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('There are one or more required arguments that are missing')
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You do not have permssion to do that\nOnly giveaway managers can use this command')
             
 def setup(client):
     client.add_cog(Dono(client))

@@ -40,10 +40,10 @@ class Economy(commands.Cog):
         if num is None: return ""
         return '{:,}'.format(num)
 
-    @commands.command()
-    async def multi(self, ctx):
-        multi = multis.get_multi(ctx.author.id)
-        await ctx.send(f'Your curent multiplier is: **{float(multi * 100)}%**')
+    async def no_general(self, ctx):
+        channel = ctx.channel
+        if channel.id == 784491141022220312:
+            return True
 
     '''
     DB Adder
@@ -72,9 +72,18 @@ class Economy(commands.Cog):
     '''
     General
     '''
+    @commands.command()
+    async def multi(self, ctx):
+        multi = multis.get_multi(ctx.author.id)
+        await ctx.send(f'Your curent multiplier is: **{float(multi * 100)}%**')
+
     #Balance
     @commands.command(aliases=['bal', 'money'])
-    async def balance(self, ctx, member: discord.Member = None):        
+    async def balance(self, ctx, member: discord.Member = None):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+               
         user = member or ctx.author
         
         amount = self.currency.get_amount(user.id)
@@ -101,6 +110,10 @@ class Economy(commands.Cog):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
 
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         cursor.execute("SELECT balance, user_id FROM economy ORDER BY balance DESC")
         richest = cursor.fetchmany(10)
 
@@ -119,7 +132,11 @@ class Economy(commands.Cog):
 
     @commands.command(aliases=["inv"])
     async def inventory(self, ctx, member: typing.Optional[discord.Member] = None, page: typing.Optional[int] = 1):
-        item_limit_per_page = 5 # for displaying a maximum number of items in the inventory
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
+        item_limit_per_page = 5
 
         user = member or ctx.author
 
@@ -128,7 +145,7 @@ class Economy(commands.Cog):
             colour = 0x00ff00
         )
 
-        user_items = self.items.copy() # will be left with items that the user has
+        user_items = self.items.copy()
         for name, item in self.items.copy().items():
             quantity = item.get_item_count(user.id)
             if quantity == 0:
@@ -156,6 +173,10 @@ class Economy(commands.Cog):
     #Shop
     @commands.command(aliases = ["store"])
     async def shop(self, ctx, page: typing.Optional[int], *, item_name = None):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         if page is None and item_name is None:
             return await self.shop(ctx, 1)
 
@@ -221,6 +242,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def buy(self, ctx, count: int, *, item_name):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+            
         if count <= 0:
             return await ctx.send("You need to key in an valid amount, dummy")       
 
@@ -257,6 +282,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def sell(self, ctx, count: int, *, item_name):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         if count <= 0:
             return await ctx.send("You need to key in an valid amount, dummy")       
 
@@ -294,6 +323,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def use(self, ctx, count: typing.Optional[int] = 1, *, item_name):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         if count <= 0:
             return await ctx.send("You can’t use that number of items, dummy")
 
@@ -333,6 +366,10 @@ class Economy(commands.Cog):
     #Give
     @commands.command()
     async def give(self, ctx, member: discord.Member, amount: int):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         if member == ctx.author:
             return await ctx.send("Why would you want to give yourself money?")
         
@@ -342,7 +379,7 @@ class Economy(commands.Cog):
         if self.currency.get_amount(ctx.author.id) < amount:
             return await ctx.send("You don't have enough money for that!")
         
-        tax_rate = 8 # in percentages
+        tax_rate = 8
         after_taxes = round(amount * (100-tax_rate)/100)
 
         self.currency.add(member.id, after_taxes)
@@ -367,7 +404,11 @@ class Economy(commands.Cog):
     
     #Gift
     @commands.command()
-    async def gift(self, ctx, count: int, *item_and_member):    
+    async def gift(self, ctx, count: int, *item_and_member):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         if item_and_member == () or len(item_and_member) < 2:
             return await ctx.send("It's `b!gift <amount> <item> <user>`")
         
@@ -415,6 +456,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 35, commands.BucketType.user)
     async def beg(self, ctx):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         amount = random.randint(100, 1000)
 
         names = [
@@ -435,7 +480,8 @@ class Economy(commands.Cog):
             'Adit',
             'Tommy',
             'Julesi',
-            'Firecracker'
+            'Firecracker',
+            'DM WIGGLE FOR NITRO YOU JUST WON SOME EPIC NITRO'
         ]
 
         multi = multis.get_multi(ctx.author.id)
@@ -456,6 +502,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 8, commands.BucketType.user)
     async def bet(self, ctx, bet):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         if bet.lower() == "max" or bet.lower() == "all":
             # typecasting amount to string to preserve invocation style
             return await self.bet(ctx, str(min(500000, self.currency.get_amount(ctx.author.id))))
@@ -498,6 +548,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def slots(self, ctx, bet = None):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         if bet.lower() == "max" or bet.lower() == "all":
             # typecasting amount to string to preserve invocation style
             return await self.slots(ctx, str(min(100000, self.currency.get_amount(ctx.author.id))))
@@ -560,8 +614,12 @@ class Economy(commands.Cog):
     
     #Work
     @commands.command()
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.cooldown(1, 600, commands.BucketType.user)
     async def work(self, ctx):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         response = 'You got some stuff for working:'
         possible_items = [
             dukesBadge,
@@ -588,12 +646,20 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 15, commands.BucketType.user)
     async def mine(self, ctx):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         await ctx.send('Wiggle is working on it')
     
     #Dig
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def dig(self, ctx):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         shovelcheck = shovel.get_item_count(ctx.author.id)
         if shovelcheck < 1:
             await ctx.send('You need to buy a shovel to do this, run the command `b!buy 1 shovel`')
@@ -618,6 +684,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 15, BucketType.user)
     async def chop(self, ctx):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         axecheck = axe.get_item_count(ctx.author.id)
         if axecheck < 1:
             await ctx.send('You still need to buy an an axe, to do that run the command `b!buy 1 axe`')
@@ -638,6 +708,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 15, BucketType.user)
     async def hunt(self, ctx):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         def check(m):
             return m.content == "hello" and m.channel == m.channel
 
@@ -685,6 +759,10 @@ class Economy(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 15, BucketType.user)
     async def fish(self, ctx):
+        channel = await self.no_general(ctx)
+        if channel:
+            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
+
         rodcheck = fishingRod.get_item_count(ctx.author.id)
         if rodcheck < 1:
             await ctx.send("Buy a fishing rob by running the command: `b!buy 1 pole`")
