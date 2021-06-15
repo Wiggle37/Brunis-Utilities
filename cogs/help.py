@@ -63,5 +63,10 @@ class Help(commands.Cog):
             help_embed.add_field(name='__**Channels:**__', value='`b!lock` ➞ Locks the current channel\n`b!unlock` ➞ Unlocks the vurrent channel')
             await ctx.send(embed=help_embed)
 
+    @commands.command()
+    async def helps(self, cog):
+        for command in self.cog.Events:
+            print(command)
+
 def setup(client):
     client.add_cog(Help(client))

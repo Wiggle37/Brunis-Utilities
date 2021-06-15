@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import sqlite3
 
+from discord.ext.commands.core import command
+
 class Dono(commands.Cog):
 
     def __init__(self, client):
@@ -106,6 +108,30 @@ class Dono(commands.Cog):
     #Beatify Numbers
     def beautify_numbers(self, num):
         return "{:,}".format(num)
+
+    '''
+    BRUNI ONY LOL
+    '''
+    @commands.command()
+    @commands.is_owner()
+    async def endspecial(self, ctx):
+        dbase = sqlite3.connect('dono.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT user_id, special FROM donations")
+        users = cursor.fetchall()
+
+        for user in users:
+            cursor.execute(f"UPDATE donations SET special = 0 WHERE user_id = '{int(user[0])}'")
+            cursor.execute(f"UPDATE donations SET event = '{int(user[1])}' + event WHERE user_id = '{user[0]}'")
+
+            person = await self.client.fetch_user(user[0])
+            await ctx.send(f"{person.name}'s special donations were reset to **0** and added {user[1]} to events")
+
+        await ctx.send('ALL DONE!!')
+
+        dbase.commit()
+        dbase.close()
 
     '''
     DONATIONS CHECK
