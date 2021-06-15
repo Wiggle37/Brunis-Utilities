@@ -48,9 +48,8 @@ class Dono(commands.Cog):
 
         cursor.execute(f"SELECT total FROM donations WHERE user_id = '{member}'")
         amount = cursor.fetchone()[0]
-        return amount
-
         dbase.close()
+        return amount
 
     #Get User
     def get_user(self, ctx, member: discord.Member=None):

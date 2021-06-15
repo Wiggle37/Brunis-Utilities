@@ -580,7 +580,9 @@ class Economy(commands.Cog):
             snowflake,
             doughnut,
             iphone,
-            goldBox
+            goldBox,
+            clover,
+            emeraldPick
         ]
 
         item = random.choice(possible_items)
