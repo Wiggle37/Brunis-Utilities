@@ -64,7 +64,7 @@ class Events(commands.Cog):
         cleaned_content = message.content.lower()
 
         for trigger, response in text_response:
-            if trigger in cleaned_content:
+            if trigger in cleaned_content and not message.author.bot:
                 await message.channel.send(response)
         
     @commands.Cog.listener("on_message")
@@ -82,7 +82,7 @@ class Events(commands.Cog):
         cleaned_content = message.content.lower()
 
         for trigger, emoji in emoji_react:
-            if trigger in cleaned_content:
+            if trigger in cleaned_content and not message.author.bot:
                 await message.add_reaction(emoji)
     
     
