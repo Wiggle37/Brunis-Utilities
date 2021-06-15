@@ -35,7 +35,7 @@ class CommandErrorHandler(commands.Cog):
             return await ctx.send(f'The role provided was not found')
 
         if isinstance(error, commands.BadArgument):
-            return await ctx.send(f'There was a bad argument\n```{error}```')
+            pass
 
         if isinstance(error, commands.CommandOnCooldown):
             pass

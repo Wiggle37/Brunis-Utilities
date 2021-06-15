@@ -87,11 +87,7 @@ class Economy(commands.Cog):
         user = member or ctx.author
         
         amount = self.currency.get_amount(user.id)
-        bal_embed = discord.Embed(
-            title = f"{user.name}'s balance",
-            description = f"**Balance:**\n{self.currency.emoji} {self.beautify_number(amount)}",
-            colour = 0x00ff00
-        )
+        bal_embed = discord.Embed(title = f"{user.name}'s balance",description = f"**Balance:**\n{self.currency.emoji} {self.beautify_number(amount)}",colour = 0x00ff00)
         await ctx.send(embed = bal_embed)
     
     @balance.error
@@ -140,10 +136,7 @@ class Economy(commands.Cog):
 
         user = member or ctx.author
 
-        inv_embed = discord.Embed(
-            title = f"{user.name}’s Inventory" ,
-            colour = 0x00ff00
-        )
+        inv_embed = discord.Embed(title = f"{user.name}’s Inventory" ,colour = 0x00ff00)
 
         user_items = self.items.copy()
         for name, item in self.items.copy().items():
@@ -157,11 +150,7 @@ class Economy(commands.Cog):
             return await ctx.send("You don't have any items!")
 
         for name, item_count in dict(islice(user_items.items(), (page - 1) * 5, page *5)).items():
-            inv_embed.add_field(
-                name = f"{self.items[name].emoji} __{self.items[name].name}__",
-                value = f"**{self.beautify_number(item_count)}** owned",
-                inline = False
-            )
+            inv_embed.add_field(name = f"{self.items[name].emoji} __{self.items[name].name}__",value = f"**{self.beautify_number(item_count)}** owned",inline = False)
             
         if inv_embed.fields == []:            
             return await ctx.send(f"Page {page} doesn’t exist")
@@ -194,23 +183,11 @@ class Economy(commands.Cog):
             if item_name.lower().replace(" ", "") not in name.lower().replace(" ", ""):
                 continue
 
-            item_info_embed = discord.Embed(
-                title = f"{item.name} ({self.beautify_number(item.get_item_count(ctx.author.id))} owned)",
-                description = item.description,
-                colour = 0x00ff00
-            )
+            item_info_embed = discord.Embed(title = f"{item.name} ({self.beautify_number(item.get_item_count(ctx.author.id))} owned)",description = item.description,colour = 0x00ff00)
             
-            item_info_embed.add_field(
-                name = "Buy: ",
-                value = item.purchasable * f"{self.currency.emoji} **{self.beautify_number(item.price)}**" + (not item.purchasable) * "This item cannot be bought",
-                inline = False
-            )
+            item_info_embed.add_field(name = "Buy: ", value = item.purchasable * f"{self.currency.emoji} **{self.beautify_number(item.price)}**" + (not item.purchasable) * "This item cannot be bought",    inline = False)
 
-            item_info_embed.add_field(
-                name = "Sell: ",
-                value = item.sellable * f"{self.currency.emoji} **{self.beautify_number(item.sell_price)}**" + (not item.sellable) * "This item cannot be sold",
-                inline = False
-            )
+            item_info_embed.add_field(name = "Sell: ",value = item.sellable * f"{self.currency.emoji} **{self.beautify_number(item.sell_price)}**" + (not item.sellable) * "This item cannot be sold",inline = False)
 
             item_info_embed.set_thumbnail(url = item.image_url)
             return await ctx.send(embed = item_info_embed)
@@ -226,11 +203,7 @@ class Economy(commands.Cog):
         if page > pages_of_shop:
             return await ctx.send("That's not a valid page number")
 
-        shop_embed = discord.Embed(
-            title = "Dank Merchants Shop",
-            description = "__**Shop Items:**__\n\n",
-            colour = 0x00ff00
-        )
+        shop_embed = discord.Embed(title = "Dank Merchants Shop",description = "__**Shop Items:**__\n\n",colour = 0x00ff00)
 
         for item in purchasable_items[(page - 1) * item_limit_per_page: page * item_limit_per_page]:
             shop_embed.description += f"{item.emoji} **{item.name}** - {self.currency.emoji} {self.beautify_number(item.price)}\n\n"
@@ -306,16 +279,12 @@ class Economy(commands.Cog):
     @sell.error
     async def sell_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
+            embed = discord.Embed(title=f'WOAH There Slow It Down!', description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
             return await ctx.send(embed=embed)
-        
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            return await ctx.send("It's `b!sell <amount> <item>`")
         
         if isinstance(error, commands.errors.BadArgument):
             return await ctx.send("You need to key in an amount of items to sell")
 
-        # print any other error
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
@@ -380,7 +349,7 @@ class Economy(commands.Cog):
             return await ctx.send("You don't have enough money for that!")
         
         tax_rate = 8
-        after_taxes = round(amount * (100-tax_rate)/100)
+        after_taxes = round(amount * (100-tax_rate) / 100)
 
         self.currency.add(member.id, after_taxes)
         self.currency.subtract(ctx.author.id, amount)
@@ -388,17 +357,10 @@ class Economy(commands.Cog):
         return await ctx.send(f"You gave **{member.name}** {self.currency.emoji} **{self.beautify_number(after_taxes)}**, after a {tax_rate}% tax rate")
 
     @give.error
-    async def give_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            return await ctx.send("It's `b!give <user> <amount>`")
-        
-        if isinstance(error, commands.errors.MemberNotFound):
-            return await ctx.send("That isn't a valid user")
-        
+    async def give_error(self, ctx, error):       
         if isinstance(error, BadArgument):
             return await ctx.send("You have to type in an amount to give")
         
-        # print any other error
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
@@ -439,13 +401,9 @@ class Economy(commands.Cog):
 
     @gift.error
     async def gift_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            return await ctx.send("It's `b!gift <amount> <item> <user>`")
-        
         if isinstance(error, BadArgument):
             return await ctx.send("You have to type in a number of items you want to give")
         
-        # print any other error
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
@@ -461,7 +419,6 @@ class Economy(commands.Cog):
             return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
 
         amount = random.randint(100, 1000)
-
         names = [
             'Lily',
             'Darkside',
@@ -486,9 +443,7 @@ class Economy(commands.Cog):
 
         multi = multis.get_multi(ctx.author.id)
         new_amount = int(amount * (1 + multi))
-
         self.currency.add(ctx.author.id, new_amount)
-
         await ctx.reply(f"{random.choice(names)} gave you {self.currency.emoji} **{int(new_amount)}** after a {multi * 100}% multi")
 
     @beg.error
@@ -507,7 +462,6 @@ class Economy(commands.Cog):
             return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
 
         if bet.lower() == "max" or bet.lower() == "all":
-            # typecasting amount to string to preserve invocation style
             return await self.bet(ctx, str(min(500000, self.currency.get_amount(ctx.author.id))))
 
         bet = self.is_valid_int(bet)
@@ -553,7 +507,6 @@ class Economy(commands.Cog):
             return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
 
         if bet.lower() == "max" or bet.lower() == "all":
-            # typecasting amount to string to preserve invocation style
             return await self.slots(ctx, str(min(100000, self.currency.get_amount(ctx.author.id))))
 
         bal = self.currency.get_amount(ctx.author.id)
@@ -650,7 +603,11 @@ class Economy(commands.Cog):
         if channel:
             return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
 
-        await ctx.send('Wiggle is working on it')
+        wood = woodPick.get_item_count(ctx.author.id)
+        iron = ironPick.get_item_count(ctx.author.id)
+        gold = goldPick.get_item_count(ctx.author.id)
+        diamond = diamondPick.get_item_count(ctx.author.id)
+        emerald = emeraldPick.get_item_count(ctx.author.id)
     
     #Dig
     @commands.command()

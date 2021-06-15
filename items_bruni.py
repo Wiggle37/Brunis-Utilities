@@ -503,6 +503,7 @@ class clover(misc):
     name = 'Clover'
     description = 'Suggested by <@!561620028601008148>'
     image_url = 'https://cdn.discordapp.com/emojis/853798056662794240.png?v=1'
+    emoji = '<:clover:853798056662794240>'
     db_name = 'clover'
     purchasable = True
     price = 50000
