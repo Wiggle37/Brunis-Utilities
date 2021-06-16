@@ -1,5 +1,6 @@
 import asyncio
 import discord
+from discord import FFmpegAudio, FFmpegOpusAudio, FFmpegPCMAudio, PCMAudio, PCMVolumeTransformer
 import youtube_dl
 from discord.ext import commands
 
@@ -77,7 +78,7 @@ class Music(commands.Cog):
         """Plays from a url (almost anything youtube_dl supports)"""
 
         async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop)
+            player = await YTDLSource.from_url(url, loop=self.client.loop)
             ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
 
         await ctx.send(f'Now playing: {player.title}')
@@ -87,20 +88,10 @@ class Music(commands.Cog):
         """Streams from a url (same as yt, but doesn't predownload)"""
 
         async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            player = await YTDLSource.from_url(url, loop=self.client.loop, stream=True)
             ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
 
         await ctx.send(f'Now playing: {player.title}')
-
-    @commands.command()
-    async def volume(self, ctx, volume: int):
-        """Changes the player's volume"""
-
-        if ctx.voice_client is None:
-            return await ctx.send("Not connected to a voice channel.")
-
-        ctx.voice_client.source.volume = volume / 100
-        await ctx.send(f"Changed volume to {volume}%")
 
     @commands.command()
     async def stop(self, ctx):
