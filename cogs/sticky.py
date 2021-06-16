@@ -41,7 +41,7 @@ class Sticky(commands.Cog):
                 return await ctx.send("That isnt't a valid number")
             
             else:
-                channelCheck = discord.utils.find(ctx.guild.text_channels, id=int(channel.content))
+                channelCheck = discord.utils.find(lambda chan: chan.id == int(channel.content), ctx.guild.text_channels)
                 if channelCheck is None:
                     return await ctx.reply("That channel doesn't exist")
 
