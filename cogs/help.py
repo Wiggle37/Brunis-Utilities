@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import discord_slash
 
 class Help(commands.Cog):
 
@@ -14,7 +15,7 @@ class Help(commands.Cog):
         '''
         #Main Help
         if command is None:
-            help_embed = discord.Embed(title='Brunis Utilities', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed = discord.Embed(title='Brunis Utilities', description='All of the categorys', color=0x00ff00)
             help_embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/827369094776356905/828079209623584818/dankmerchants.gif')
             help_embed.add_field(name='__Donations__', value='To track donations for members', inline=False)
             help_embed.add_field(name='__Economy__', value='The servers economy system', inline=False)
@@ -24,7 +25,7 @@ class Help(commands.Cog):
 
         #Donation Help
         if command == 'dono' or command == 'donation' or command == 'donations':
-            help_embed = discord.Embed(title='Donations', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed = discord.Embed(title='Donations', description='dono', color=0x00ff00)
             help_embed.add_field(name='__**Basic:**__', value='`b!dono` ➞ Check how much you have donated\n`b!init` ➞ Add you self to the database')
             help_embed.add_field(name='__**Giveaway Donations:**__', value='`b!gda <@member / id> <amount>` ➞ Add to someones giveaway donations\n`b!gdr <@member / id> <amount>` ➞ Remove from someones giveaway donations\n`b!gds <@member / id> <amount>` ➞ Set someones donations\n`b!gdrs <@member / id>` ➞ Reset someones giveaway donations', inline=False)
             help_embed.add_field(name='__**Heist Donations:**__', value='`b!hda <@member / id> <amount>` ➞ Add to someones heist donations\n`b!hdr <@member / id> <amount>` ➞ Remove from someones heist donations\n`b!hds <@member / id> <amount>` ➞ Set someones heist donations\n`b!hdrs <@member / id>` ➞ Reset someones heist donations', inline=False)
@@ -35,14 +36,13 @@ class Help(commands.Cog):
 
         #Utility Help
         if command == 'utility' or command == 'utils' or command == 'util':
-            help_embed = discord.Embed(title='Utility', description='Commands that will probally be useful\n[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed = discord.Embed(title='Utility', description='Commands that will probally be useful', color=0x00ff00)
             help_embed.add_field(name='__**Useful:**__', value='`b!count` ➞ Count to up to 1000', inline=False)
-            help_embed.add_field(name='__**Support Server:**__', value='b!suggest <suggestion> ➞ Suggest something to the bot\n`b!bug <bug>` ➞ report a bug', inline=False)
             await ctx.send(embed=help_embed)
 
         #Economy Help
         if command == 'econ' or command == 'economy':
-            help_embed = discord.Embed(title='Economy', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
+            help_embed = discord.Embed(title='Economy', description='economy', color=0x00ff00)
             help_embed.add_field(name='__**Basic:**__', value='`b!bal [@member / id]` ➞ Check how much money you have\n`b!inv [page] [member]` ➞ Check what you have in your inventory', inline=False)
             help_embed.add_field(name='__**Money Making:**__', value='`b!beg` ➞ Gives you some money\n`b!bet <amount>` ➞ Risk losing some money but have a chance of winning even more\n`b!work` ➞ Go to work and do some things that could make you some money', inline=False)
             await ctx.send(embed=help_embed)
@@ -61,12 +61,7 @@ class Help(commands.Cog):
             help_embed.add_field(name='__**Roles:**__', value='`b!ar <@member / id> <@role / id>` ➞ Give someone a role\n`b!rr <@member / id> <@role / id>` ➞ Remove a role from someone', inline=False)
             help_embed.add_field(name='__**Messages:**__', value='`b!purge <amount>` ➞ Delete up-to 1000 messages', inline=False)
             help_embed.add_field(name='__**Channels:**__', value='`b!lock` ➞ Locks the current channel\n`b!unlock` ➞ Unlocks the vurrent channel')
-            await ctx.send(embed=help_embed)
-
-    @commands.command()
-    async def helps(self, cog):
-        for command in self.cog.Events:
-            print(command)
+            await ctx.send(embed=help_embed)      
 
 def setup(client):
     client.add_cog(Help(client))
