@@ -20,7 +20,7 @@ class CommandErrorHandler(commands.Cog):
             return await ctx.send(f'That member is not found')
 
         if isinstance(error, commands.MissingRequiredArgument):
-            return await ctx.send(f'You are missing one or more required arguments\n```b!{ctx.command} {ctx.command.signature}```')
+            return await ctx.send(f'You are missing the `{error.param.name}` argument in the `{ctx.command}` command\n```b!{ctx.command} {ctx.command.signature}```')
 
         if isinstance(error, commands.BotMissingPermissions):
             return await ctx.send(f'The bot is missing some permissions for this command to be run please contact wiggle so he can get this figured out')
