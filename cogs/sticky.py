@@ -1,4 +1,3 @@
-from os import name
 import discord
 from discord import message
 from discord.ext import commands
@@ -13,9 +12,22 @@ class Sticky(commands.Cog):
     #Sticky
     @commands.Cog.listener()
     async def on_message(self, message):
-        return
+        dbase = sqlite3.connect('stickys.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT channel_id FROM stickys WHERE channel_id == '{message.channel.id}'")
+        result = cursor.fetchone()
+        if result != None and not message.author.bot:
+            cursor.execute(f"SELECT message FROM stickys WHERE channel_id == '{message.channel.id}'")
+            msg = cursor.fetchone()
+
+            embed = discord.Embed(title='Stickied Message', description=f'{msg[0]}', color=0x00ff00)
+            await self.client.get_channel(result[0]).send(embed=embed)
+
+        dbase.close()
 
     @commands.command()
+    @commands.has_any_role(785202756641619999, 788738305365114880, 784492058756251669, 788738308879941633) # Bruni, Co-Owner, Admin, Bot Dev
     async def add_sticky(self, ctx):
         def check(message):
             return ctx.author == message.author and ctx.channel == message.channel
@@ -55,10 +67,13 @@ class Sticky(commands.Cog):
         except TimeoutError:
             return await ctx.send("You didn't send the message in time")
 
-        cursor.execute(f"INSERT INTO stickys (channel_id, stickyname, message) VALUES (?, ?, ?)", [channel.content, name.content.lower(), message.content.lower()])
+        cursor.execute("INSERT INTO stickys (stickyname, channel_id, message) VALUES (?, ?, ?);", [name.content.lower(), channel.content, message.content.lower()])
 
-        embed = discord.Embed(title='Sticky Added With The Following Details', description=f'Name: {name}\nChannel: {channel}\n\nMessage: {message}')
+        embed = discord.Embed(title='Sticky Added With The Following Details', description=f'Name: {name.content.lower()}\nChannel: {int(channel.content)}\n\nMessage: {message.content.lower()}')
         await ctx.send(embed=embed)
+
+        dbase.commit()
+        dbase.close()
 
 def setup(client):
     client.add_cog(Sticky(client))
