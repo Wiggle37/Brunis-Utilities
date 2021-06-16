@@ -324,11 +324,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\n**AMOUNT RESET TO 0**')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     '''
@@ -361,11 +359,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
@@ -395,11 +391,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
@@ -429,11 +423,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
@@ -459,11 +451,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\n**AMOUNT RESET TO 0**')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     '''
@@ -492,16 +482,14 @@ class Dono(commands.Cog):
 
             dbase.commit()
 
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(amount)}")
+            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(amount)}**")
 
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
@@ -531,11 +519,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
@@ -565,11 +551,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
@@ -594,11 +578,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\n**AMOUNT RESET TO 0**')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     '''
@@ -631,11 +613,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
@@ -665,17 +645,15 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
     @commands.command(name='sdr')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
-    async def special_dono_remove(self, ctx, member: discord.Member, amount: int=None):
+    async def special_dono_remove(self, ctx, member: discord.Member, amount: str):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
         self.get_user(ctx, member)
@@ -699,11 +677,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
@@ -728,11 +704,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\n**AMOUNT RESET TO 0**')
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     '''
@@ -768,11 +742,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount set: `⏣{amount}`', color=0x00ff00)
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
@@ -803,11 +775,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount added: `⏣{amount}`', color=0x00ff00)
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
@@ -837,11 +807,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount removed: `⏣{amount}`', color=0xff0000)
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
@@ -866,11 +834,9 @@ class Dono(commands.Cog):
         dbase.close()
         await self.roles(ctx, member)
 
-        now = datetime.utcnow()
-        current_time = now.strftime("%H:%M:%S")
-
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\n**AMOUNT RESET TO 0**', color=0xff0000)
-        embed.set_footer(text=f'Manager: {ctx.author} - {current_time}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
             
 def setup(client):
