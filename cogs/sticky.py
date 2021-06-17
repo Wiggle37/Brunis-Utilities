@@ -24,6 +24,10 @@ class Sticky(commands.Cog):
             embed = discord.Embed(title='Stickied Message', description=f'{msg[0]}', color=0x00ff00)
             await self.client.get_channel(result[0]).send(embed=embed)
 
+            messages = await message.channel.history(limit=5).flatten()
+            await messages[2].delete()
+
+
         dbase.close()
 
     @commands.command()
