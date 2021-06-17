@@ -133,7 +133,7 @@ class topdonor(donations):
     name = 'Top Donator'
     amount = None
     role_id = 793189820151234620
-    emoji = '🤑'
+    emoji = '<a:Crown:792881663398772746>'
 
 ### - - - - - Misc - - - - - ###
 class misc:
