@@ -1,6 +1,8 @@
 from discord.ext import commands
 import discord
 import asyncio
+
+from items_bruni import *
  
 class massEvents(commands.Cog):
     def __init__(self, client):
@@ -34,7 +36,7 @@ class massEvents(commands.Cog):
             try:
                 valid_message = await self.bot.wait_for("message", check = check, timeout = 30)
                 if self.raiders.get(valid_message.author.id) is None:
-                    await valid_message.add_reaction(":pog:790995076339859547:")
+                    await valid_message.add_reaction("<:pog:790995076339859547:>")
                     self.raiders[valid_message.author.id] = valid_message.author.name
                 else:
                     await valid_message.reply("You already joined the raid!")
@@ -45,7 +47,7 @@ class massEvents(commands.Cog):
     @raid.command()
     async def start(self, ctx):
         raid_start_embed = discord.Embed(title = "A boss is here!", colour = 0x4c1a33)
-        raid_start_embed.add_field(name = "It's Tiny Tortle", value = "Quick, type ```join raid``` to fight the boss!")
+        raid_start_embed.add_field(name = "It's Tiny Tortle", value = "Quick, type ```join raid``` to fight the boss and get some coins!")
  
         await ctx.send(embed = raid_start_embed)
  
@@ -56,13 +58,16 @@ class massEvents(commands.Cog):
  
         results = []
  
-        if len(self.raiders) == 0:
-            return await ctx.send("Wow no one participated?")
+        if len(self.raiders) < 3:
+            return await ctx.send("Not enough people joined the raid, you need at least 3 people to start a successful raid")
+
         await ctx.send("Good job people, we managed to defeat the boss!")
+
+        amount = random.randint(100000, 1000000)
  
         for name in self.raiders.values():
             # add currency here
-            results.append(f"{name} got away with too many coins")
+            results.append(f"{name} got away with {amount}")
         
  
         prefix = "```\n"
