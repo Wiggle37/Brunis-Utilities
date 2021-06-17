@@ -1,3 +1,5 @@
+from os import name
+from discord.ext.commands.core import command
 from badges import *
 import discord
 from discord.ext import commands
@@ -16,7 +18,8 @@ class Profile(commands.Cog):
         cursor.execute(f"SELECT total, money FROM donations WHERE user_id == '{user.id}'")
         result = cursor.fetchone()
         if result is None:
-            return 0
+            result = [0, 0]
+            return result
 
         else:
             return result
@@ -45,6 +48,18 @@ class Profile(commands.Cog):
             details += 'Auctioneer, '
 
         return details
+
+    def bumps(self, user):
+        dbase = sqlite3.connect('bump.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT bump FROM bumps WHERE user_id == '{user.id}'")
+        result = cursor.fetchone()
+        if result is None:
+            return 0
+
+        else:
+            return result[0]
 
     def badges(self, ctx, user):
         badges = '‏‏‎ ‎'
@@ -104,17 +119,36 @@ class Profile(commands.Cog):
         
         amount = self.get_donation(user)
         badges = self.badges(ctx, user)
+        bumps = self.bumps(user)
         details = self.detail(ctx, user)
 
         embed = discord.Embed(title=f"{user}'s Server Profile", description=badges[:-1], color=user.color)
         embed.add_field(name='Dank Memer Donations:', value=f'`⏣{"{:,}".format(amount[0])}`')
         embed.add_field(name='Real Money Donations:', value=f'`${amount[1]} USD`')
+        embed.add_field(name='Server Bump Stats:', value=f'`{bumps}` successful bumps')
         embed.add_field(name='Member Details', value=details[:-2], inline=False)
 
         embed.set_thumbnail(url=user.avatar_url)
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=user.id, icon_url=ctx.guild.icon_url)
 
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def badges(self, ctx):
+        level_emojis = [level5, level10, level15, level20, level30, level40, level50, level69, level100]
+        levels_ = ''
+        for emoji in level_emojis:
+            levels_ += f'{emoji.name} - {emoji.emoji}\n'
+        
+        dono_emojis = [mil5, mil10, mil25, mil50, mil100, mil250, mil500, bil1, bil2_5, bil5, topdonor]
+        donations_ = ''
+        for dono in dono_emojis:
+            donations_ += f'{dono.name} - {dono.emoji}\n'
+
+        embed = discord.Embed(title='All The Badges', description='A list of all the profile badges')
+        embed.add_field(name='Levels', value=levels_, inline=False)
+        embed.add_field(name='Donations', value=donations_)
         await ctx.send(embed=embed)
 
 def setup(client):
