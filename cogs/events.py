@@ -4,14 +4,13 @@ from discord import reaction
 from discord.ext import commands
 import sqlite3
 import time
-from discord.ext.commands.core import command
-
-from discord.ext.commands.errors import MissingAnyRole
+from datetime import datetime
 
 class Events(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.self_roles_channel = self.client.get_channel(784547669619507201)
 
     '''
     MEMBER EVENTS
@@ -36,6 +35,9 @@ class Events(commands.Cog):
 
             else:
                 channel = await member.create_dm()
+
+                ping_message = await self.self_roles_channel.send(member.mention)
+                await ping_message.delete(delay = 7)
                     
                 dm_embed = discord.Embed(title=f'Welcome To Dank Merchants!', description=f'In case of you getting banned from the server join [this](https://discord.gg/ubtz7gK2js) server to appeal', color=0x00ff00)
                 await channel.send(embed=dm_embed)
