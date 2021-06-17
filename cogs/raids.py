@@ -32,9 +32,12 @@ class massEvents(commands.Cog):
         
         while True:
             try:
-                valid_message = await self.client.wait_for("message", check = check, timeout = 30)
+                valid_message = await self.bot.wait_for("message", check = check, timeout = 30)
                 if self.raiders.get(valid_message.author.id) is None:
+                    await valid_message.add_reaction(":pog:790995076339859547:")
                     self.raiders[valid_message.author.id] = valid_message.author.name
+                else:
+                    await valid_message.reply("You already joined the raid!")
  
             except asyncio.TimeoutError:
                 pass
@@ -57,23 +60,26 @@ class massEvents(commands.Cog):
             return await ctx.send("Wow no one participated?")
         await ctx.send("Good job people, we managed to defeat the boss!")
  
-        for id, name in self.raiders.items():
+        for name in self.raiders.values():
             # add currency here
             results.append(f"{name} got away with too many coins")
         
+ 
+        prefix = "```\n"
+        suffix = "\n```"
+        sending_res = prefix
         # avoiding hitting the 2000 char limit for messages
-        sending_res = "```\n"
         for res in results:
             if len(sending_res) + len(res) > 1995:
-                sending_res += "\n```"
+                sending_res += suffix
                 await ctx.send(sending_res)
-                sending_res = "```\n"
-            
-            sending_res += res + "\n"
+                sending_res = prefix
+ 
+            else:
+                sending_res += res + "\n"
         
-        sending_res += "\n```"
+        sending_res += suffix
         await ctx.send(sending_res)
- 
- 
+
 def setup(client):
     client.add_cog(massEvents(client))
