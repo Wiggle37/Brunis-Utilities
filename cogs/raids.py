@@ -33,7 +33,7 @@ class massEvents(commands.Cog):
         while True:
             try:
                 valid_message = await self.client.wait_for("message", check = check, timeout = 30)
-                if self.raiders.get(valid_message.author.id) is not None:
+                if self.raiders.get(valid_message.author.id) is None:
                     self.raiders[valid_message.author.id] = valid_message.author.name
  
             except asyncio.TimeoutError:
