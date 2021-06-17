@@ -52,27 +52,50 @@ class Profile(commands.Cog):
         if staff_ in user.roles:
             badges += f'{staff.emoji} '
 
+        topdonor_ = discord.utils.find(lambda r: r.id == 793189820151234620, ctx.message.guild.roles)
+        if topdonor_ in user.roles:
+            badges += f'{topdonor.emoji} '
+
+        # Donations
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
         cursor.execute(f"SELECT total FROM donations WHERE user_id = '{user.id}'")
         total = cursor.fetchone()[0]
         donor_emojis = {
-            5000000: mil5.emoji, # 5 million
-            10000000: mil10.emoji, # 10 million
-            25000000: mil25.emoji, # 25 million
-            50000000: mil50.emoji, # 50 million
-            100000000: mil100.emoji, # 100 million
-            250000000: mil250.emoji, # 250 million
-            500000000: mil500.emoji, # 500 million
-            1000000000: bil1.emoji, # 1 billion
+            5000000: mil5.emoji,      # 5 million
+            10000000: mil10.emoji,    # 10 million
+            25000000: mil25.emoji,    # 25 million
+            50000000: mil50.emoji,    # 50 million
+            100000000: mil100.emoji,  # 100 million
+            250000000: mil250.emoji,  # 250 million
+            500000000: mil500.emoji,  # 500 million
+            1000000000: bil1.emoji,   # 1 billion
             2500000000: bil2_5.emoji, # 2.5 billion
-            5000000000: bil5.emoji # 5 billion
+            5000000000: bil5.emoji    # 5 billion
         }
         for amount, emoji in donor_emojis.items():
             if total < amount:
                 break
             badges += f'{emoji} '
         dbase.close()
+
+        # Levels
+        level_emojis = {
+            level5.role_id: level5.emoji,     # Level 5
+            level10.role_id: level10.emoji,   # Level 10
+            level15.role_id: level15.emoji,   # Level 15
+            level20.role_id: level20.emoji,   # Level 20
+            level30.role_id: level30.emoji,   # Level 30
+            level40.role_id: level40.emoji,   # Level 40
+            level50.role_id: level50.emoji,   # Level 50
+            level69.role_id: level69.emoji,   # Level 69
+            level100.role_id: level100.emoji, # Level 100
+        }
+        for role_id, emoji in level_emojis.items():
+            role = discord.utils.find(lambda r: r.id == role_id, ctx.message.guild.roles)
+            if role in user.roles:
+                badges += f'{emoji} '
+
         return badges
 
     @commands.command()
