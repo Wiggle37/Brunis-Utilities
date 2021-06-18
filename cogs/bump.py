@@ -7,6 +7,38 @@ class BumpTracker(commands.Cog, name='Bump Tracker', description='Tracks how muc
     def __init__(self, client):
         self.client = client
 
+    #Check Bumps
+    @commands.command(name='Check Bumps', description='Check the amount of successful and unsuccessful bumps you have in the server', aliases=['b', 'bumps'])
+    async def bumps(self, ctx, member: discord.Member=None):
+        dbase = sqlite3.connect('bump.db')
+        cursor = dbase.cursor()
+        user = (member or ctx.author).id
+        cursor.execute(f"INSERT INTO bumps (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
+        cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user}'")
+        bump = cursor.fetchone()[0]
+        cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
+        total = cursor.fetchone()[0]
+        user = await ctx.guild.fetch_member(user)
+
+        if bump == 0:
+            embed = discord.Embed(title=f'Bumps for **{user}**', description='The server bump tracker', color=0x00ff00)
+            embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
+            embed.add_field(name='Total Bumps:', value=f'`{(total)}`')
+            embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
+            await ctx.send(embed=embed)
+
+        else:
+            percentage = int(round(bump / total, 2) * 100)
+
+            embed = discord.Embed(title=f'Bumps for **{user}**', description='The server bump tracker', color=0x00ff00)
+            embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
+            embed.add_field(name='Total Bumps:', value=f'`{(total)}`')
+            embed.add_field(name='Percentage:', value=f'`{int(percentage)}%`')
+            embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
+            await ctx.send(embed=embed)
+        
+        dbase.close()
+
     def valid_message(self, message):
         return message.author.id == 302050872383242240 and message.channel.id == 784994978661138453 and message.embeds != [] 
     
@@ -79,38 +111,6 @@ class BumpTracker(commands.Cog, name='Bump Tracker', description='Tracks how muc
         await user.add_roles(role)
 
         dbase.commit()
-        dbase.close()
-
-    #Check Bumps
-    @commands.command(name='Check Bumps', description='Check the amount of successful and unsuccessful bumps you have in the server', aliases=['b'])
-    async def bumps(self, ctx, member: discord.Member=None):
-        dbase = sqlite3.connect('bump.db')
-        cursor = dbase.cursor()
-        user = (member or ctx.author).id
-        cursor.execute(f"INSERT INTO bumps (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
-        cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user}'")
-        bump = cursor.fetchone()[0]
-        cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
-        total = cursor.fetchone()[0]
-        user = await ctx.guild.fetch_member(user)
-
-        if bump == 0:
-            embed = discord.Embed(title=f'Bumps for **{user}**', description='The server bump tracker', color=0x00ff00)
-            embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
-            embed.add_field(name='Total Bumps:', value=f'`{(total)}`')
-            embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
-            await ctx.send(embed=embed)
-
-        else:
-            percentage = int(round(bump / total, 2) * 100)
-
-            embed = discord.Embed(title=f'Bumps for **{user}**', description='The server bump tracker', color=0x00ff00)
-            embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
-            embed.add_field(name='Total Bumps:', value=f'`{(total)}`')
-            embed.add_field(name='Percentage:', value=f'`{int(percentage)}%`')
-            embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
-            await ctx.send(embed=embed)
-        
         dbase.close()
 
 def setup(client):
