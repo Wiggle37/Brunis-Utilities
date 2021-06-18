@@ -1,4 +1,3 @@
-from types import new_class
 import discord
 from discord import *
 from discord.ext import commands
@@ -16,13 +15,92 @@ import typing
 
 from items_bruni import *
 
-class Economy(commands.Cog):
+class Economy(commands.Cog, name='Economy', description='The servers economy system'):
 
     def __init__(self, client):
         self.client = client
         self.items = economy_items
         self.currency = currency
         self.memberConverter = commands.MemberConverter()
+
+        self.raiders = {}
+    
+    @commands.group(name='Raid', description='Team up to destroy a boss and get some coins', invoke_without_command = True)
+    async def raid(self, ctx):
+        raid_help_embed = discord.Embed(
+            title = "How to boss raids 101",
+            description = "Boss raids commands",
+            colour = 0x4db59a
+        )
+ 
+        raid_help_embed.add_field(name = "How to start a raid?", value = "```b!raid start```", inline = True)
+        raid_help_embed.add_field(name = "How to join a raid?", value = "```join raid```", inline = True)
+ 
+        raid_help_embed.add_field(
+            name = "What even are boss raids?",
+            value = "A creature spawned out of nowhere and threatened the stability of the server!\nWe need people to team up against this creature and restore peace and tranquility and defeating this creature",
+            inline = False
+        )
+ 
+        await ctx.send(embed = raid_help_embed)
+ 
+    async def read_messages(self, ctx):
+        def check(message):
+            return message.content.lower() == 'join raid' and message.channel == ctx.channel
+        
+        while True:
+            try:
+                valid_message = await self.bot.wait_for("message", check = check, timeout = 30)
+                if self.raiders.get(valid_message.author.id) is None:
+                    await valid_message.add_reaction("<:pog:790995076339859547:>")
+                    self.raiders[valid_message.author.id] = valid_message.author.name
+                else:
+                    await valid_message.reply("You already joined the raid!")
+ 
+            except asyncio.TimeoutError:
+                pass
+ 
+    @raid.command()
+    async def start(self, ctx):
+        raid_start_embed = discord.Embed(title = "A boss is here!", colour = 0x4c1a33)
+        raid_start_embed.add_field(name = "It's Tiny Tortle", value = "Quick, type ```join raid``` to fight the boss and get some coins!")
+ 
+        await ctx.send(embed = raid_start_embed)
+ 
+        try:
+            await asyncio.wait_for(self.read_messages(ctx), 60)
+        except asyncio.TimeoutError:
+            pass # this will be triggered
+ 
+        results = []
+ 
+        if len(self.raiders) < 3:
+            return await ctx.send("Not enough people joined the raid, you need at least 3 people to start a successful raid")
+
+        await ctx.send("Good job people, we managed to defeat the boss!")
+
+        amount = random.randint(100000, 1000000)
+ 
+        for name in self.raiders.values():
+            # add currency here
+            results.append(f"{name} got away with {amount}")
+        
+ 
+        prefix = "```\n"
+        suffix = "\n```"
+        sending_res = prefix
+        # avoiding hitting the 2000 char limit for messages
+        for res in results:
+            if len(sending_res) + len(res) > 1995:
+                sending_res += suffix
+                await ctx.send(sending_res)
+                sending_res = prefix
+ 
+            else:
+                sending_res += res + "\n"
+        
+        sending_res += suffix
+        await ctx.send(sending_res)
 
     '''
     Functions
@@ -130,13 +208,13 @@ class Economy(commands.Cog):
     '''
     General
     '''
-    @commands.command()
+    @commands.command(name='Multiplier', description='Get your current bot multi in the economy system')
     async def multi(self, ctx):
         multi = multis.get_multi(ctx.author.id)
         await ctx.send(f'Your curent multiplier is: **{float(multi * 100)}%**')
 
     #Balance
-    @commands.command(aliases=['bal', 'money'])
+    @commands.command(name='Balance', description='Get your current balance in the economy system', aliases=['bal', 'money'])
     async def balance(self, ctx, member: discord.Member = None):
         channel = await self.no_general(ctx)
         if channel:
@@ -147,19 +225,9 @@ class Economy(commands.Cog):
         amount = self.currency.get_amount(user.id)
         bal_embed = discord.Embed(title = f"{user.name}'s balance",description = f"**Balance:**\n{self.currency.emoji} {self.beautify_number(amount)}",colour = 0x00ff00)
         await ctx.send(embed = bal_embed)
-    
-    @balance.error
-    async def bal_error(self, ctx, error):
-        if isinstance(error, commands.errors.MemberNotFound):
-            return await ctx.send("That isn't a valid user")
-        
-        # print any other error
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-
         
     #Rich
-    @commands.command(aliases=['lb'])
+    @commands.command(name='Rich', description='Get the richest people in the bot', aliases=['lb'])
     async def rich(self, ctx):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
@@ -184,7 +252,7 @@ class Economy(commands.Cog):
 
         dbase.close()
 
-    @commands.command(aliases=["inv"])
+    @commands.command(name='Inventory', description='See what you or someone else has in their inventory', aliases=["inv"])
     async def inventory(self, ctx, member: typing.Optional[discord.Member] = None, page: typing.Optional[int] = 1):
         channel = await self.no_general(ctx)
         if channel:
@@ -218,7 +286,7 @@ class Economy(commands.Cog):
         return await ctx.send(embed = inv_embed)
 
     #Shop
-    @commands.command(aliases = ["store"])
+    @commands.command(name='Shop', description='See whats in the shop for you to buy', aliases = ["store"])
     async def shop(self, ctx, page: typing.Optional[int], *, item_name = None):
         channel = await self.no_general(ctx)
         if channel:
@@ -242,9 +310,7 @@ class Economy(commands.Cog):
                 continue
 
             item_info_embed = discord.Embed(title = f"{item.name} ({self.beautify_number(item.get_item_count(ctx.author.id))} owned)",description = item.description,colour = 0x00ff00)
-            
             item_info_embed.add_field(name = "Buy: ", value = item.purchasable * f"{self.currency.emoji} **{self.beautify_number(item.price)}**" + (not item.purchasable) * "This item cannot be bought",    inline = False)
-
             item_info_embed.add_field(name = "Sell: ",value = item.sellable * f"{self.currency.emoji} **{self.beautify_number(item.sell_price)}**" + (not item.sellable) * "This item cannot be sold",inline = False)
 
             item_info_embed.set_thumbnail(url = item.image_url)
@@ -270,7 +336,7 @@ class Economy(commands.Cog):
         return await ctx.send(embed = shop_embed)
 
     #Buy
-    @commands.command()
+    @commands.command(name='Buy', description='Buy an item from the shop', aliases=['purchase'])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def buy(self, ctx, count: int, *, item_name):
         channel = await self.no_general(ctx)
@@ -300,9 +366,6 @@ class Economy(commands.Cog):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
             return await ctx.send(embed=embed)
         
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            return await ctx.send("It's `b!buy <amount> <item>`")
-        
         if isinstance(error, commands.errors.BadArgument):
             return await ctx.send("You need to key in an amount of items to buy")
 
@@ -310,7 +373,7 @@ class Economy(commands.Cog):
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
        
-    @commands.command()
+    @commands.command(name='Sell', description="Sell off some of the items you don't want anymore")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def sell(self, ctx, count: int, *, item_name):
         channel = await self.no_general(ctx)
@@ -347,7 +410,7 @@ class Economy(commands.Cog):
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
     #Use
-    @commands.command()
+    @commands.command(name='Use', description='Use some of your items, you might even get something from it, who knows')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def use(self, ctx, count: typing.Optional[int] = 1, *, item_name):
         channel = await self.no_general(ctx)
@@ -391,7 +454,7 @@ class Economy(commands.Cog):
     Giving
     '''
     #Give
-    @commands.command()
+    @commands.command(name='Give', description='Give someone some money because why not', aliases=['share'])
     async def give(self, ctx, member: discord.Member, amount: int):
         channel = await self.no_general(ctx)
         if channel:
@@ -423,7 +486,7 @@ class Economy(commands.Cog):
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
     #Gift
-    @commands.command()
+    @commands.command(name='Gift', description='Gift some items to someone', aliases=['yeet', 'throw', 'chuck'])
     async def gift(self, ctx, count: int, *item_and_member):
         channel = await self.no_general(ctx)
         if channel:
@@ -469,7 +532,7 @@ class Economy(commands.Cog):
     Money Making
     '''
     #Beg
-    @commands.command()
+    @commands.command(name='Beg', description='Beg for some money from the people of the server')
     @commands.cooldown(1, 35, commands.BucketType.user)
     async def beg(self, ctx):
         channel = await self.no_general(ctx)
@@ -482,7 +545,7 @@ class Economy(commands.Cog):
             'Darkside',
             'Dark',
             'Neon',
-            'PHYCHO',
+            'PSYCHO',
             'Dank Mazen',
             'Bruni',
             'Wiggle',
@@ -509,10 +572,9 @@ class Economy(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
-
     
     #Bet
-    @commands.command()
+    @commands.command(name='Bet', description='Risk your money to possibly win some more money', aliases=['gamble'])
     @commands.cooldown(1, 8, commands.BucketType.user)
     async def bet(self, ctx, bet):
         channel = await self.no_general(ctx)
@@ -557,7 +619,7 @@ class Economy(commands.Cog):
             await ctx.send(embed=embed)
 
     #Slots
-    @commands.command()
+    @commands.command(name='Slots', description='Throw some money in the slots machine and hope for the best')
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def slots(self, ctx, bet = None):
         channel = await self.no_general(ctx)
@@ -624,7 +686,7 @@ class Economy(commands.Cog):
 
     
     #Work
-    @commands.command()
+    @commands.command(name='Work', description='Work to get some rare items')
     @commands.cooldown(1, 600, commands.BucketType.user)
     async def work(self, ctx):
         channel = await self.no_general(ctx)
@@ -654,23 +716,9 @@ class Economy(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No, stop being a work addict\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
-
-    #Mine
-    @commands.command()
-    @commands.cooldown(1, 15, commands.BucketType.user)
-    async def mine(self, ctx):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
-        wood = woodPick.get_item_count(ctx.author.id)
-        iron = ironPick.get_item_count(ctx.author.id)
-        gold = goldPick.get_item_count(ctx.author.id)
-        diamond = diamondPick.get_item_count(ctx.author.id)
-        emerald = emeraldPick.get_item_count(ctx.author.id)
     
     #Dig
-    @commands.command()
+    @commands.command(name='Dig', description='Go digging and maybe find some cool relics')
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def dig(self, ctx):
         channel = await self.no_general(ctx)
@@ -698,7 +746,7 @@ class Economy(commands.Cog):
             await ctx.send(embed=embed)
 
     #Chop
-    @commands.command()
+    @commands.command(name='Chop', description='Go chop down some trees to get some wood')
     @commands.cooldown(1, 15, BucketType.user)
     async def chop(self, ctx):
         channel = await self.no_general(ctx)
@@ -722,7 +770,7 @@ class Economy(commands.Cog):
             await ctx.send(embed=embed)
 
     #Hunt
-    @commands.command()
+    @commands.command(name='Hunt', description="Go hunting, but beware some animals arent as friendly as you would think")
     @commands.cooldown(1, 15, BucketType.user)
     async def hunt(self, ctx):
         channel = await self.no_general(ctx)
@@ -773,7 +821,7 @@ class Economy(commands.Cog):
             await ctx.send(embed=embed)
 
     #Fish
-    @commands.command()
+    @commands.command(name='Fish', description='Go fishing so you will have some food on the table tonight')
     @commands.cooldown(1, 15, BucketType.user)
     async def fish(self, ctx):
         channel = await self.no_general(ctx)

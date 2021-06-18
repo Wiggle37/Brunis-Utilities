@@ -4,7 +4,7 @@ import sqlite3
 import datetime
 from datetime import datetime
 
-class Dono(commands.Cog):
+class Dono(commands.Cog, name='Donation Tracker', description='Tracks the servers donations by person'):
 
     def __init__(self, client):
         self.client = client

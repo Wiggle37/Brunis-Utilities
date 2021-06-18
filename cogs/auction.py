@@ -7,7 +7,7 @@ import asyncio
 from discord.ext.commands.errors import MissingRequiredArgument
 
 
-class Auction(commands.Cog):
+class Auction(commands.Cog, name='Auctions', description='Host some auctions for the server'):
     def __init__(self, client):
         self.client = client
         self.auctioner_role = client.get_guild(784491141022220309).get_role(800496416740605993)
@@ -89,7 +89,7 @@ class Auction(commands.Cog):
             return await self.auctionend(ctx)
 
 
-    @commands.command(aliases = ["as"])
+    @commands.command(name='Auction Start', description='Start an auction to auction of an item for some money', aliases = ["as"])
     @commands.has_any_role(784492058756251669, 784527745539375164, 802645887063031818, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Auctioneer, Bruni, client Dev
     async def auctionstart(self, ctx, starting_bid, *, item):
         starting_bid = self.is_valid_int(starting_bid)
@@ -156,7 +156,7 @@ class Auction(commands.Cog):
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
-    @commands.command(aliases = ["a", "bid"])
+    @commands.command(name='bid', description='Add to the bid of the current auction', aliases = ["a"])
     async def auction(self, ctx, bid):
         if not self.auction_in_progress:
             return

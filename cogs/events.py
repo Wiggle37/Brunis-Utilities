@@ -1,12 +1,10 @@
-from os import curdir, error
 import discord
-from discord import reaction
 from discord.ext import commands
 import sqlite3
 import time
 from datetime import datetime
 
-class Events(commands.Cog):
+class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
     def __init__(self, client):
         self.client = client

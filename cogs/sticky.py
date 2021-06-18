@@ -4,7 +4,7 @@ from discord.ext import commands
 import sqlite3
 import asyncio
 
-class Sticky(commands.Cog):
+class Sticky(commands.Cog, name='Stickys', command_attrs=dict(hidden=True)):
 
     def __init__(self, client):
         self.client = client

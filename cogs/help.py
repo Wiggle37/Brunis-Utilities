@@ -1,18 +1,16 @@
 import discord
 from discord.ext import commands
-import discord_slash
+from datetime import datetime
 
 class Help(commands.Cog):
 
     def __init__(self, client):
         self.client = client
 
+    
     #Help
     @commands.command(aliases=['cmds', 'commands'])
     async def help(self, ctx, command=None):
-        '''
-        COGS
-        '''
         #Main Help
         if command is None:
             help_embed = discord.Embed(title='Brunis Utilities', description='All of the categorys', color=0x00ff00)
@@ -60,8 +58,62 @@ class Help(commands.Cog):
             help_embed = discord.Embed(title='Admin', description='[Dank Merchants](https://discord.gg/S5sNmzfF9M)', color=0x00ff00)
             help_embed.add_field(name='__**Roles:**__', value='`b!ar <@member / id> <@role / id>` ➞ Give someone a role\n`b!rr <@member / id> <@role / id>` ➞ Remove a role from someone', inline=False)
             help_embed.add_field(name='__**Messages:**__', value='`b!purge <amount>` ➞ Delete up-to 1000 messages', inline=False)
-            help_embed.add_field(name='__**Channels:**__', value='`b!lock` ➞ Locks the current channel\n`b!unlock` ➞ Unlocks the vurrent channel')
-            await ctx.send(embed=help_embed)      
+            help_embed.add_field(name='__**Channels:**__', value='`b!lock` ➞ Locks the current channel\n`b!unlock` ➞ Unlocks the current channel')
+            await ctx.send(embed=help_embed)
+    
+    def lowercase(self, arg):
+        x = []
+        for command in self.client.commands:
+            i = (command.name).lower()
+            x.append(i)
 
+        return x
+
+    @commands.command()
+    async def helps(self, ctx, *, arg=None):
+        embed = discord.Embed(title="Bruni's Utilities", description='All commands for the bot', color=discord.Color.purple())
+        embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/852670742419603467/e39038e6e8733b14445e99fc2038e1e7.png?size=1024')
+        embed.timestamp = datetime.utcnow()
+
+        if arg is None:
+            for cog in self.client.cogs:
+                if cog == 'CommandErrorHandler' or cog == 'Heist Starter' or cog == 'Music' or cog == 'Events' or cog == 'Help' or cog == 'Stickys':
+                    pass
+                else:
+                    cog_ = self.client.get_cog(cog)
+                    embed.add_field(name=cog_.name, value=f'{cog_.description}', inline=False)
+            await ctx.send(embed=embed)
+
+        elif arg.capitalize() is not None and arg in self.client.cogs:
+            cog_ = self.client.get_cog(arg)
+            commands = cog_.get_commands()
+
+            num = 0
+            for command in commands:
+                name = commands[num].name
+                description = commands[num].description
+                if commands[num].description is None:
+                    description = '-'
+
+                embed.add_field(name=name, value=description, inline=False)
+                num += 1
+
+            await ctx.send(embed=embed)
+
+        else:
+            x = []
+            for command in self.client.commands:
+                i = (command.name).lower()
+                x.append(i)
+
+            print(x)
+                
+            if arg.lower() in x:
+                embed = discord.Embed(title=f'{command.name}', description=f'{command.description}\n\n```{command.name} {command.signature}```')
+                await ctx.send(embed=embed)
+
+            else:
+                await ctx.send("That command doesn't exist")
+                
 def setup(client):
     client.add_cog(Help(client))

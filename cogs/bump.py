@@ -3,7 +3,7 @@ from discord.ext import commands
 import re
 import sqlite3
 
-class BumpTracker(commands.Cog):
+class BumpTracker(commands.Cog, name='Bump Tracker', description='Tracks how much the server gets bumped'):
     def __init__(self, client):
         self.client = client
 
@@ -82,7 +82,7 @@ class BumpTracker(commands.Cog):
         dbase.close()
 
     #Check Bumps
-    @commands.command()
+    @commands.command(name='Check Bumps', description='Check the amount of successful and unsuccessful bumps you have in the server', aliases=['b'])
     async def bumps(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bump.db')
         cursor = dbase.cursor()
@@ -111,30 +111,6 @@ class BumpTracker(commands.Cog):
             embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
             await ctx.send(embed=embed)
         
-        dbase.close()
-
-    #Top
-    @commands.command()
-    async def topbumps(self, ctx):
-        dbase = sqlite3.connect("bump.db")
-        cursor = dbase.cursor()
-
-        cursor.execute("SELECT user_id, bump FROM bumps ORDER BY bump DESC")
-        bumpers = cursor.fetchmany(10)
-
-        top_bumpers_embed = discord.Embed(title="Top Bumpers", color=0x00ff00)
-
-        bumper_info = ""
-
-        bumper_info += "__**Server Bumps Leader board**__\n"
-        dank_merchants = self.client.get_guild(784491141022220309)
-        for rank, user in enumerate(bumpers):
-            member = dank_merchants.get_member(int(user[0]))
-            bumper_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
-        
-        top_bumpers_embed.description=bumper_info
-        await ctx.send(embed=top_bumpers_embed)
-
         dbase.close()
 
 def setup(client):

@@ -1,10 +1,6 @@
-from inspect import Parameter
-from typing import Awaitable
-import discord
 import traceback
 import sys
 from discord.ext import commands
-from discord.ext.commands.errors import MemberNotFound, MissingRequiredArgument
 
 class CommandErrorHandler(commands.Cog):
 

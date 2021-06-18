@@ -1,55 +1,49 @@
 import discord
 from discord.ext import commands
-import time
 import sqlite3
-from discord.ext.commands.core import command
 
-class Admin(commands.Cog):
+class Admin(commands.Cog, name='Admin', description='Commands only admins can use'):
 
     def __init__(self, client):
         self.client = client
 
     #Add Role
-    @commands.command(aliases=['ar'])
+    @commands.command(name='Add Role', description='Adds a role to a member', aliases=['ar'])
     @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
-    async def addrole(self, ctx, member: discord.Member=None, *, role:discord.Role=None):
-        client = self.client
+    async def addrole(self, ctx, member: discord.Member, *, role:discord.Role):
         await member.add_roles(role)
         await ctx.send(f'Role added to **{member}**')
 
     #Remove Role
-    @commands.command(aliases=['rr'])
+    @commands.command(name='Remove Role', description='Removes a role from a member', aliases=['rr'])
     @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
-    async def removerole(self, ctx, member: discord.Member=None, *, role:discord.Role=None):
-        client = self.client
+    async def removerole(self, ctx, member: discord.Member, *, role:discord.Role):
         await member.remove_roles(role)
         await ctx.send(f'Role removed from **{member}**')
 
     #Purge
-    @commands.command()
+    @commands.command(name='Purge', description='Delete a certain amount of messages given')
     @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
     async def purge(self, ctx, amount=1):
         if amount > 1000:
             await ctx.send(f'Please choose a number under 1000 to purge.\nYour number was: {amount}')
 
         else:
-
             await ctx.message.delete()
-
             await ctx.channel.purge(limit=amount)
 
             purge_embed = discord.Embed(title='Purged Messages', description=f'{amount} message(s) purged', color=0x00ff00)
             await ctx.send(embed=purge_embed, delete_after=1)
 
     #Lock
-    @commands.command()
+    @commands.command(name='Lock', description='Locks the current channel to everyone')
     @commands.has_any_role(791516118120267806)
     async def lock(self, ctx):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
         await ctx.send('Channel locked')
 
     #Unlock
-    @commands.command()
+    @commands.command(name='Unlock', description='Unlocks the current channel to everyone')
     @commands.has_any_role(791516118120267806)
     async def unlock(self, ctx):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
@@ -59,7 +53,7 @@ class Admin(commands.Cog):
 
 
 
-    @commands.command()
+    @commands.command(name='Add Auto Response', description='Add an auto response')
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def ara(self, ctx, trigger, *, response):
         dbsae = sqlite3.connect('autoresponse.db')
@@ -79,7 +73,7 @@ class Admin(commands.Cog):
         dbsae.commit()
         dbsae.close()
 
-    @commands.command()
+    @commands.command(name='Remove Auto Response', description='Remove an auto response')
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def arr(self, ctx, trigger):
         dbase = sqlite3.connect('autoresponse.db')
@@ -102,7 +96,7 @@ class Admin(commands.Cog):
         dbase.close()
 
     #Emoji Add Auto Response
-    @commands.command()
+    @commands.command(name='Add Auto Reaction', description='Add an emoji reaction')
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def aea(self, ctx, trigger, emoji):
         dbase = sqlite3.connect('autoresponse.db')
@@ -122,7 +116,7 @@ class Admin(commands.Cog):
         dbase.commit()
         dbase.close()
 
-    @commands.command()
+    @commands.command(name='Remove Auto Reaction', description='Remove an emoji reaction')
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def aer(self, ctx, trigger):
         dbase = sqlite3.connect('autoresponse.db')
@@ -142,30 +136,6 @@ class Admin(commands.Cog):
             await ctx.send('That is not a trigger currently added')
 
         dbase.commit()
-        dbase.close()
-
-    @commands.command(aliases=['arl'])
-    async def arlist(self, ctx, list=None):
-        dbase = sqlite3.connect('autoresponse.db')
-        cursor = dbase.cursor()
-        response = ''
-
-        if list is None:
-            cursor.execute(f"SELECT trigger FROM text")
-            list = cursor.fetchall()
-
-            for i in list:
-                response += f'{i}\n'
-
-        elif list == 'emoji':
-            cursor.execute(f"SELECT trigger FROM emoji")
-            list = cursor.fetchall()
-
-            for i in list:
-                response += f'{i}\n'
-
-        await ctx.send(response)
-
         dbase.close()
 
 def setup(client):
