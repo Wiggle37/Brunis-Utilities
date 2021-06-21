@@ -55,12 +55,10 @@ async def refresh(ctx):
         if folder.endswith(".py"):
             client.unload_extension(f'cogs.{folder[:-3]}')
             client.load_extension(f"cogs.{folder[:-3]}")
-            print(f'cogs.{folder[:-3]} loaded')
         else:
             for file in [f for f in os.listdir(f"./cogs/{folder}") if f != "__pycache__"]:
                 client.unload_extension(f"cogs.{folder}.{file[:-3]}")
                 client.load_extension(f"cogs.{folder}.{file[:-3]}")
-                print(f'cogs.{folder}.{file[:-3]} loaded')
     await ctx.send('Refreshed the whole bot')
 
 async def status():
