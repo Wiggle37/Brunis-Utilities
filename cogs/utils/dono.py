@@ -32,6 +32,11 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     '''
     Functions
     '''
+    async def aboose(self, ctx, person, amount):
+        if person == ctx.author:
+            embed = discord.Embed(title=f'**Warning, {ctx.author} has updated their own donations**', description=f'Please keep an eye on this person they are mad sus\n**More Info:**\nUser: {ctx.author}({ctx.author.id})\nChannel: {ctx.channel.mention}\nAmount: {"{:,}".format(amount)}', color=0xff0000)
+            await self.client.get_channel(854363438616936498).send(embed=embed)
+
     #Number Converter
     def is_valid_int(self, amount):
         try:
@@ -232,6 +237,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -264,6 +270,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -296,6 +303,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -323,6 +331,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, 0)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()
@@ -358,6 +367,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -390,6 +400,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -422,6 +433,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -450,6 +462,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, 0)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()
@@ -486,6 +499,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -518,6 +532,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -550,6 +565,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -577,6 +593,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, 0)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()
@@ -612,6 +629,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -644,6 +662,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -676,6 +695,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
@@ -703,6 +723,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.close()
         await self.roles(ctx, member)
+        await self.aboose(ctx, member, 0)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()

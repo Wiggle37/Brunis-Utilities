@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 import asyncio
-import sqlite3
 import os
+from dotenv import load_dotenv
 
 intents = discord.Intents.default()
 intents.members = True
@@ -18,11 +18,15 @@ client.remove_command('help')
 async def on_ready():
     print(f'\n\-/ Loading... \-/\n')
 
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            client.load_extension(f'cogs.{filename[:-3]}')
-            print(f'cog.{filename[:-3]} loaded')
-    
+    for folder in [f for f in os.listdir("./cogs") if f != "__pycache__"]:
+        if folder.endswith(".py"):
+            client.load_extension(f"cogs.{folder[:-3]}")
+            print(f'cogs.{folder[:-3]} loaded')
+        else:
+            for file in [f for f in os.listdir(f"./cogs/{folder}") if f != "__pycache__"]:
+                client.load_extension(f"cogs.{folder}.{file[:-3]}")
+                print(f'cogs.{folder}.{file[:-3]} loaded')
+
     print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
 
 @client.command()
@@ -54,8 +58,6 @@ async def status():
 
 client.loop.create_task(status())
 
-dbase = sqlite3.connect('bot.db')
-cursor = dbase.cursor()
-cursor.execute("SELECT token FROM token WHERE bot == bot")
-token = cursor.fetchone()[0]
-client.run(token)
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
+client.run(TOKEN)

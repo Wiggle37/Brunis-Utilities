@@ -37,7 +37,7 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
             await message.channel.send("Well that sucks you didn't get enough people to join you heist, try again later I guess")
         else:
             if message.channel.id == 822567848400388106:
-                await message.channel.send("Remember freeloaders get a 7 day ban so don't free load also to support us vote for us [here](https://top.gg/servers/784491141022220309/vote)")
+                await message.channel.send("Remember freeloaders get a 7 day ban so don't free load also to support us vote for us at https://top.gg/servers/784491141022220309/vote")
 
             msg = await message.channel.send(f"I hope that was a good heist!")
             await msg.add_reaction('✅')
