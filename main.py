@@ -4,7 +4,7 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 client = commands.Bot(
     command_prefix=['b!', 'B!', 'b ', 'B '],
@@ -25,7 +25,7 @@ async def on_ready():
         else:
             for file in [f for f in os.listdir(f"./cogs/{folder}") if f != "__pycache__"]:
                 client.load_extension(f"cogs.{folder}.{file[:-3]}")
-                print(f'cogs.{folder}.{file[:-3]} loaded')
+                print(f'cogs.{file[:-3]} loaded')
 
     print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
 
@@ -47,6 +47,21 @@ async def reload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f'Reloaded **{extension}**')
+
+@client.command()
+@commands.is_owner()
+async def refresh(ctx):
+    for folder in [f for f in os.listdir("./cogs") if f != "__pycache__"]:
+        if folder.endswith(".py"):
+            client.unload_extension(f'cogs.{folder[:-3]}')
+            client.load_extension(f"cogs.{folder[:-3]}")
+            print(f'cogs.{folder[:-3]} loaded')
+        else:
+            for file in [f for f in os.listdir(f"./cogs/{folder}") if f != "__pycache__"]:
+                client.unload_extension(f"cogs.{folder}.{file[:-3]}")
+                client.load_extension(f"cogs.{folder}.{file[:-3]}")
+                print(f'cogs.{folder}.{file[:-3]} loaded')
+    await ctx.send('Refreshed the whole bot')
 
 async def status():
     await client.wait_until_ready()
