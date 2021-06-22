@@ -8,7 +8,7 @@ class BumpTracker(commands.Cog, name='Bump Tracker', description='Tracks how muc
         self.client = client
 
     #Check Bumps
-    @commands.command(name='Check Bumps', description='Check the amount of successful and unsuccessful bumps you have in the server', aliases=['b', 'bumps'])
+    @commands.command(name='bumps', description='Check the amount of successful and unsuccessful bumps you have in the server', aliases=['b', 'bump'])
     async def bumps(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bump.db')
         cursor = dbase.cursor()

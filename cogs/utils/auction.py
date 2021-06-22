@@ -89,7 +89,7 @@ class Auction(commands.Cog, name='Auctions', description='Host some auctions for
             return await self.auctionend(ctx)
 
 
-    @commands.command(name='Auction Start', description='Start an auction to auction of an item for some money', aliases = ["as"])
+    @commands.command(name='auctionstart', description='Start an auction to auction of an item for some money', aliases=["as"])
     @commands.has_any_role(784492058756251669, 784527745539375164, 802645887063031818, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Auctioneer, Bruni, client Dev
     async def auctionstart(self, ctx, starting_bid, *, item):
         starting_bid = self.is_valid_int(starting_bid)

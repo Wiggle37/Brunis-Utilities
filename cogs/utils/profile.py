@@ -111,7 +111,7 @@ class Profile(commands.Cog, name='Profile', description='See your server profile
 
         return badges
 
-    @commands.command()
+    @commands.command(name='profile', description='Check your server profile', aliases=['me', 'user'])
     async def profile(self, ctx, member: discord.Member=None):
         user = member or ctx.author
         
@@ -132,7 +132,7 @@ class Profile(commands.Cog, name='Profile', description='See your server profile
 
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.command(name='badges', description='Check all the badges for the `b!profile` command')
     async def badges(self, ctx):
         level_emojis = [level5, level10, level15, level20, level30, level40, level50, level69, level100]
         levels_ = ''

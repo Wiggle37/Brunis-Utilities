@@ -30,7 +30,7 @@ class Sticky(commands.Cog, name='Stickys', command_attrs=dict(hidden=True)):
 
         dbase.close()
 
-    @commands.command()
+    @commands.command(name='add_sticky', description='Add a stickied message to a channel')
     @commands.has_any_role(785202756641619999, 788738305365114880, 784492058756251669, 788738308879941633) # Bruni, Co-Owner, Admin, Bot Dev
     async def add_sticky(self, ctx):
         def check(message):

@@ -6,10 +6,8 @@ class Fun(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command()
-    @commands.cooldown(rate=1, per=2.0, type=commands.BucketType.user)
+    @commands.command(name='urban', description='Find the definition to what you are searching for on the urban dictionary')
     async def urban(self, ctx, *, search: commands.clean_content):
-        """ Find the 'best' definition to your words """
         async with ctx.channel.typing():
             try:
                 url = await http.get(f"https://api.urbandictionary.com/v0/define?term={search}", res_method="json")

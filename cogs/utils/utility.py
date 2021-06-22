@@ -8,7 +8,7 @@ class Utility(commands.Cog, name='Utility', description='Some commands that will
         self.client = client
 
     #Timer
-    @commands.command()
+    @commands.command(name='timer', description='Set a timer for up to 1000')
     async def count(self, ctx, number: int):
         try:
             if number < 0:
@@ -27,12 +27,12 @@ class Utility(commands.Cog, name='Utility', description='Some commands that will
             await ctx.send('Please provide a valid number')
 
     #Ping
-    @commands.command()
+    @commands.command(name='ping', description='Shows the bots current ping', aliases=['ms'])
     async def ping(self, ctx):
         await ctx.send(f'🏓 Current latency: `{int(self.client.latency * 1000)} ms`')
 
     #Server Info
-    @commands.command()
+    @commands.command(name='serverinfo', description='Shows the servers info', aliases=['si', 'server'])
     async def serverinfo(self, ctx):
         members = 0
         for member in ctx.guild.members:

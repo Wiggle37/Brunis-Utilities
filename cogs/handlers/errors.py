@@ -1,6 +1,7 @@
 import traceback
 import sys
 from discord.ext import commands
+from discord.ext.commands.errors import MissingAnyRole, NotOwner
 
 class CommandErrorHandler(commands.Cog):
 
@@ -19,13 +20,17 @@ class CommandErrorHandler(commands.Cog):
             return await ctx.send(f'You are missing the `{error.param.name}` argument in the `{ctx.command}` command\n```b!{ctx.command} {ctx.command.signature}```')
 
         if isinstance(error, commands.BotMissingPermissions):
-            return await ctx.send(f'The bot is missing some permissions for this command to be run please contact wiggle so he can get this figured out')
+            wiggle = self.client.fetch_user(824010269071507536)
+            return await wiggle.send(f'Alert! The bot is missing permissions in {ctx.channel.mention} for `{ctx.command}` please get this fixed right away')
 
-        if isinstance(error, commands.MissingRole):
+        if isinstance(error, commands.MissingRole, MissingAnyRole):
             return await ctx.send(f'You are missing one or more roles to run this command')
 
         if isinstance(error , commands.MissingPermissions):
             return await ctx.send(f'You are lacking some permissions to run this command')
+
+        if isinstance(error, commands.NotOwner):
+            return await ctx.send('You need to be the owner of the bot to run this command')
 
         if isinstance(error, commands.RoleNotFound):
             return await ctx.send(f'The role provided was not found')

@@ -10,7 +10,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         self.client = client
 
     #Make Acc Command(Backup)
-    @commands.command()
+    @commands.command(hidden=True)
     async def init(self, ctx):
         dbase = sqlite3.connect('dono.db')
         cursor = dbase.cursor()
@@ -28,10 +28,15 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.commit()
         dbase.close()
+    '''
+    Checks
+    '''
+    
 
     '''
     Functions
     '''
+    #Aboose Check Ree
     async def aboose(self, ctx, person, amount):
         if person == ctx.author:
             embed = discord.Embed(title=f'**Warning, {ctx.author} has updated their own donations**', description=f'Please keep an eye on this person they are mad sus\n**More Info:**\nUser: {ctx.author}({ctx.author.id})\nChannel: {ctx.channel.mention}\nAmount: {"{:,}".format(amount)}', color=0xff0000)
@@ -142,7 +147,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     DONATIONS CHECK
     '''
     #Check Dono
-    @commands.command(aliases=['d', 'dono', 'donation'])
+    @commands.command(name='donations', aliases=['d', 'dono', 'donation'])
     async def donations(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect("dono.db")
         cursor = dbase.cursor()
@@ -177,7 +182,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
             await ctx.send(f'There was an error\nError: `{error}`\nPlease dm Wiggle so he can fix it')
 
     #Tops
-    @commands.command()
+    @commands.command(name='top', description='Check the leaderboard of the top donations', aliases=['tops'])
     async def top(self, ctx, board='donor'):
         if board.lower() == 'donor' or board.lower() == 'dank' or board.lower() == 'donors' or board.lower() == 'total':
             dbase = sqlite3.connect("dono.db")
@@ -319,7 +324,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     GIVEAWAY DONATIONS
     '''
     #Dono Set
-    @commands.command(name='gds')
+    @commands.command(name='gds', description='Set someones giveaway donations')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_set(self, ctx, member: discord.Member, amount: str):
         dbase = sqlite3.connect('dono.db')
@@ -352,7 +357,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
-    @commands.command(name='gda')
+    @commands.command(name='gda', description='Add to someones giveaway donations')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -385,7 +390,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
-    @commands.command(name='gdr')
+    @commands.command(name='gdr', description='Remove from someones giveaway donations')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -418,7 +423,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
-    @commands.command(name='gdrs')
+    @commands.command(name='gdrs', description='Reset someones giveaway donations')
     @commands.has_any_role(785198646731604008, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def gaw_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -449,7 +454,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     HEIST DONATIONS
     '''
     #Dono Set
-    @commands.command(name='hds')
+    @commands.command(name='hds', description='Set someones heist donations')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -482,7 +487,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
-    @commands.command(name='hda')
+    @commands.command(name='hda', description='Add to someones heist donations')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -515,7 +520,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
-    @commands.command(name='hdr')
+    @commands.command(name='hdr', description='Remove from someones heist donations')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -548,7 +553,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
-    @commands.command(name='hdrs')
+    @commands.command(name='hdrs', description='Reset someones heist donations')
     @commands.has_any_role(785631914010214410, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Heist Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def heist_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -580,7 +585,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     EVENT DONATIONS
     '''
     #Dono Set
-    @commands.command(name='eds')
+    @commands.command(name='eds', description='Set someones event donations')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def event_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -614,7 +619,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
-    @commands.command(name='eda')
+    @commands.command(name='eda', description='Add to someones event donations')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Mod Admin, Co-Owner
     async def event_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -647,7 +652,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
-    @commands.command(name='edr')
+    @commands.command(name='edr', description='Remove from someones event donations')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Modr Admin, Co-Owner
     async def event_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -680,7 +685,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
-    @commands.command(name='edrs')
+    @commands.command(name='edrs', description='Reset someones event donations')
     @commands.has_any_role(791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Event Manger, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def event_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -711,7 +716,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     SPECIAL EVENT
     '''
     #Dono Set
-    @commands.command(name='sds')
+    @commands.command(name='sds', description='Set someones special donations')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -744,7 +749,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
-    @commands.command(name='sda')
+    @commands.command(name='sda', description='Add to someones special donations')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -777,7 +782,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
-    @commands.command(name='sdr')
+    @commands.command(name='sdr', description='Remove from someones special donations')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_remove(self, ctx, member: discord.Member, amount: str):
         dbase = sqlite3.connect('dono.db')
@@ -810,7 +815,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
-    @commands.command(name='sdrs')
+    @commands.command(name='sdrs', description='Reset someones special donations')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 785202756641619999, 788738308879941633, 784527745539375164, 784492058756251669, 788738305365114880) #Giveaway Manager, Heist Manager, Event Manager, Bruni, Bot Dev, Mod, Admin, Co-Owner
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')
@@ -841,7 +846,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     MONEY DONATIONS
     '''
     #Dono Set
-    @commands.command(name='mds')
+    @commands.command(name='mds', description='Set someones money donations')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -876,7 +881,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
-    @commands.command(name='mda')
+    @commands.command(name='mda', description='Add to someones money donations')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -909,7 +914,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
-    @commands.command(name='mdr')
+    @commands.command(name='mdr', description='Remove from someones money donations')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = sqlite3.connect('dono.db')
@@ -941,7 +946,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
         await self.client.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
-    @commands.command(name='mdrs')
+    @commands.command(name='mdrs', description='Reset someones money donations')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_reset(self, ctx, member: discord.Member):
         dbase = sqlite3.connect('dono.db')

@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 import asyncio
 
@@ -36,13 +35,13 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
         elif "you're not popular enough" in results.content or "for an unsuccessful robbery" in results.content:
             await message.channel.send("Well that sucks you didn't get enough people to join you heist, try again later I guess")
         else:
+            await asyncio.sleep(3)
             if message.channel.id == 822567848400388106:
                 await message.channel.send("Remember freeloaders get a 7 day ban so don't free load also to support us vote for us at https://top.gg/servers/784491141022220309/vote")
 
             msg = await message.channel.send(f"I hope that was a good heist!")
             await msg.add_reaction('✅')
             await msg.add_reaction('❌')
- 
         
 def setup(client):
     client.add_cog(HeistStarter(client))

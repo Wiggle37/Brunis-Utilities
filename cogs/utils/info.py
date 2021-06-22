@@ -7,7 +7,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         self.client = client
 
     #Rules
-    @commands.command()
+    @commands.command(name='rules', description='Displays the rules of the server')
     async def rules(self, ctx):
         rules_embed = discord.Embed(title='__**Dank Merchants Rules:**__', description='The Rules Of Dank Merchants', color=0x00ff00)
         rules_embed.add_field(name='__Rule One:__', value='**Respect all members** of this community. Swearing is allowed but not when you use those words to offend others. Youll be warned for begin toxic in this community.', inline=False)
@@ -27,7 +27,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=rules_embed)
 
     #Dank Rules
-    @commands.command()
+    @commands.command(name='dankrules', description='Displays the rules of Dank Memer')
     async def dankrules(self, ctx):
         dank_rules = discord.Embed(title='Dank Memer Rules', description='https://dankmemer.lol/rules', color=0x00ff00)
         dank_rules.add_field(name='__Rule One__\n**User-bots, Spamming and Macros**', value='\nUsage of user-bots, macros, scripts, auto-typers or anything else enabling automation of commands is strictly forbidden. In addition to this, massive amounts of spam is not allowed and will be punished with equal severity.', inline=False)
@@ -41,7 +41,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=dank_rules)
 
     #Warning Policy
-    @commands.command()
+    @commands.command(name='warningpolicy', description='The warning policy in the server')
     async def warnp(self, ctx):
         warn_embed = discord.Embed(title='__**Dank Merchants Warning Policy:**__', description='The Warning Policy Of Dank Merchants', color=0x00ff00)
         warn_embed.add_field(name='__First Warning:__', value='Nothing', inline=False)
@@ -56,7 +56,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=warn_embed)
 
     #Trading Rules
-    @commands.command()
+    @commands.command(name='tradingrules', description='The rule of trading for the server')
     async def traderules(self, ctx):
         traderules_embed = discord.Embed(title='__**Dank Merchants Trading Rules:**__', description='The Rules Of Trading In Dank Merchants', color=0x00ff00)
         traderules_embed.add_field(name='__Rule One:__', value='If you want to trade, post your ads at <#785645266790252554>. Inappropriate and out-of-place ads will be removed.', inline=False)
@@ -68,10 +68,10 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=traderules_embed)
 
     #Giveaway Rules
-    @commands.command()
+    @commands.command(name='giveawayrules', description='The rules for giveaways for the server')
     async def gawrules(self, ctx):
         gaw_embed = discord.Embed(title='__**Dank Merchants Giveaway Rules:**__', description='The Rules Of Giveaways In Dank Merchants', color=0x00ff00)
-        gaw_embed.add_field(name='__Rule One:__', value='Only level amari 5s may claim giveaway prizes to avoid freeloaders.', inline=False)
+        gaw_embed.add_field(name='__Rule One:__', value='Only level amari 2s may claim giveaway prizes to avoid freeloaders.', inline=False)
         gaw_embed.add_field(name='__Rule Two:__', value='You may use **giveaway pass** to skip the requirements of an exclusive giveaway.', inline=False)
         gaw_embed.add_field(name='__Rule Three:__', value='If you didnt receive your prize in 12 hours go to <#787761394664996865> and ask for help', inline=False)
         gaw_embed.add_field(name='__Rule Four:__', value='You are not allowed to use secondary accounts (or alts) as this is unfair to others. Alts will be immediately banned.', inline=False)
@@ -80,7 +80,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=gaw_embed)
 
     #Special Roles
-    @commands.command()
+    @commands.command(name='specialroles', description='The info for special roles in the server')
     async def specroles(self, ctx):
         specroles_embed = discord.Embed(title='__**Dank Merchants Special Roles:**__', description='The Special Roles Of Dank Merchants', color=0x00ff00)
         specroles_embed.add_field(name='__Member Of The Week:__', value='<@&786610856158429204>\nBe the highest hoisted member (higher than owner) in the server followed by a week of premium. The person who sends the most messages in a week gets this role.', inline=False)
@@ -97,8 +97,8 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         specroles_embed.add_field(name='__Top 3 Weekly:__', value='<@&800496416178700288>\nThis is awarded to the three most active members every week. Top 3 finishers can bypass ALL giveaways!', inline=False)
         await ctx.send(embed=specroles_embed)
 
-    #Exlusive Roles
-    @commands.command()
+    #Exclusive Roles
+    @commands.command(name='excusiveroles', description='Info on some of the most rare roles in the server')
     async def eroles(self, ctx):
         eroles_embed = discord.Embed(title='__**Dank Merchants Exclusive Roles:**__', description='The Exlusive Roles Of Dank Merchants', color=0x00ff00)
         eroles_embed.add_field(name='__Dank Harbor Veteran:__', value='<@&784560843890753577>\nFor those who survived Dank Harbor', inline=False)
@@ -109,7 +109,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=eroles_embed)
 
     #Donations
-    @commands.command()
+    @commands.command(name='donationperks', description='Info on the donation perks')
     async def donoperks(self, ctx):
         donor_embed = discord.Embed(title='__**Dank Merchants Donation Perks:**__', description='The Donations Perks Of Dank Merchants', color=0x00ff00)
         donor_embed.add_field(name='__5 Million Donor:__', value='<@&787342154862166046>\nAccess to exclusive giveaways/heists', inline=False)
@@ -125,7 +125,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=donor_embed)
 
     #Invites
-    @commands.command()
+    @commands.command(name='inviteperks', description='The perks you get for inviting people in the server')
     async def invperks(self, ctx):
         inv_embed = discord.Embed(title='__**Dank Merchants Invite Perks:**__', description='The Invite Perks Of Dank Merchants', color=0x00ff00)
         inv_embed.add_field(name='__2 Invites:__', value='<@&787342156611321857>\nGain access to some inviter-exclusive giveaways', inline=False)
@@ -137,7 +137,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=inv_embed)
 
     #Levels
-    @commands.command()
+    @commands.command(name='levelperks', description='The servers leveling perks')
     async def lvlperks(self, ctx):
         lvl_embed = discord.Embed(title='__**Dank Merchants Level Perks:**__', description='The Level Perks Of Dank Merchants', color=0x00ff00)
         lvl_embed.add_field(name='__Level 5:__', value='<@&785676777585639464>\n`pls weekly/monthly` access', inline=False)
@@ -152,7 +152,7 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         await ctx.send(embed=lvl_embed)
 
     #Booster Perks
-    @commands.command()
+    @commands.command(name='boosterperks', description='The amazing perks of being a server booster')
     async def booster(self, ctx):
         inv_embed = discord.Embed(title='__**Dank Merchants Booster Perks:**__', description='The Booster Perks Of Dank Merchants', color=0xf47fff)
         inv_embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/757131348539473920.gif?v=1')
