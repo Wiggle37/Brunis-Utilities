@@ -161,12 +161,5 @@ class Info(commands.Cog, name='Info', description='Displays some important info 
         inv_embed.add_field(name='__Multi Booster Perks:__', value='<@&797486130844663829>\n<a:NR_Boost:800379946647420989> Custom trigger\n<a:NR_Boost:800379946647420989> Up to 10 friends can join you in your private channel\n<a:NR_Boost:800379946647420989> Add two emotes of your choice to the server\n <a:NR_Boost:800379946647420989> Promote your content in <#784887859143507978> with <@&785930653665067038> ping\n<a:NR_Boost:800379946647420989> Booster perks last two more weeks if you boost a whole month', inline=False)
         await ctx.send(embed=inv_embed)
 
-    #Credits
-    @commands.command()
-    async def credits(self, ctx):
-        inv_embed = discord.Embed(title='__**Brunis Utilities Credits**__', description='Who helped make the bot', color=0xf47fff)
-        inv_embed.add_field(name='__Devs:__', value='<@!824010269071507536> ➞ The owner of the bot\n<@!531317158530121738> ➞ Main Developer', inline=False)
-        await ctx.send(embed=inv_embed)
-
 def setup(client):
     client.add_cog(Info(client))

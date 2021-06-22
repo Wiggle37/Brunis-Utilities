@@ -12,7 +12,6 @@ client = commands.Bot(
     case_insensitive=True,
     owner_ids = {531317158530121738, 824010269071507536, 784172569153503332}
     )
-client.remove_command('help')
 
 @client.event
 async def on_ready():
