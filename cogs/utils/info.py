@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-class Info(commands.Cog, name='Info', description='Displays some important info about the server'):
+class Info(commands.Cog, name='info', description='Displays some important info about the server'):
 
     def __init__(self, client):
         self.client = client

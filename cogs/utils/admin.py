@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import sqlite3
 
-class Admin(commands.Cog, name='Admin', description='Commands only admins can use'):
+class Admin(commands.Cog, name='admin', description='Commands only admins can use'):
 
     def __init__(self, client):
         self.client = client

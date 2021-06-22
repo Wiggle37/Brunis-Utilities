@@ -1,7 +1,7 @@
 from discord.ext import commands
 import http
 
-class Fun(commands.Cog):
+class Fun(commands.Cog, name='fun', description='Some fun commands'):
 
     def __init__(self, client):
         self.client = client

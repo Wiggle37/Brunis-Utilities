@@ -3,7 +3,7 @@ from discord.ext import commands
 import re
 import sqlite3
 
-class BumpTracker(commands.Cog, name='Bump Tracker', description='Tracks how much the server gets bumped'):
+class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the server gets bumped'):
     def __init__(self, client):
         self.client = client
 

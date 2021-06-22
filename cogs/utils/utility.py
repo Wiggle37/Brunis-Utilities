@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 
-class Utility(commands.Cog, name='Utility', description='Some commands that will be helpful when needed'):
+class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
 
     def __init__(self, client):
         self.client = client

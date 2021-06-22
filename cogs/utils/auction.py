@@ -7,7 +7,7 @@ import asyncio
 from discord.ext.commands.errors import MissingRequiredArgument
 
 
-class Auction(commands.Cog, name='Auctions', description='Host some auctions for the server'):
+class Auction(commands.Cog, name='auction', description='Host some auctions for the server'):
     def __init__(self, client):
         self.client = client
         self.auctioner_role = client.get_guild(784491141022220309).get_role(800496416740605993)

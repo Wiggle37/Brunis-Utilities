@@ -1,7 +1,6 @@
 import traceback
 import sys
 from discord.ext import commands
-from discord.ext.commands.errors import MissingAnyRole, NotOwner
 
 class CommandErrorHandler(commands.Cog):
 
@@ -10,6 +9,18 @@ class CommandErrorHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        errors = [
+            commands.CommandNotFound,
+            commands.MemberNotFound,
+            commands.MissingRequiredArgument,
+            commands.BotMissingPermissions,
+            commands.MissingRole,
+            commands.MissingAnyRole,
+            commands.MissingPermissions,
+            commands.NotOwner,
+            commands.RoleNotFound,
+
+        ]
         if isinstance(error, commands.CommandNotFound):
             return await ctx.send(f'The command `{ctx.message.content}` is not found')
 
@@ -23,7 +34,7 @@ class CommandErrorHandler(commands.Cog):
             wiggle = self.client.fetch_user(824010269071507536)
             return await wiggle.send(f'Alert! The bot is missing permissions in {ctx.channel.mention} for `{ctx.command}` please get this fixed right away')
 
-        if isinstance(error, commands.MissingRole, MissingAnyRole):
+        if isinstance(error, commands.MissingRole) or isinstance(error, commands.MissingAnyRole):
             return await ctx.send(f'You are missing one or more roles to run this command')
 
         if isinstance(error , commands.MissingPermissions):

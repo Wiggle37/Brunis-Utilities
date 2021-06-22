@@ -4,7 +4,7 @@ from discord.ext import commands
 import sqlite3
 from datetime import datetime
 
-class Profile(commands.Cog, name='Profile', description='See your server profile'):
+class Profile(commands.Cog, name='profile', description='See your server profile'):
 
     def __init__(self, client):
         self.client = client

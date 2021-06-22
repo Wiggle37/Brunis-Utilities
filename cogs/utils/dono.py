@@ -4,7 +4,7 @@ import sqlite3
 import datetime
 from datetime import datetime
 
-class Dono(commands.Cog, name='Donation Tracker', description='Tracks the servers donations by person'):
+class Dono(commands.Cog, name='donations', description='Tracks the servers donations by person'):
 
     def __init__(self, client):
         self.client = client
@@ -143,7 +143,7 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
     DONATIONS CHECK
     '''
     #Check Dono
-    @commands.command(name='donations', aliases=['d', 'dono', 'donation'])
+    @commands.command(name='donations', description='Check yours or someone elses donations', aliases=['d', 'dono', 'donation'])
     async def donations(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect("dono.db")
         cursor = dbase.cursor()

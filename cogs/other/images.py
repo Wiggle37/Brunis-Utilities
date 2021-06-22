@@ -3,7 +3,7 @@ from discord.ext import commands
 import aiohttp
 import requests
 
-class Images(commands.Cog, name='Images', description='Get some pictures of some animals'):
+class Images(commands.Cog, name='images', description='Get some pictures of some animals'):
 
     def __init__(self, client):
         self.client = client
