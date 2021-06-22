@@ -28,10 +28,6 @@ class Dono(commands.Cog, name='Donation Tracker', description='Tracks the server
 
         dbase.commit()
         dbase.close()
-    '''
-    Checks
-    '''
-    
 
     '''
     Functions
