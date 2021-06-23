@@ -805,7 +805,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
                 elif msg.clean_content.lower() != 'shoot' or msg.clean_content.lower() != 'run':
                     amount = gun.get_item_count(ctx.author.id)
-                    gun.decrease_item(ctx, amount)
+                    gun.decrease_item(ctx.author.id, amount)
                     await ctx.send("You didn't chose a valid option so you lost you all of your guns because you lost the fight")
 
             if not event:
