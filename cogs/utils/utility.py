@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import sys
 from datetime import datetime
+
 class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
 
     def __init__(self, client):
@@ -67,6 +68,26 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         '''
 
         await ctx.send(msg)
+
+    #Bug
+    @commands.command()
+    async def bug(self, ctx, *, bug):
+        wiggle = self.client.get_user(824010269071507536)
+        embed = discord.Embed(title='Bug Report', description=f'**Reporter:** {ctx.author}({ctx.author.id})\n\n{bug}', color=discord.Color.red())
+        embed.timestamp = datetime.utcnow()
+        await wiggle.send(embed=embed)
+        await ctx.send('Bug sent!')
+    
+    #Suggest
+    @commands.command()
+    async def suggest(self, ctx, *, suggestion):
+        embed = discord.Embed(title=f'Suggestion From {ctx.author}', description=f'**Suggestion:**\n{suggestion}')
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=f'User id: {ctx.author.id}')
+        msg = await self.client.get_channel(827293945003376650).send(embed=embed)
+        await msg.add_reaction('✔')
+        await msg.add_reaction('✖')
+        await ctx.send('Suggestion sent in <#827293945003376650>')
 
 def setup(client):
     client.add_cog(Utility(client))

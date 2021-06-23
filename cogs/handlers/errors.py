@@ -5,7 +5,7 @@ from discord.ext import commands
 class CommandErrorHandler(commands.Cog):
 
     def __init__(self, client):
-        self.bot = client
+        self.client = client
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -31,7 +31,7 @@ class CommandErrorHandler(commands.Cog):
             return await ctx.send(f'You are missing the `{error.param.name}` argument in the `{ctx.command}` command\n```b!{ctx.command} {ctx.command.signature}```')
 
         if isinstance(error, commands.BotMissingPermissions):
-            wiggle = self.client.fetch_user(824010269071507536)
+            wiggle = self.client.get_user(824010269071507536)
             return await wiggle.send(f'Alert! The bot is missing permissions in {ctx.channel.mention} for `{ctx.command}` please get this fixed right away')
 
         if isinstance(error, commands.MissingRole) or isinstance(error, commands.MissingAnyRole):
@@ -45,7 +45,10 @@ class CommandErrorHandler(commands.Cog):
 
         if isinstance(error, commands.RoleNotFound):
             return await ctx.send(f'The role provided was not found')
-
+        
+        if isinstance(error, commands.errors.CommandInvokeError):
+            pass
+        
         if isinstance(error, commands.BadArgument):
             pass
 
