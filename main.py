@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 intents = discord.Intents.all()
 intents.members = True
@@ -26,7 +27,7 @@ async def on_ready():
                 client.load_extension(f"cogs.{folder}.{file[:-3]}")
                 print(f'cogs.{file[:-3]} loaded')
 
-    print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\n==============================================\n')
+    print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\nLatency: {int(client.latency * 1000)}\nTime: {datetime.utcnow()}\n==============================================\n')
 
 @client.command()
 @commands.is_owner()

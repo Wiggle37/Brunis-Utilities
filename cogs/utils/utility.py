@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 import asyncio
-
+import sys
+from datetime import datetime
 class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
 
     def __init__(self, client):
@@ -51,6 +52,21 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         info_embed.add_field(name='Server Human Count', value=members)
         info_embed.add_field(name='Total Member Count', value=total)
         await ctx.send(embed=info_embed)
+
+    #Bot Info
+    @commands.command()
+    async def botinfo(self, ctx):
+        msg = f'''
+        ```asciidoc\n
+=== {self.client.user} Info ===
+
+• Latency             :: {int(self.client.latency * 1000)}ms
+• Discord Version     :: {discord.__version__}
+• Python Version Info :: {sys.version}
+```
+        '''
+
+        await ctx.send(msg)
 
 def setup(client):
     client.add_cog(Utility(client))
