@@ -1,5 +1,6 @@
 from discord.ext import commands
 import http
+import asyncio
 
 class Fun(commands.Cog, name='fun', description='Some fun commands'):
 

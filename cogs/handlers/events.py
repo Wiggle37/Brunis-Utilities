@@ -43,6 +43,8 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
                 members = 0
                 for member in member.guild.members:
+                    if member.bot:
+                        return
                     members += 1
 
                 join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
@@ -51,7 +53,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 join_embed.add_field(name=f'__**More Info:**__', value=f'Time Created: {int(days)} days ago\nUser ID: {member.id}\nWe are now at {members} members', inline=False)
                 await self.client.get_channel(784491141022220312).send(embed=join_embed)
 
-                if members >= 5000:
+                if members == 5000:
                     await self.client.get_channel(784491141022220312).send('We are now at 5,000 members!!! 🎉🎉🎉 The events and giveaways will begin soon!')
         
         else:
