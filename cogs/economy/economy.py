@@ -26,7 +26,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
         self.raiders = {}
     
-    @commands.group(name='Raid', description='Team up to destroy a boss and get some coins', invoke_without_command = True)
+    @commands.group(name='raid', description='Team up to destroy a boss and get some coins', invoke_without_command = True)
     async def raid(self, ctx):
         raid_help_embed = discord.Embed(
             title = "How to boss raids 101",
@@ -61,7 +61,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             except asyncio.TimeoutError:
                 pass
  
-    @raid.command()
+    @raid.command(name='start', description='Start a boss raid')
     async def start(self, ctx):
         raid_start_embed = discord.Embed(title = "A boss is here!", colour = 0x4c1a33)
         raid_start_embed.add_field(name = "It's Tiny Tortle", value = "Quick, type ```join raid``` to fight the boss and get some coins!")
