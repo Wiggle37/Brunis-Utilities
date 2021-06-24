@@ -118,7 +118,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     '''
     BRUNI ONY LOL(well ig bot owners...)
     '''
-    @commands.command()
+    @commands.command(name='endspecial', description='End the special leaderboarder', hidden=True)
     @commands.is_owner()
     async def endspecial(self, ctx):
         dbase = sqlite3.connect('dono.db')

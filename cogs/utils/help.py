@@ -59,7 +59,10 @@ class bruniUtilsHelp(commands.HelpCommand):
 
         command_help = discord.Embed(title = f"{self.clean_prefix}{command.qualified_name} info", color=discord.Color.purple())
 
-        command_help.add_field(name = "Description:", value = command.description, inline = False)
+        description = "No description provided, but a cool command anyway!"
+        if command.description != "":
+            description = command.description
+        command_help.add_field(name = "Description:", value = description, inline = False)
         command_help.add_field(name = "Usage:", value = self.get_command_signature(command), inline = False)
 
         aliases = ", ".join(command.aliases)
