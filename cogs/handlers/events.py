@@ -44,8 +44,9 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 members = 0
                 for member in member.guild.members:
                     if member.bot:
-                        return
-                    members += 1
+                        pass
+                    else:
+                        members += 1
 
                 join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
                 join_embed.set_thumbnail(url=member.avatar_url)
