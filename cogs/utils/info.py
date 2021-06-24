@@ -1,4 +1,5 @@
 import discord
+from discord.channel import VoiceChannel
 from discord.ext import commands
 
 class Info(commands.Cog, name='info', description='Displays some important info about the server'):
@@ -28,6 +29,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
             msg += f'**{num}** ➞ {rule}\n\n'
 
         rules_embed = discord.Embed(title='__**Dank Merchants Rules:**__', description=msg, color=0x00ff00)
+        rules_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=rules_embed)
 
     #Dank Rules
@@ -48,6 +50,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
             msg += f'**{num}** ➞ {rule}\n\n'
 
         dank_rules = discord.Embed(title='Dank Memer Rules', description=msg, color=0x00ff00)
+        dank_rules.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=dank_rules)
 
     #Warning Policy
@@ -69,6 +72,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         for num, pun in warns.items():
             msg += f'**{num}** ➞ {pun}\n\n'
         warn_embed = discord.Embed(title='__**Dank Merchants Warning Policy:**__', description=msg, color=0x00ff00)
+        warn_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=warn_embed)
 
     #Trading Rules
@@ -84,8 +88,9 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         }
         msg = ''
         for num, rule in rules.items:
-            msg += f'{num} ➞ {rule}\n'
+            msg += f'**{num}** ➞ {rule}\n'
         traderules_embed = discord.Embed(title='__**Dank Merchants Trading Rules:**__', description=msg, color=0x00ff00)
+        traderules_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=traderules_embed)
 
     #Giveaway Rules
@@ -101,8 +106,9 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         }
         msg = ''
         for num, rule in rules.items():
-            msg += f'{num} ➞ {rule}\n'
+            msg += f'**{num}** ➞ {rule}\n'
         gaw_embed = discord.Embed(title='__**Dank Merchants Giveaway Rules:**__', description=msg, color=0x00ff00)
+        gaw_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=gaw_embed)
 
     #Special Roles
@@ -121,8 +127,9 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         }
         msg = ''
         for num, role in roles.items():
-            msg += f'{num} ➞ {role}\n'
+            msg += f'**{num}** ➞ {role}\n'
         specroles_embed = discord.Embed(title='__**Dank Merchants Special Roles:**__', description=msg, color=0x00ff00)
+        specroles_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=specroles_embed)
 
     #Exclusive Roles
@@ -135,50 +142,71 @@ class Info(commands.Cog, name='info', description='Displays some important info 
             '__1k Special Winner': '<@&807824584396767292> - For those that won in 1k special event',
             '__Highest Donor__': '<@&793189820151234620> - Highest donor gets their own custom channel'
         }
-        eroles_embed = discord.Embed(title='__**Dank Merchants Exclusive Roles:**__', description='The Exlusive Roles Of Dank Merchants', color=0x00ff00)
+        msg = ''
+        for num, role in roles.items():
+            msg += f'**{num}** ➞ {role}\n'
+        eroles_embed = discord.Embed(title='__**Dank Merchants Exclusive Roles:**__', description=msg, color=0x00ff00)
+        eroles_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=eroles_embed)
 
     #Donations
     @commands.command(name='donationperks', description='Info on the donation perks')
     async def donoperks(self, ctx):
-        donor_embed = discord.Embed(title='__**Dank Merchants Donation Perks:**__', description='The Donations Perks Of Dank Merchants', color=0x00ff00)
-        donor_embed.add_field(name='__5 Million Donor:__', value='<@&787342154862166046>\nAccess to exclusive giveaways/heists', inline=False)
-        donor_embed.add_field(name='__10 Million Donor:__', value='<@&787342156573704203>\nAccess to <#787349373448880128>', inline=False)
-        donor_embed.add_field(name='__25 Million Donor:__', value='<@&799022090791419954>\nUnlock <#788159178865639511> and a list of robbing servers', inline=False)
-        donor_embed.add_field(name='__50 Million Donor:__', value='<@&787868761528336427>\nAccess to Dyno `?afk` and Dank Memer `pls snipe` ', inline=False)
-        donor_embed.add_field(name='__100 Million Donor:__', value='<@&787868759720722493>\nAccess to <#800386641839390720>', inline=False)
-        donor_embed.add_field(name='__250 Million Donor:__', value='<@&799844364389187616>\nAccess to <#788160596319272980> and carl highlight command', inline=False)
-        donor_embed.add_field(name='__500 Million Donor:__', value='<@&799022083778543696>\nReaction perms in all trading channels + 2 weeks premium', inline=False)
-        donor_embed.add_field(name='__1 Billion Donor:__', value='<@&799844367551692827>\nExclusive **custom command** made only for you!', inline=False)
-        donor_embed.add_field(name='__2.5 Billion Donor:__', value='<@&824615522934849607>\nAbility to **BYPASS ALL** giveaways server-wide!', inline=False)
-        donor_embed.add_field(name='__Highest Donor:__', value='<@&793189820151234620>\nYour **OWN** Dank channel + auto reaction when pinged!', inline=False)
+        donos = {
+            '__5 Million Donor__': '<@&787342154862166046> - Access to exclusive giveaways/heists',
+            '__10 Million Donor__': '<@&787342156573704203> - Access to <#787349373448880128>',
+            '__25 Million Donor__': '<@&799022090791419954> - Unlock <#788159178865639511> and a list of robbing servers',
+            '__50 Million Donor__': '<@&787868761528336427> - Access to Dyno `?afk` and Dank Memer `pls snipe`',
+            '__100 Million Donor__': '<@&787868759720722493> - Access to <#800386641839390720>',
+            '__250 Million Donor__': '<@&799844364389187616> - Access to <#788160596319272980> and carl highlight command',
+            '__500 Million Donor__': '<@&799022083778543696> - Reaction perms in all trading channels + 2 weeks premium',
+            '__1 Billion Donor__': '<@&799844367551692827> - Exclusive **custom command** made only for you!',
+            '__2.5 Billlion Donor__': '<@&824615522934849607> - Ability to **BYPASS ALL** giveaways server-wide!',
+            '__5 Billion Donor__': 'Fancy letter autoresponse when name is pinged',
+            '__🤑 Highest Donor 🤑__': '<@&793189820151234620> - Your **OWN** Dank channel + auto reaction when pinged!'
+        }
+        msg = ''
+        for num, role in donos.items():
+            msg += f'**{num}** ➞ {role}\n'
+        donor_embed = discord.Embed(title='__**Dank Merchants Donation Perks:**__', description=msg, color=0x00ff00)
+        donor_embed.set_footer(text='Last updated: 6/23/21')
         await ctx.send(embed=donor_embed)
 
     #Invites
     @commands.command(name='inviteperks', description='The perks you get for inviting people in the server')
     async def invperks(self, ctx):
-        inv_embed = discord.Embed(title='__**Dank Merchants Invite Perks:**__', description='The Invite Perks Of Dank Merchants', color=0x00ff00)
-        inv_embed.add_field(name='__2 Invites:__', value='<@&787342156611321857>\nGain access to some inviter-exclusive giveaways', inline=False)
-        inv_embed.add_field(name='__5 Invites:__', value='<@&787342156846727188>\nAbility to add reactions in giveaway channels and unlock <#787349373448880128>', inline=False)
-        inv_embed.add_field(name='__10 Invites:__', value='<@&787348338004590612>\nGuild-wide ability to embed links ', inline=False)
-        inv_embed.add_field(name='__15 Invites:__', value='<@&787348339733168179>\nAdvertise your server in <#784887859143507978> with <@&785930653665067038> ping and Dyno ?afk access', inline=False)
-        inv_embed.add_field(name='__30 Invites:__', value='<@&787348339791233045>\nLife time exclusive giveaway pass + your private text and voice channel (can invite 3 friends) and 1 month premium', inline=False)
-        inv_embed.add_field(name='__75+ Invites:__', value='<@&787348341675393025>\n**LIFE TIME PREMIUM**', inline=False)
+        perks = {
+            '__2 Invites__': '<@&787342156611321857> - Access to nitro giveaways',
+            '__5 Invites__': '<@&787342156846727188> - Ability to add reaction to giveaways and access to <#854916429185941535>',
+            '__10 Invites__': '<@&787348338004590612> - Guild wide ability to embed links',
+            '__15 Invites__': '<@&787348339733168179> - Dyno `?afk` access',
+            '__30 Invites__': '<@&787348339791233045> - 6 months server premium'
+        }
+        msg = ''
+        for num, role in perks.items():
+            msg += f'**{num}** ➞ {role}\n'
+        inv_embed = discord.Embed(title='__**Dank Merchants Invite Perks:**__', description=msg, color=0x00ff00)
+        inv_embed.set_footer(text='Last updated: 6/23/21')
         await ctx.send(embed=inv_embed)
 
     #Levels
     @commands.command(name='levelperks', description='The servers leveling perks')
     async def lvlperks(self, ctx):
-        lvl_embed = discord.Embed(title='__**Dank Merchants Level Perks:**__', description='The Level Perks Of Dank Merchants', color=0x00ff00)
-        lvl_embed.add_field(name='__Level 5:__', value='<@&785676777585639464>\n`pls weekly/monthly` access', inline=False)
-        lvl_embed.add_field(name='__Level 10:__', value='<@&785725155561308171>\nUnlock all color roles at <#784547669619507201>', inline=False)
-        lvl_embed.add_field(name='__Level 15:__', value='<@&785676889736871946>\nAll channels Reaction perms', inline=False)
-        lvl_embed.add_field(name='__Level 20:__', value='<@&785725154373271594>\nGuild-wide image perms', inline=False)
-        lvl_embed.add_field(name='__Level 25:__', value='<@&785725155762372608>\nAbility to embed links and unlock <#787352549622546464>', inline=False)
-        lvl_embed.add_field(name='__Level 30:__', value='<@&785676961904852992>\n`pls snipe` access and 1 week of premium', inline=False)
-        lvl_embed.add_field(name='__Level 40:__', value='<@&785676992481329182>\nAbility to upload an emote of your choice(no NSFW) ', inline=False)
-        lvl_embed.add_field(name='__Level 50:__', value='<@&785726480092626945>\nCustom role with color of your choice', inline=False)
-        lvl_embed.add_field(name='__Level 69:__', value='<@&799844364976259082>\nThe "<a:pepeeggplant:828020469286436864>" emote reaction when you are pinged!', inline=False)
+        level = {
+            '__Level 5__': '<@&785676777585639464> - `pls weekly/monthly` access',
+            '__Level 10__': '<@&785725155561308171> - Unlock all color roles [here](https://discord.com/channels/784491141022220309/784547669619507201/805984931707617330)',
+            '__Level 15__': '<@&785676889736871946> - All channel reaction perms',
+            '__Level 20__': '<@&785725154373271594> - Guild wide image permissions',
+            '__Level 30 __': '<@&785676961904852992> - Access to `;;snipe`',
+            '__Level 40__': '<@&785676992481329182> - Free 10 days of server premium',
+            '__Level 50__': '<@&785726480092626945> - Ability to send links',
+            '__Level 69__': '<@&799844364976259082> - The "<a:pepeeggplant:828020469286436864>" emote reaction when you are pinged!',
+            '__Level 100__': '<@&810249129909420122> - Access to carl bot\'s highlight (cmd is *hl) to highlight anything in the server and receive an exclusive color role from the past (contact me). If you reach here, You are truly a god!'
+        }
+        msg = ''
+        for num, perk in level.items():
+            msg += f'**{num}** ➞ {perk}'
+        lvl_embed = discord.Embed(title='__**Dank Merchants Level Perks:**__', description=msg, color=0x00ff00)
         await ctx.send(embed=lvl_embed)
 
     #Booster Perks
@@ -189,6 +217,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         inv_embed.add_field(name='__Single Booster Perks:__', value='<@&797486130844663829>\n<a:shiny_boost:802975176194129950> Receive all <@&787734881563705354> perks as long as your boost lasts\n<a:shiny_boost:802975176194129950> `pls snipe` and `?afk` access\n<a:shiny_boost:802975176194129950> Bypass all giveaways\n<a:shiny_boost:802975176194129950> Your own auto-response in animated letters\n<a:shiny_boost:802975176194129950> Access to exclusive <#801287649309884447>\n<a:shiny_boost:802975176194129950> All boosters are pinged in silent giveaways', inline=False)
         inv_embed.add_field(name='__Double Booster Perks:__', value='<@&786610856308768768>\n<a:Boost:800379805367402496> Your own dank memer channel (can invite up to 5 friends)\n<a:Boost:800379805367402496> 6 hour claim time for nitro giveaways (normies get 10 minutes)\n<a:Boost:800379805367402496> `pls esnipe` access\n<a:Boost:800379805367402496> List of robbing servers\n<a:Boost:800379805367402496> Auto reaction when your name is pingedn\n<a:Boost:800379805367402496> Carl-bot `*hl` access (when key word is said in chat youll be notified)\n<a:Boost:800379805367402496> booster perks last one more week if you boost a whole month', inline=False)
         inv_embed.add_field(name='__Multi Booster Perks:__', value='<@&797486130844663829>\n<a:NR_Boost:800379946647420989> Custom trigger\n<a:NR_Boost:800379946647420989> Up to 10 friends can join you in your private channel\n<a:NR_Boost:800379946647420989> Add two emotes of your choice to the server\n <a:NR_Boost:800379946647420989> Promote your content in <#784887859143507978> with <@&785930653665067038> ping\n<a:NR_Boost:800379946647420989> Booster perks last two more weeks if you boost a whole month', inline=False)
+        inv_embed.set_footer(text='Last updated: 6/23/21')
         await ctx.send(embed=inv_embed)
 
 def setup(client):
