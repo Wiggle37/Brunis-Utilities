@@ -1,3 +1,4 @@
+import discord
 import traceback
 import sys
 from discord.ext import commands
@@ -46,8 +47,9 @@ class CommandErrorHandler(commands.Cog):
         if isinstance(error, commands.RoleNotFound):
             return await ctx.send(f'The role provided was not found')
         
-        if isinstance(error, commands.errors.CommandInvokeError):
-            pass
+        if isinstance(error, discord.errors.Forbidden):
+            wiggle = self.client.get_user(824010269071507536)
+            return await wiggle.send(f'Alert! The bot is missing permissions in {ctx.channel.mention} for `{ctx.command}` please get this fixed right away')
         
         if isinstance(error, commands.BadArgument):
             pass
