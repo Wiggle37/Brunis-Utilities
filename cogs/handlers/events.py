@@ -50,7 +50,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
                 join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
                 join_embed.set_thumbnail(url=member.avatar_url)
-                join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and ask your question and staff will be there as soon as possible! Also in case of you getting banned join the ban appeal server [here](https://discord.gg/f8steRTWQj)')
+                join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and ask your question and staff will be there as soon as possible!')
                 join_embed.add_field(name=f'__**More Info:**__', value=f'Time Created: {int(days)} days ago\nUser ID: {member.id}\nWe are now at {members} members', inline=False)
                 await self.client.get_channel(784491141022220312).send(embed=join_embed)
 
