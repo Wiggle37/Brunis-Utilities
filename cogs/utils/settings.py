@@ -1,54 +1,17 @@
+from sqlite3.dbapi2 import DatabaseError
 import discord
 from discord.ext import commands
 import sqlite3
 
-class Admin(commands.Cog, name='admin', description='Commands only admins can use'):
+class Settings(commands.Cog):
 
     def __init__(self, client):
         self.client = client
 
-    #Add Role
-    @commands.command(name='addrole', description='Adds a role to a member', aliases=['ar'])
-    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
-    async def addrole(self, ctx, member: discord.Member, *, role:discord.Role):
-        await member.add_roles(role)
-        await ctx.send(f'Role added to **{member}**')
-
-    #Remove Role
-    @commands.command(name='removerole', description='Removes a role from a member', aliases=['rr'])
-    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
-    async def removerole(self, ctx, member: discord.Member, *, role:discord.Role):
-        await member.remove_roles(role)
-        await ctx.send(f'Role removed from **{member}**')
-
-    #Purge
-    @commands.command(name='purge', description='Delete a certain amount of messages given')
-    @commands.has_any_role(784492058756251669, 784527745539375164, 785202756641619999, 788738308879941633, 840738395001323563) #Admin, Mod, Bruni, Bot Dev
-    async def purge(self, ctx, amount=1):
-        if amount > 1000:
-            await ctx.send(f'Please choose a number under 1000 to purge.\nYour number was: {amount}')
-
-        else:
-            await ctx.message.delete()
-            await ctx.channel.purge(limit=amount)
-
-            purge_embed = discord.Embed(title='Purged Messages', description=f'{amount} message(s) purged', color=0x00ff00)
-            await ctx.send(embed=purge_embed, delete_after=1)
-
-    #Lock
-    @commands.command(name='lock', description='Locks the current channel to everyone')
-    @commands.has_any_role(791516118120267806)
-    async def lock(self, ctx):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
-        await ctx.send('Channel locked')
-
-    #Unlock
-    @commands.command(name='unlock', description='Unlocks the current channel to everyone')
-    @commands.has_any_role(791516118120267806)
-    async def unlock(self, ctx):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
-        await ctx.send('Channel unlocked')
-
+    '''
+    Auto Reponses
+    '''
+    #Add Auto Reponse
     @commands.command(name='add_auto_response', description='Add an auto response', aliases=['ara'])
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def ara(self, ctx, trigger, *, response):
@@ -69,6 +32,7 @@ class Admin(commands.Cog, name='admin', description='Commands only admins can us
         dbsae.commit()
         dbsae.close()
 
+    #Remove Auto Response
     @commands.command(name='remove_auto_response', description='Remove an auto response', aliases=['arr'])
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def arr(self, ctx, trigger):
@@ -112,6 +76,7 @@ class Admin(commands.Cog, name='admin', description='Commands only admins can us
         dbase.commit()
         dbase.close()
 
+    #Emoji Remove Response
     @commands.command(name='remove_auto_reaction', description='Remove an emoji reaction', aliases=['aer'])
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def aer(self, ctx, trigger):
@@ -134,5 +99,25 @@ class Admin(commands.Cog, name='admin', description='Commands only admins can us
         dbase.commit()
         dbase.close()
 
+    '''
+    Heist Settings
+    '''
+    @commands.command()
+    @commands.has_any_role(784527745539375164, 784492058756251669, 788738305365114880, 788738308879941633) # Mod, Admin, Co-Owner, Bot dev
+    async def heistmode(self, ctx, mode=True):
+        dbase = sqlite3.connect('settings.db')
+        cursor = dbase.cursor()
+
+        types = [True, False]
+        if mode not in types:
+            return await ctx.send('That is not a valid option plese user either: `True` or `False`')
+
+        elif mode or not mode:
+            cursor.execute(f"UPDATE heistmode SET heistmode = '{mode}'")
+            await ctx.send(f'Heistmode set to {mode}')
+
+        dbase.commit()
+        dbase.close()
+
 def setup(client):
-    client.add_cog(Admin(client))
+    client.add_cog(Settings(client))
