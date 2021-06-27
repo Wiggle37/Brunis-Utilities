@@ -250,7 +250,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         dank_merchants = self.client.get_guild(784491141022220309)
         for rank, user_info in enumerate(richest):
             member = dank_merchants.get_member(int(user_info[1]))
-            embed_desc += f"**{rank + 1}. {member}:** <:dankmerchants:829809749058650152> `{'{:,}'.format(user_info[0])}`\n"
+            embed_desc += f"**{rank + 1}. {member}:** {self.currency.emoji} `{'{:,}'.format(user_info[0])}`\n"
 
         rich_embed.description = embed_desc
         await ctx.send(embed = rich_embed)
