@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands
 import sqlite3
 import time
-from datetime import datetime
+
+from config import *
 
 class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
@@ -21,11 +22,9 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
         days = seconds // seconds_in_day
 
         if member.guild.id == 784491141022220309:
-            if time.time() - member.created_at.timestamp() < 1814400:
-                channel = await member.create_dm()
-                    
+            if time.time() - member.created_at.timestamp() < 1814400:                    
                 dm_embed = discord.Embed(title=f'You were banned from dank merchants', description=f'You were banned because your account was too young\nYou will be unbanned when your account is over the age of 3 weeks old(21 days)\nIn the mean time you can join [this](https://discord.gg/ubtz7gK2js) server if you have anymore questions', color=0x00ff00)
-                await channel.send(embed=dm_embed)
+                await member.send(embed=dm_embed)
 
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
@@ -41,18 +40,24 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 except:
                     pass
 
-                members = 0
-                for member in member.guild.members:
-                    if member.bot:
-                        pass
-                    else:
-                        members += 1
+                heist = heistmode.heist()
+                print(heist)
+                if heist is True:
+                    await self.client.get_channel(784491141022220312).send(f'{member.name} has joined the server during a heist, the heist is here: <#822567848400388106>')
 
-                join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member}** has joined the server!', color=0x00ff00)
-                join_embed.set_thumbnail(url=member.avatar_url)
-                join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and ask your question and staff will be there as soon as possible!')
-                join_embed.add_field(name=f'__**More Info:**__', value=f'Time Created: {int(days)} days ago\nUser ID: {member.id}\nWe are now at {members} members', inline=False)
-                await self.client.get_channel(784491141022220312).send(embed=join_embed)
+                if heist is not True:
+                    members = 0
+                    for member in member.guild.members:
+                        if member.bot:
+                            pass
+                        else:
+                            members += 1
+
+                    join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'{member.mention}\n**{member}** has joined the server!', color=0x00ff00)
+                    join_embed.set_thumbnail(url=member.avatar_url)
+                    join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and ask your question and staff will be there as soon as possible!')
+                    join_embed.add_field(name=f'__**More Info:**__', value=f'Time Created: {int(days)} days ago\nUser ID: {member.id}\nWe are now at {members} members', inline=False)
+                    await self.client.get_channel(784491141022220312).send(embed=join_embed)
 
                 if members == 5000:
                     await self.client.get_channel(784491141022220312).send('We are now at 5,000 members!!! 🎉🎉🎉 The events and giveaways will begin soon!')

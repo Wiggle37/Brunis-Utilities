@@ -1,4 +1,5 @@
 import discord
+from discord.activity import CustomActivity
 from discord.ext import commands
 import sqlite3
 import datetime
@@ -116,8 +117,9 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         return "{:,}".format(num)
 
     '''
-    BRUNI ONY LOL(well ig bot owners...)
+    Owner Commands
     '''
+    #Reset Special
     @commands.command(name='endspecial', description='End the special leaderboarder', hidden=True)
     @commands.is_owner()
     async def endspecial(self, ctx):
@@ -138,6 +140,35 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
         dbase.commit()
         dbase.close()
+
+    #Prune Database
+    @commands.command(name='prunedb', description='Delete old users from the database that aren\'t in the server anymore', hidden=True)
+    @commands.is_owner()
+    async def prunedb(self, ctx):
+        dbase = sqlite3.connect('dono.db')
+        cursor = dbase.cursor()
+
+        cursor.execute(f"SELECT user_id FROM donations")
+        results = cursor.fetchall()
+
+        num = 0
+        dank_merchants = self.client.get_guild(784491141022220309)
+
+        for user in results:
+            member = dank_merchants.get_member(user[0])
+            if member is None:
+                cursor.execute(f"DELETE FROM donations WHERE user_id = '{user[0]}'")
+                print(f'{user[0]} was deleted from the db')
+                await ctx.send(f'{user[0]} deleted from database')
+
+            else:
+                pass
+            num += 1
+
+        dbase.commit()
+        dbase.close()
+
+        await ctx.send('Done pruning members')
 
     '''
     DONATIONS CHECK
@@ -193,8 +224,8 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             donor_info += "__**Dank Memer Donations Leader Board**__\n"
             dank_merchants = self.client.get_guild(784491141022220309)
             for rank, user in enumerate(dank_donors):
-                member = dank_merchants.get_member(int(user[0]))
-                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
+                '''member = dank_merchants.get_member(int(user[0]))'''
+                donor_info += f"**{rank + 1}. <@{user[0]}>**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
             dbase.close()

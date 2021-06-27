@@ -14,6 +14,7 @@ import traceback
 import sys
 import typing
 
+from config import *
 from items_bruni import *
 
 class Economy(commands.Cog, name='economy', description='The servers economy system'):
@@ -217,6 +218,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     #Balance
     @commands.command(name='balance', description='Get your current balance in the economy system', aliases=['bal', 'money'])
     async def balance(self, ctx, member: discord.Member = None):
+        msg = punishments.banned(ctx.author.id)
+        if msg:
+            return await ctx.send('You have been banned from the bot, to appeal please dm Wiggle and he will either decline your appeal or accpet your appeal.')
         channel = await self.no_general(ctx)
         if channel:
             return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
