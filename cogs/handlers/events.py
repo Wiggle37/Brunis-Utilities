@@ -70,7 +70,10 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
         for trigger, response in text_response:
             if trigger in cleaned_content and not message.author.bot:
-                await message.channel.send(response)
+                try:
+                    await message.channel.send(response)
+                except:
+                    pass
         
     @commands.Cog.listener("on_message")
     async def emoji_react(self, message):
@@ -88,8 +91,10 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
         for trigger, emoji in emoji_react:
             if trigger in cleaned_content and not message.author.bot:
-                await message.add_reaction(emoji)
-    
+                try:
+                    await message.add_reaction(emoji)
+                except:
+                    pass
     
     #Triggers
     @commands.Cog.listener()
