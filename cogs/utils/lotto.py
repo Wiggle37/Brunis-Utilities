@@ -41,6 +41,10 @@ class Lottery(commands.Cog):
         dbase = sqlite3.connect('lotto.db')
         cursor = dbase.cursor()
 
+        cursor.execute(f"INSERT INTO '{lotto}' (user_id, tickets) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET tickets = tickets + ?;", [member.id, amount, amount])
+        embed = discord.Embed(title='Tickets Updated', description=f'**Member:** {member.name}\n**Tickets:** {amount}', color=0x2e5090)
+        await ctx.send(embed=embed)
+
         dbase.commit()
         dbase.close()
 
@@ -49,6 +53,10 @@ class Lottery(commands.Cog):
     async def removeticket(self, lotto, ctx, member: discord.Member, amount: int=1):
         dbase = sqlite3.connect('lotto.db')
         cursor = dbase.cursor()
+
+        cursor.execute(f"INSERT INTO '{lotto}' (user_id, tickets) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET tickets = tickets - ?;", [member.id, amount, amount])
+        embed = discord.Embed(title='Tickets Updated', description=f'**Member:** {member.name}\n**Tickets:** {amount}', color=0x2e5090)
+        await ctx.send(embed=embed)
 
         dbase.commit()
         dbase.close()

@@ -39,7 +39,7 @@ def restart_bot():
 @client.command()
 @commands.is_owner()
 async def restart(ctx):
-    await ctx.send("Restarting bot...")
+    await ctx.send('Restarting <a:loading:858913963005706270>')
     restart_bot()
 
 @client.command()
