@@ -561,8 +561,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             'Adit',
             'Tommy',
             'Julesi',
-            'Firecracker',
-            'DM WIGGLE FOR NITRO YOU JUST WON SOME EPIC NITRO'
+            'Firecracker'
         ]
 
         multi = multis.get_multi(ctx.author.id)
