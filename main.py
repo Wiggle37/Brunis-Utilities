@@ -4,6 +4,10 @@ import asyncio
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+import sys
+
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
 
 intents = discord.Intents.all()
 intents.members = True
@@ -28,6 +32,15 @@ async def on_ready():
                 print(f'cogs.{file[:-3]} loaded')
 
     print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\nLatency: {int(client.latency * 1000)}\nTime: {datetime.utcnow()}\n==============================================\n')
+
+def restart_bot(): 
+  os.execv(sys.executable, ['python'] + sys.argv)
+
+@client.command()
+@commands.is_owner()
+async def restart(ctx):
+    await ctx.send("Restarting bot...")
+    restart_bot()
 
 @client.command()
 @commands.is_owner()
@@ -71,6 +84,4 @@ async def status():
 
 client.loop.create_task(status())
 
-load_dotenv()
-TOKEN = os.getenv('TOKEN')
 client.run(TOKEN)
