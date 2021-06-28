@@ -37,7 +37,7 @@ class Lottery(commands.Cog):
 
     #Add Tickets
     @commands.command(name='addticket')
-    async def addticket(self, ctx, name, member: discord.Member, amount: int=1):
+    async def addticket(self, ctx, lotto, member: discord.Member, amount: int=1):
         dbase = sqlite3.connect('lotto.db')
         cursor = dbase.cursor()
 
@@ -46,7 +46,7 @@ class Lottery(commands.Cog):
 
     #Remove Tickets
     @commands.command(name='removeticket')
-    async def removeticket(self, ctx, member: discord.Member, amount: int=1):
+    async def removeticket(self, lotto, ctx, member: discord.Member, amount: int=1):
         dbase = sqlite3.connect('lotto.db')
         cursor = dbase.cursor()
 
