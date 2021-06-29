@@ -111,6 +111,8 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         
         cursor.execute(f"SELECT user_id, tickets FROM '{lotto}'")
         results = cursor.fetchall()
+        if results is None:
+            return await ctx.send('There is nobody in the current lottery')
 
         msg = ''
         num = 0
