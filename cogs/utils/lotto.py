@@ -43,7 +43,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
 
     #End Lottery
     @commands.command(name='endlottery')
-    async def endlottery(self, ctx, name):
+    async def endlottery(self, ctx):
         dbase = sqlite3.connect('lotto.db')
         cursor = dbase.cursor()
 
