@@ -1,4 +1,4 @@
-from os import curdir
+from os import curdir, name
 import sqlite3
 import random
 from typing import ClassVar
@@ -273,28 +273,21 @@ class multis(item):
 
     @classmethod
     def get_multi(cls, user_id):
-        dbase = sqlite3.connect('economy.db')
-        cursor = dbase.cursor()
+        multis = [
+            doughnut,
+            butilCoin,
+            brunisBackpack
+        ]
+        current_multi = 0
+        for multi in multis:
+            amount = multi.get_item_count(user_id)
+            if amount > multi.cap:
+                amount = multi.cap
 
-        cursor.execute(f"SELECT doughnut FROM multis WHERE user_id == '{user_id}'")
-        doughnut_amount = cursor.fetchone()[0]
+            multi_ = float((multi.multi) * amount)
+            current_multi += multi_
 
-        cursor.execute(f"SELECT token FROM multis WHERE user_id == '{user_id}'")
-        token_amount = cursor.fetchone()[0]
-
-        cursor.execute(f"SELECT brunisbackpack FROM multis WHERE user_id == '{user_id}'")
-        backpack_amount = cursor.fetchone()[0]
-
-        if doughnut_amount <= 0 and token_amount <= 0 and backpack_amount <= 0:
-            return 0.01
-
-        elif doughnut_amount > doughnut.cap or token_amount > butilCoin.cap or backpack_amount > brunisBackpack.cap:
-            return (doughnut.cap * doughnut.multi) + (doughnut.cap * butilCoin.multi) + (doughnut.cap * brunisBackpack.multi)
-
-        elif doughnut_amount < doughnut.cap or token_amount < butilCoin.cap and backpack_amount < brunisBackpack.cap:
-            return (doughnut_amount * doughnut.multi) + (token_amount * butilCoin.multi) + (backpack_amount * brunisBackpack.multi)
-
-        dbase.close()
+        return current_multi
 
 
 class doughnut(multis):
