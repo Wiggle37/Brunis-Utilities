@@ -58,6 +58,8 @@ class CommandErrorHandler(commands.Cog):
             pass
 
         else:
+            wiggle = self.client.get_user(824010269071507536)
+            await wiggle.send(f'There was an error:\n\n```{error}```')
             print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
