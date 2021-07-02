@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import os
+from discord.ext.commands.converter import clean_content
 from dotenv import load_dotenv
 from datetime import datetime
 import sys
@@ -31,6 +32,7 @@ async def on_ready():
                 client.load_extension(f"cogs.{folder}.{file[:-3]}")
                 print(f'cogs.{file[:-3]} loaded')
 
+    await client.change_presence(status=discord.Status.dnd)
     print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\nLatency: {int(client.latency * 1000)}\nTime: {datetime.utcnow()}\n==============================================\n')
 
 def restart_bot(): 
