@@ -6,21 +6,10 @@ import aiohttp
 from datetime import datetime
 
 load_dotenv()
-TOKEN = os.getenv("TOKEN")
-
-# subclassing commands.Bot
-class bruniUtilsBot(commands.Bot):
-    def __init__(self, *args, **kwargs):        
-        return super().__init__(*args, **kwargs)
+TOKEN = os.getenv("TOKEN") 
     
-    # creates a global aiohttp session that can be used
-    async def startup(self, TOKEN):
-        async with aiohttp.ClientSession() as session:
-            self.session = session
-            await self.start(TOKEN)
-
-
-bot = bruniUtilsBot(
+    
+bot = commands.Bot(
     command_prefix = ["b!", "B!", "b ", "B "],
     intents = discord.Intents.all(),
     case_insensitive = True,
@@ -30,6 +19,12 @@ bot = bruniUtilsBot(
 
 # case insensitive help command for cogs 
 bot._BotBase__cogs = commands.core._CaseInsensitiveDict()
+
+
+# creates a global aiohttp session that can be used
+async def aiohttp_sess():
+    bot.session = aiohttp.ClientSession()
+
 
 async def load_extensions():
     await bot.wait_until_ready()
@@ -72,5 +67,6 @@ async def bot_ready():
     await bot.wait_until_ready()
 
 bot.loop.create_task(load_extensions())
+bot.loop.create_task(aiohttp_sess())
 status.start()
-bot.loop.run_until_complete(bot.startup(TOKEN))
+bot.run(TOKEN)
