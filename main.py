@@ -1,89 +1,76 @@
 import discord
-from discord.ext import commands
-import asyncio
+from discord.ext import commands, tasks
 import os
-from discord.ext.commands.converter import clean_content
 from dotenv import load_dotenv
+import aiohttp
 from datetime import datetime
-import sys
 
 load_dotenv()
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv("TOKEN")
 
-intents = discord.Intents.all()
-intents.members = True
-client = commands.Bot(
-    command_prefix=['b!', 'B!', 'b ', 'B '],
-    intents=intents,
-    case_insensitive=True,
-    owner_ids = {531317158530121738, 824010269071507536, 784172569153503332}
-    )
+# subclassing commands.Bot
+class bruniUtilsBot(commands.Bot):
+    def __init__(self, *args, **kwargs):        
+        return super().__init__(*args, **kwargs)
+    
+    # creates a global aiohttp session that can be used
+    async def startup(self, TOKEN):
+        async with aiohttp.ClientSession() as session:
+            self.session = session
+            await self.start(TOKEN)
 
-@client.event
+
+bot = bruniUtilsBot(
+    command_prefix = ["b!", "B!", "b ", "B "],
+    intents = discord.Intents.all(),
+    case_insensitive = True,
+    owner_ids = {531317158530121738, 824010269071507536,  737020572906684556},
+    status = discord.Status.dnd
+)
+
+# case insensitive help command for cogs 
+bot._BotBase__cogs = commands.core._CaseInsensitiveDict()
+
+async def load_extensions():
+    await bot.wait_until_ready()
+    
+    # gets the path name and files in every directory
+    # includes nested paths
+    # only load if it"s in a directory called "cogs"
+    for (dirpath, _, filenames) in os.walk("cogs"):
+
+        # only load python files
+        py_filenames = list(filter(lambda fn: fn.endswith(".py"), filenames))
+
+        # loads each extension
+        for fn in py_filenames:
+
+            # prepares the extension to be loaded
+            ext = dirpath.replace("/", ".") + "." + fn[:-3]
+
+            bot.load_extension(ext)
+            print(f"{ext} loaded")
+
+
+@bot.event
 async def on_ready():
-    print(f'\n\-/ Loading... \-/\n')
+    print(f"\-/ Loading... \-/\n\n" \
+           "==============================================\n" \
+          f"User: {bot.user}\n" \
+          f"ID: {bot.user.id}\n" \
+          f"Latency: {int(bot.latency * 1000)}\n" \
+          f"Time: {datetime.utcnow()}\n" \
+           "==============================================\n")
 
-    for folder in [f for f in os.listdir("./cogs") if f != "__pycache__"]:
-        if folder.endswith(".py"):
-            client.load_extension(f"cogs.{folder[:-3]}")
-            print(f'cogs.{folder[:-3]} loaded')
-        else:
-            for file in [f for f in os.listdir(f"./cogs/{folder}") if f != "__pycache__"]:
-                client.load_extension(f"cogs.{folder}.{file[:-3]}")
-                print(f'cogs.{file[:-3]} loaded')
-
-    await client.change_presence(status=discord.Status.dnd)
-    print(f'\n==============================================\nUser: {client.user}\nID: {client.user.id}\nLatency: {int(client.latency * 1000)}\nTime: {datetime.utcnow()}\n==============================================\n')
-
-def restart_bot(): 
-  os.execv(sys.executable, ['python'] + sys.argv)
-
-@client.command()
-@commands.is_owner()
-async def restart(ctx):
-    await ctx.send('Restarting <a:loading:858913963005706270>')
-    restart_bot()
-
-@client.command()
-@commands.is_owner()
-async def load(ctx, extension):
-    client.load_extension(f'cogs.{extension}')
-    await ctx.send(f'Loaded **{extension}**')
-
-@client.command()
-@commands.is_owner()
-async def unload(ctx, extension):
-    client.unload_extension(f'cogs.{extension}')
-    await ctx.send(f'Unloaded **{extension}**')
-
-@client.command()
-@commands.is_owner()
-async def reload(ctx, extension):
-    client.unload_extension(f'cogs.{extension}')
-    client.load_extension(f'cogs.{extension}')
-    await ctx.send(f'Reloaded **{extension}**')
-
-@client.command()
-@commands.is_owner()
-async def refresh(ctx):
-    for folder in [f for f in os.listdir("./cogs") if f != "__pycache__"]:
-        if folder.endswith(".py"):
-            client.unload_extension(f'cogs.{folder[:-3]}')
-            client.load_extension(f"cogs.{folder[:-3]}")
-        else:
-            for file in [f for f in os.listdir(f"./cogs/{folder}") if f != "__pycache__"]:
-                client.unload_extension(f"cogs.{folder}.{file[:-3]}")
-                client.load_extension(f"cogs.{folder}.{file[:-3]}")
-    await ctx.send('Refreshed the whole bot')
-
+@tasks.loop(seconds = 60)
 async def status():
-    await client.wait_until_ready()
-    while True:
-        memberCount = sum([guild.member_count for guild in client.guilds])
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f'over {memberCount} people'))
+    memberCount = sum(guild.member_count for guild in bot.guilds)
+    await bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = f"Over {memberCount} people"))
 
-        await asyncio.sleep(30)
+@status.before_loop
+async def bot_ready():
+    await bot.wait_until_ready()
 
-client.loop.create_task(status())
-
-client.run(TOKEN)
+bot.loop.create_task(load_extensions())
+status.start()
+bot.loop.run_until_complete(bot.startup(TOKEN))
