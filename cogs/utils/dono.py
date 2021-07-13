@@ -77,7 +77,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def roles(self, ctx, user: discord.Member):
         user_roles_id = [role.id for role in user.roles]
 
-        total = await self.get_amount(ctx, user.id)
+        total = await self.get_amount(ctx, user)
 
         donors_roles = {
             5000000: 787342154862166046, # 5 million
