@@ -28,7 +28,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
-                await self.client.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made {int(days)} days ago')
+                await self.bot.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made {int(days)} days ago')
 
             else:
                 ping_message = await self.self_roles_channel.send(member.mention)
@@ -42,14 +42,14 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
                 heist = heistmode.heist()
                 if heist is True:
-                    await self.client.get_channel(784491141022220312).send(f'{member.name} has joined the server during a heist, the heist is here: <#822567848400388106>')
+                    await self.bot.get_channel(784491141022220312).send(f'{member.name} has joined the server during a heist, the heist is here: <#822567848400388106>')
 
                 if heist is not True:
                     join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'{member.mention}\n**{member}** has joined the server!', color=0x00ff00)
                     join_embed.set_thumbnail(url=member.avatar_url)
                     join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and ask your question and staff will be there as soon as possible!')
                     join_embed.add_field(name=f'__**More Info:**__', value=f'Time Created: {int(days)} days ago\nUser ID: {member.id}', inline=False)
-                    await self.client.get_channel(784491141022220312).send(embed=join_embed)
+                    await self.bot.get_channel(784491141022220312).send(embed=join_embed)
         
         else:
             return

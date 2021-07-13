@@ -20,7 +20,7 @@ class Sticky(commands.Cog, name='stickys'):
             msg = cursor.fetchone()
 
             embed = discord.Embed(title='Stickied Message', description=f'{msg[0]}', color=0x00ff00)
-            await self.client.get_channel(result[0]).send(embed=embed)
+            await self.bot.get_channel(result[0]).send(embed=embed)
 
             messages = await message.channel.history(limit=5).flatten()
             await messages[2].delete()
@@ -39,7 +39,7 @@ class Sticky(commands.Cog, name='stickys'):
 
         try:
             await ctx.send('What do you want the name of this sticky to be so you can delete it or edit it in the future')
-            name = await self.client.wait_for("message", check=check, timeout=30)
+            name = await self.bot.wait_for("message", check=check, timeout=30)
             cursor.execute(f"SELECT stickyname FROM stickys WHERE stickyname == ?", [name.content.lower()])
             result = cursor.fetchone()
             if result != None:
@@ -50,7 +50,7 @@ class Sticky(commands.Cog, name='stickys'):
 
         try:
             await ctx.send('What channel do you want this to be in? **use the id not the channel mention**')
-            channel = await self.client.wait_for("message", check=check, timeout=30)
+            channel = await self.bot.wait_for("message", check=check, timeout=30)
             if not channel.content.isdigit():
                 return await ctx.send("That isnt't a valid number")
             
@@ -64,7 +64,7 @@ class Sticky(commands.Cog, name='stickys'):
 
         try:
             await ctx.send('What do you want the message to be?')
-            message = await self.client.wait_for("message", check=check, timeout=60)
+            message = await self.bot.wait_for("message", check=check, timeout=60)
 
         except TimeoutError:
             return await ctx.send("You didn't send the message in time")

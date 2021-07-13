@@ -35,7 +35,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def aboose(self, ctx, person, amount):
         if person == ctx.author:
             embed = discord.Embed(title=f'**Warning, {ctx.author} has updated their own donations**', description=f'Please keep an eye on this person they are mad sus\n**More Info:**\nUser: {ctx.author}({ctx.author.id})\nChannel: {ctx.channel.mention}\nAmount: {"{:,}".format(amount)}', color=0xff0000)
-            await self.client.get_channel(854363438616936498).send(embed=embed)
+            await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Number Converter
     def is_valid_int(self, amount):
@@ -128,7 +128,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             await cursor.execute(f"UPDATE donations SET special = 0 WHERE user_id = '{int(user[0])}'")
             await cursor.execute(f"UPDATE donations SET event = '{int(user[1])}' + event WHERE user_id = '{user[0]}'")
 
-            person = await self.client.fetch_user(user[0])
+            person = await self.bot.fetch_user(user[0])
             await ctx.send(f"{person.name}'s special donations were reset to **0** and added {user[1]} to events")
 
         await ctx.send('ALL DONE!!')
@@ -147,7 +147,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         results = cursor.fetchall()
 
         num = 0
-        dank_merchants = self.client.get_guild(784491141022220309)
+        dank_merchants = self.bot.get_guild(784491141022220309)
 
         for user in results:
             member = dank_merchants.get_member(user[0])
@@ -209,7 +209,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             donor_info = ""
 
             donor_info += "__**Dank Memer Donations Leader Board**__\n"
-            dank_merchants = self.client.get_guild(784491141022220309)
+            dank_merchants = self.bot.get_guild(784491141022220309)
             for rank, user in enumerate(dank_donors):
                 '''member = dank_merchants.get_member(int(user[0]))'''
                 donor_info += f"**{rank + 1}. <@{user[0]}>**: `⏣{'{:,}'.format(user[1])}`\n"
@@ -248,7 +248,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             bumper_info = ""
 
             bumper_info += "__**Server Bumps Leader board**__\n"
-            dank_merchants = self.client.get_guild(784491141022220309)
+            dank_merchants = self.bot.get_guild(784491141022220309)
             for rank, user in enumerate(bumpers):
                 member = dank_merchants.get_member(int(user[0]))
                 bumper_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
@@ -366,7 +366,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
     @commands.command(name='gda', description='Add to someones giveaway donations')
@@ -397,7 +397,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
     @commands.command(name='gdr', description='Remove from someones giveaway donations')
@@ -428,7 +428,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
     @commands.command(name='gdrs', description='Reset someones giveaway donations')
@@ -454,7 +454,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Giveaway`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     '''
     HEIST DONATIONS
@@ -488,7 +488,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
     @commands.command(name='hda', description='Add to someones heist donations')
@@ -519,7 +519,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
     @commands.command(name='hdr', description='Remove from someones heist donations')
@@ -550,7 +550,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
     @commands.command(name='hdrs', description='Reset someones heist donations')
@@ -576,7 +576,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Heist`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     '''
     EVENT DONATIONS
@@ -610,7 +610,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
     @commands.command(name='eda', description='Add to someones event donations')
@@ -641,7 +641,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
     @commands.command(name='edr', description='Remove from someones event donations')
@@ -672,7 +672,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
     @commands.command(name='edrs', description='Reset someones event donations')
@@ -698,7 +698,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Event`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     '''
     SPECIAL EVENT
@@ -732,7 +732,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount set: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
     @commands.command(name='sda', description='Add to someones special donations')
@@ -763,7 +763,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount added: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
     @commands.command(name='sdr', description='Remove from someones special donations')
@@ -794,7 +794,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\nAmount removed: `⏣{self.beautify_numbers(amount)}`')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
     @commands.command(name='sdrs', description='Reset someones special donations')
@@ -820,7 +820,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Special`\n**AMOUNT RESET TO 0**')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     '''
     MONEY DONATIONS
@@ -855,7 +855,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount set: `⏣{amount}`', color=0x00ff00)
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Add
     @commands.command(name='mda', description='Add to someones money donations')
@@ -885,7 +885,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount added: `⏣{amount}`', color=0x00ff00)
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Remove
     @commands.command(name='mdr', description='Remove from someones money donations')
@@ -915,7 +915,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount removed: `⏣{amount}`', color=0xff0000)
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
 
     #Dono Reset
     @commands.command(name='mdrs', description='Reset someones money donations')
@@ -940,7 +940,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\n**AMOUNT RESET TO 0**', color=0xff0000)
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
-        await self.client.get_channel(854363438616936498).send(embed=embed)
+        await self.bot.get_channel(854363438616936498).send(embed=embed)
             
 def setup(bot):
     bot.add_cog(Dono(bot))

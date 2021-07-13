@@ -65,9 +65,9 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
     async def botinfo(self, ctx):
         msg = f'''
         ```asciidoc\n
-=== {self.client.user} Info ===
+=== {self.bot.user} Info ===
 
-• Latency             :: {int(self.client.latency * 1000)}ms
+• Latency             :: {int(self.bot.latency * 1000)}ms
 • Discord Version     :: {discord.__version__}
 • Python Version Info :: {sys.version}
 ```
@@ -78,7 +78,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
     #Bug
     @commands.command()
     async def bug(self, ctx, *, bug):
-        wiggle = self.client.get_user(824010269071507536)
+        wiggle = self.bot.get_user(824010269071507536)
         embed = discord.Embed(title='Bug Report', description=f'**Reporter:** {ctx.author}({ctx.author.id})\n\n{bug}', color=discord.Color.red())
         embed.timestamp = datetime.utcnow()
         await wiggle.send(embed=embed)
@@ -90,7 +90,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         embed = discord.Embed(title=f'Suggestion From {ctx.author}', description=f'**Suggestion:**\n{suggestion}')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'User id: {ctx.author.id}')
-        msg = await self.client.get_channel(827293945003376650).send(embed=embed)
+        msg = await self.bot.get_channel(827293945003376650).send(embed=embed)
         await msg.add_reaction('✔')
         await msg.add_reaction('✖')
         await ctx.send('Suggestion sent in <#827293945003376650>')

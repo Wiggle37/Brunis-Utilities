@@ -26,7 +26,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         cursor = dbase.cursor()
 
         await ctx.reply('Please send "yes" to reset all data from the before lottery and make a new one.')
-        confirm = await self.client.wait_for('message', check=check, timeout=30)
+        confirm = await self.bot.wait_for('message', check=check, timeout=30)
         if confirm.clean_content == 'yes':
             lotto = self.get_table()
             cursor.execute(f"DROP TABLE '{lotto}'")
@@ -118,7 +118,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         num = 0
 
         for i in results:
-            user = self.client.get_user(i[0])
+            user = self.bot.get_user(i[0])
             msg += f'**{user.name}**: {i[1]}\n'
             num += 1
 

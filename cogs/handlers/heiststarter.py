@@ -10,7 +10,7 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
             return message.author.id == 270904126974590976 and message.channel.id == invocation_message.channel.id and ("you're not popular enough" in message.content or "Amazing job everybody, we racked up a total of" in message.content or "for an unsuccessful robbery" in message.content)
 
         try:
-            return await self.client.wait_for('message', check=check, timeout=300)
+            return await self.bot.wait_for('message', check=check, timeout=300)
 
         except asyncio.TimeoutError:
             return None

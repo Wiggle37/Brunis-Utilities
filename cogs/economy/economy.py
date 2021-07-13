@@ -247,7 +247,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         rich_embed = discord.Embed(title="Richest People In Dank Merchants", colour=0x00ff00)
 
         embed_desc = ""
-        dank_merchants = self.client.get_guild(784491141022220309)
+        dank_merchants = self.bot.get_guild(784491141022220309)
         for rank, user_info in enumerate(richest):
             member = dank_merchants.get_member(int(user_info[1]))
             embed_desc += f"**{rank + 1}. {member}:** {self.currency.emoji} `{'{:,}'.format(user_info[0])}`\n"
@@ -790,7 +790,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             event = random.choice([True, False])
             if event:
                 await ctx.send(f"OH NO THERE WAS A WILD {random.choice(['Goose', 'Duck', 'Chicken'])} came to woop you, QUICK what do you do?\n`1.` Shoot it and have a chance of living and gettings some loot\n`2.` Run away like a baby and get nothing")
-                msg = await self.client.wait_for("message", check=check)
+                msg = await self.bot.wait_for("message", check=check)
 
                 if msg.clean_content.lower() == 'shoot':
                     action = random.choice(['hit', 'missed'])
