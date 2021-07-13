@@ -41,7 +41,7 @@ async def load_extensions():
         for fn in py_filenames:
 
             # prepares the extension to be loaded
-            ext = dirpath.replace("/", ".") + "." + fn[:-3]
+            ext = dirpath.replace("\\", ".") + "." + fn[:-3]
 
             bot.load_extension(ext)
             print(f"{ext} loaded")
