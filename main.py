@@ -7,8 +7,8 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN") 
-    
-    
+
+
 bot = commands.Bot(
     command_prefix = ["b!", "B!", "b ", "B "],
     intents = discord.Intents.all(),
@@ -28,7 +28,7 @@ async def aiohttp_sess():
 
 async def load_extensions():
     await bot.wait_until_ready()
-    
+
     # gets the path name and files in every directory
     # includes nested paths
     # only load if it"s in a directory called "cogs"
@@ -41,7 +41,7 @@ async def load_extensions():
         for fn in py_filenames:
 
             # prepares the extension to be loaded
-            ext = dirpath.replace("\\", ".") + "." + fn[:-3]
+            ext = dirpath.replace("/", ".") + "." + fn[:-3]
 
             bot.load_extension(ext)
             print(f"{ext} loaded")
