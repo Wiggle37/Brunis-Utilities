@@ -22,8 +22,7 @@ bot._BotBase__cogs = commands.core._CaseInsensitiveDict()
 
 
 # creates a global aiohttp session that can be used
-async def aiohttp_sess():
-    bot.session = aiohttp.ClientSession()
+bot.session = aiohttp.ClientSession()
 
 
 async def load_extensions():
@@ -67,6 +66,5 @@ async def bot_ready():
     await bot.wait_until_ready()
 
 bot.loop.create_task(load_extensions())
-bot.loop.create_task(aiohttp_sess())
 status.start()
 bot.run(TOKEN)
