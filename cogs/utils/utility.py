@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import sys
 from datetime import datetime
+import time
 
 class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
 
@@ -30,8 +31,13 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
 
     #Ping
     @commands.command(name='ping', description='Shows the bots current ping', aliases=['ms'])
-    async def ping(self, ctx):
-        await ctx.send(f'🏓 Current latency: `{int(self.client.latency * 1000)} ms`')
+    async def ping(self, ctx: commands.Context):
+        start = time.perf_counter()
+        message = await ctx.send("🏓 Ping...")
+        end = time.perf_counter()
+        duration = (end - start) * 1000
+
+        await message.edit(content = f"🏓 Pong! Current latency: `{duration:.2f} ms`")
 
     #Server Info
     @commands.command(name='serverinfo', description='Shows the servers info', aliases=['si', 'server'])
