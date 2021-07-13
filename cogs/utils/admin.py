@@ -35,7 +35,7 @@ class admin(commands.Cog, name = "Admin"):
             return await ctx.send("That wasn't a valid extension")
 
         # prepares the extension for loading
-        ext = ext.replace("/", ".")[:-3]
+        ext = ext.replace("\\", ".")[:-3]
 
         # loads the extension
         self.bot.load_extension(ext)
@@ -51,7 +51,7 @@ class admin(commands.Cog, name = "Admin"):
             return await ctx.send("That wasn't a valid extension")
 
         # prepares the extension for unloading
-        ext = ext.replace("/", ".")[:-3]
+        ext = ext.replace("\\", ".")[:-3]
 
         # unloads the extension
         self.bot.unload_extension(ext)
@@ -67,7 +67,7 @@ class admin(commands.Cog, name = "Admin"):
             return await ctx.send("That wasn't a valid extension")
 
         # prepares the extension for reloading
-        ext = ext.replace("/", ".")[:-3]
+        ext = ext.replace("\\", ".")[:-3]
 
         self.bot.unload_extension(ext)
         self.bot.load_extension(ext)
