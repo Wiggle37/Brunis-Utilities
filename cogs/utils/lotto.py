@@ -5,8 +5,8 @@ import sqlite3
 
 class Lottery(commands.Cog, name='lottery', description='Lottery commands for hosting lottery events'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     def get_table(self):
         dbase = sqlite3.connect('lotto.db')
@@ -128,5 +128,5 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         dbase.commit()
         dbase.close()
 
-def setup(client):
-    client.add_cog(Lottery(client))
+def setup(bot):
+    bot.add_cog(Lottery(bot))

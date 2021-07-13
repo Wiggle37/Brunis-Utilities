@@ -77,11 +77,11 @@ class bruniUtilsHelp(commands.HelpCommand):
         await ctx.send(embed = command_help)
 
 class Help(commands.Cog):
-    def __init__(self, client):
-       self.client = client
+    def __init__(self, bot):
+       self.bot = bot
        help_command = bruniUtilsHelp()
        help_command.cog = self
-       client.help_command = help_command
+       bot.help_command = help_command
 
-def setup(client):
-    client.add_cog(Help(client))
+def setup(bot):
+    bot.add_cog(Help(bot))

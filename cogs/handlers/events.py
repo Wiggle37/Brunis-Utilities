@@ -7,8 +7,8 @@ from config import *
 
 class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
         self.self_roles_channel = self.client.get_channel(784547669619507201)
 
     '''
@@ -121,5 +121,5 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
             await guild.leave()
             print('Someone got the invite link again somehow *smh*')
 
-def setup(client):
-    client.add_cog(Events(client))
+def setup(bot):
+    bot.add_cog(Events(bot))

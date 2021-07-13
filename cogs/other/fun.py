@@ -4,8 +4,8 @@ import asyncio
 
 class Fun(commands.Cog, name='fun', description='Some fun commands'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.command(name='urban', description='Find the definition to what you are searching for on the urban dictionary')
     async def urban(self, ctx, *, search: commands.clean_content):
@@ -31,5 +31,5 @@ class Fun(commands.Cog, name='fun', description='Some fun commands'):
 
             await ctx.send(f"📚 Definitions for **{result['word']}**```fix\n{definition}```")
 
-def setup(client):
-    client.add_cog(Fun(client))
+def setup(bot):
+    bot.add_cog(Fun(bot))

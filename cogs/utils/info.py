@@ -1,11 +1,10 @@
 import discord
-from discord.channel import VoiceChannel
 from discord.ext import commands
 
 class Info(commands.Cog, name='info', description='Displays some important info about the server'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     #Rules
     @commands.command(name='rules', description='Displays the rules of the server')
@@ -220,5 +219,5 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         inv_embed.set_footer(text='Last updated: 6/23/21')
         await ctx.send(embed=inv_embed)
 
-def setup(client):
-    client.add_cog(Info(client))
+def setup(bot):
+    bot.add_cog(Info(bot))

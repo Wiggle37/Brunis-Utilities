@@ -2,8 +2,8 @@ from discord.ext import commands
 import asyncio
 
 class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden=True)):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     async def get_heist_results(self, invocation_message):
         def check(message):
@@ -43,5 +43,5 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
             await msg.add_reaction('✅')
             await msg.add_reaction('❌')
         
-def setup(client):
-    client.add_cog(HeistStarter(client))
+def setup(bot):
+    bot.add_cog(HeistStarter(bot))

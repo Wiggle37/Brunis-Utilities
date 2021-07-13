@@ -4,8 +4,8 @@ import re
 import sqlite3
 
 class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the server gets bumped'):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     #Check Bumps
     @commands.command(name='bumps', description='Check the amount of successful and unsuccessful bumps you have in the server', aliases=['b', 'bump'])
@@ -113,5 +113,5 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
         dbase.commit()
         dbase.close()
 
-def setup(client):
-    client.add_cog(BumpTracker(client))
+def setup(bot):
+    bot.add_cog(BumpTracker(bot))

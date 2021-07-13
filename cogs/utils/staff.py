@@ -32,6 +32,15 @@ class Staff(commands.Cog, name = "Admin", description = "Commands only staff can
 
         purge_embed = discord.Embed(title = "Purged Messages", description = f"{amount} message(s) purged", color = 0x00ff00)
         await ctx.send(embed = purge_embed, delete_after = 1)
+    
+    @purge.error
+    async def purge_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            return await ctx.send("Message amount has to be an integer")
+
+        # All other Errors not returned come here. And we can just print the default traceBack.
+        print("Ignoring exception in command {}:".format(ctx.command), file = sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file = sys.stderr)
 
     # Lock
     @commands.command(name = "Lock", description = "Locks the current channel for @\u200beveryone")

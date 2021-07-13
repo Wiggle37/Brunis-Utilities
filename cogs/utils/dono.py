@@ -942,5 +942,5 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         embed.set_footer(text=f'Manager: {ctx.author}', icon_url='https://cdn.discordapp.com/emojis/851599382633250856.png?v=1')
         await self.client.get_channel(854363438616936498).send(embed=embed)
             
-def setup(client):
-    client.add_cog(Dono(client))
+def setup(bot):
+    bot.add_cog(Dono(bot))

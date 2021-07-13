@@ -1,13 +1,11 @@
 import discord
-from discord import message
 from discord.ext import commands
 import sqlite3
-import asyncio
 
 class Sticky(commands.Cog, name='stickys'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     #Sticky
     @commands.Cog.listener()
@@ -79,5 +77,5 @@ class Sticky(commands.Cog, name='stickys'):
         dbase.commit()
         dbase.close()
 
-def setup(client):
-    client.add_cog(Sticky(client))
+def setup(bot):
+    bot.add_cog(Sticky(bot))

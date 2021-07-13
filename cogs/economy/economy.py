@@ -19,8 +19,8 @@ from items_bruni import *
 
 class Economy(commands.Cog, name='economy', description='The servers economy system'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
         self.items = economy_items
         self.currency = currency
         self.memberConverter = commands.MemberConverter()
@@ -847,5 +847,5 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No stop fish before you are all tired out\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Economy(client))
+def setup(bot):
+    bot.add_cog(Economy(bot))

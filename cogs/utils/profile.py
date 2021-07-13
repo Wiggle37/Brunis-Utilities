@@ -6,8 +6,8 @@ from datetime import datetime
 
 class Profile(commands.Cog, name='profile', description='See your server profile'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     def get_donation(self, user):
         dbase = sqlite3.connect('dono.db')
@@ -149,5 +149,5 @@ class Profile(commands.Cog, name='profile', description='See your server profile
         embed.add_field(name='Donations', value=donations_)
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Profile(client))
+def setup(bot):
+    bot.add_cog(Profile(bot))

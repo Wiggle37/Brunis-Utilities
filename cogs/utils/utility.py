@@ -6,8 +6,8 @@ from datetime import datetime
 
 class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     #Timer
     @commands.command(name='timer', description='Set a timer for up to 1000')
@@ -89,5 +89,5 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         await msg.add_reaction('✖')
         await ctx.send('Suggestion sent in <#827293945003376650>')
 
-def setup(client):
-    client.add_cog(Utility(client))
+def setup(bot):
+    bot.add_cog(Utility(bot))

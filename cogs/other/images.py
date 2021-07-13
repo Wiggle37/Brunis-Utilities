@@ -6,8 +6,8 @@ from requests.models import Response
 
 class Images(commands.Cog, name='images', description='Get some pictures of some animals'):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     #Dog
     @commands.command(name='dog', description='Get a random picture of a dog', aliases=['doggo', 'bark', 'bork'])
@@ -79,5 +79,5 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
         embed.set_image(url=data['link'])
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Images(client))
+def setup(bot):
+    bot.add_cog(Images(bot))

@@ -8,9 +8,9 @@ from discord.ext.commands.errors import MissingRequiredArgument
 
 
 class Auction(commands.Cog, name='auction', description='Host some auctions for the server'):
-    def __init__(self, client):
-        self.client = client
-        self.auctioner_role = client.get_guild(784491141022220309).get_role(800496416740605993)
+    def __init__(self, bot):
+        self.bot = bot
+        self.auctioner_role = bot.get_guild(784491141022220309).get_role(800496416740605993)
         self.emoji = "\U0001f3e6"
         self.auction_message_id = None
         self.auction_in_progress = False

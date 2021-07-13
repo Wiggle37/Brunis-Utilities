@@ -5,8 +5,8 @@ import sqlite3
 
 class Settings(commands.Cog):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     '''
     Auto Reponses
@@ -119,5 +119,5 @@ class Settings(commands.Cog):
         dbase.commit()
         dbase.close()
 
-def setup(client):
-    client.add_cog(Settings(client))
+def setup(bot):
+    bot.add_cog(Settings(bot))
