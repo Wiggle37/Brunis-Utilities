@@ -2,6 +2,7 @@ import discord
 import aiosqlite
 from discord.ext import commands
 from datetime import datetime
+import asyncio
 
 class Dono(commands.Cog, name='donations', description='Tracks the servers donations by person'):
 
@@ -145,17 +146,18 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         cursor = await dbase.cursor()
 
         await cursor.execute(f"SELECT user_id FROM donations")
-        results = cursor.fetchall()
+        results = await cursor.fetchall()
 
         num = 0
-        dank_merchants = self.bot.get_guild(784491141022220309)
 
         for user in results:
-            member = dank_merchants.get_member(user[0])
+            member = self.dank_merchants.get_member(user[0])
             if member is None:
-                cursor.execute(f"DELETE FROM donations WHERE user_id = '{user[0]}'")
+                await cursor.execute(f"DELETE FROM donations WHERE user_id = '{user[0]}'")
                 print(f'{user[0]} was deleted from the db')
                 await ctx.send(f'{user[0]} deleted from database')
+
+                await asyncio.sleep(2.5)
 
             else:
                 pass
@@ -210,9 +212,8 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             donor_info = ""
 
             donor_info += "__**Dank Memer Donations Leader Board**__\n"
-            dank_merchants = self.bot.get_guild(784491141022220309)
             for rank, user in enumerate(dank_donors):
-                member = self.dank_merchants.get_member(user[0])
+                member = self.bot.get_user(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
@@ -231,7 +232,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
             donor_info += "__**Real Money Donations Leader Board**__\n"
             for rank, user in enumerate(money_donors):
-                member = self.dank_merchants.get_member(user[0])
+                member = self.bot.get_user(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `${'{:,}'.format(user[1])} USD`\n"
 
             top_donors_embed.description=donor_info
@@ -250,8 +251,8 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
             bumper_info += "__**Server Bumps Leader board**__\n"
             for rank, user in enumerate(bumpers):
-                member = self.dank_merchants.get_member(user[0])
-                donor_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
+                member = self.bot.get_user(user[0])
+                bumper_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
             
             top_bumpers_embed.description=bumper_info
             await dbase.close()
@@ -270,11 +271,11 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
             donor_info += "__**Special Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
-                member = self.dank_merchants.get_member(user[0])
+                member = self.bot.get_user(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
-            dbase.close()
+            await dbase.close()
             return await ctx.send(embed=top_donors_embed)
 
         if board.lower() == 'heist':
@@ -289,7 +290,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
             donor_info += "__**Heist Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
-                member = self.dank_merchants.get_member(user[0])
+                member = self.bot.get_user(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
@@ -308,26 +309,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
             donor_info += "__**Event Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
-                member = self.dank_merchants.get_member(user[0])
-                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
-
-            top_donors_embed.description=donor_info
-            await dbase.close()
-            return await ctx.send(embed=top_donors_embed)
-
-        if board.lower() == 'gaw' or board.lower() == 'givaway':
-            dbase = await aiosqlite.connect("dono.db")
-            cursor = await dbase.cursor()
-
-            await cursor.execute("SELECT user_id, gaw FROM donations ORDER BY gaw DESC")
-            special_donors = await cursor.fetchmany(10)
-
-            top_donors_embed = discord.Embed(title="Top Giveaway Donators", color=0x00ff00)
-            donor_info = ""
-
-            donor_info += "__**Giveaway Donations Leader Board**__\n"
-            for rank, user in enumerate(special_donors):
-                member = self.dank_merchants.get_member(user[0])
+                member = self.bot.get_user(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
