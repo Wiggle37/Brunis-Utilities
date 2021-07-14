@@ -22,9 +22,12 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
         days = seconds // seconds_in_day
 
         if member.guild.id == 784491141022220309:
-            if time.time() - member.created_at.timestamp() < 1814400:                    
-                dm_embed = discord.Embed(title=f'You were banned from dank merchants', description=f'You were banned because your account was too young\nYou will be unbanned when your account is over the age of 3 weeks old(21 days)\nIn the mean time you can join [this](https://discord.gg/ubtz7gK2js) server if you have anymore questions', color=0x00ff00)
-                await member.send(embed=dm_embed)
+            if time.time() - member.created_at.timestamp() < 1814400:      
+                try:              
+                    dm_embed = discord.Embed(title=f'You were banned from dank merchants', description=f'You were banned because your account was too young\nYou will be unbanned when your account is over the age of 3 weeks old(21 days)\nIn the mean time you can join [this](https://discord.gg/ubtz7gK2js) server if you have anymore questions', color=0x00ff00)
+                    await member.send(embed=dm_embed)
+                except:
+                    pass
 
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
