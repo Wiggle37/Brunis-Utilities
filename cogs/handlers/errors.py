@@ -1,11 +1,11 @@
 import discord
 import traceback
 from discord.ext import commands
-from discord.utils import get
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.dank_merchants = self.bot.get_guild(784491141022220309)
 
     @commands.command()
     async def fire(self, ctx):
@@ -43,7 +43,7 @@ class CommandErrorHandler(commands.Cog):
             if ctx.author.id in self.bot.owner_ids:
                 return await ctx.reinvoke()
             
-            role_name = [discord.utils.get(ctx.guild.roles, id = id).name for id in error.missing_roles]
+            role_name = [discord.utils.get(self.dank_merchants.roles, id = id).name for id in error.missing_roles]
             return await ctx.send(f'You are missing one of the following roles: `{", ".join(role_name)}`')
 
         if isinstance(error, commands.MissingPermissions):

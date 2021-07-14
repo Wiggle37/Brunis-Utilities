@@ -7,6 +7,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
     def __init__(self, bot):
         self.bot = bot
+        self.dank_merchants = self.bot.get_guild(784491141022220309)
 
     #Make Acc Command(Backup)
     @commands.command(hidden=True)
@@ -47,7 +48,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             return False
 
     #Get User
-    async def get_user(self, ctx, member: discord.Member=None):
+    async def get_member(self, ctx, member: discord.Member=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
         user = member or ctx.author
@@ -65,7 +66,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def get_amount(self, ctx, member: discord.Member):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
 
         member = member or ctx.author
 
@@ -175,7 +176,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         cursor = await dbase.cursor()
         user = member or ctx.author
 
-        await self.get_user(ctx, user)
+        await self.get_member(ctx, user)
 
         await cursor.execute(f"SELECT gaw, heist, event, special, total, money FROM donations WHERE user_id = '{user.id}'")
         gaw, heist, event, special, total, money = map(self.beautify_numbers, await cursor.fetchone())
@@ -203,7 +204,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             cursor = await dbase.cursor()
 
             await cursor.execute("SELECT user_id, total FROM donations ORDER BY total DESC")
-            dank_donors = cursor.fetchmany(25)
+            dank_donors = await cursor.fetchmany(25)
 
             top_donors_embed = discord.Embed(title="Top Total donors!", color=0x00ff00)
             donor_info = ""
@@ -211,8 +212,8 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             donor_info += "__**Dank Memer Donations Leader Board**__\n"
             dank_merchants = self.bot.get_guild(784491141022220309)
             for rank, user in enumerate(dank_donors):
-                '''member = dank_merchants.get_member(int(user[0]))'''
-                donor_info += f"**{rank + 1}. <@{user[0]}>**: `⏣{'{:,}'.format(user[1])}`\n"
+                member = self.dank_merchants.get_member(user[0])
+                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
             await dbase.close()
@@ -223,15 +224,15 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             cursor = await dbase.cursor()
 
             await cursor.execute("SELECT user_id, money FROM donations ORDER BY money DESC")
-            money_donors = cursor.fetchmany(5)
+            money_donors = await cursor.fetchmany(5)
 
             top_donors_embed = discord.Embed(title="Top Money Donators", color=0x00ff00)
             donor_info = ""
 
             donor_info += "__**Real Money Donations Leader Board**__\n"
             for rank, user in enumerate(money_donors):
-                member = ctx.guild.get_member(int(user[0]))
-                donor_info += f"**{rank + 1}. {member}**: `${'{:,}'.format(user[1])}`\n"
+                member = self.dank_merchants.get_member(user[0])
+                donor_info += f"**{rank + 1}. {member}**: `${'{:,}'.format(user[1])} USD`\n"
 
             top_donors_embed.description=donor_info
             await dbase.close()
@@ -242,16 +243,15 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             cursor = await dbase.cursor()
 
             await cursor.execute("SELECT user_id, bump FROM bumps ORDER BY bump DESC")
-            bumpers = cursor.fetchmany(10)
+            bumpers = await cursor.fetchmany(10)
 
             top_bumpers_embed = discord.Embed(title="Top Bumpers", color=0x00ff00)
             bumper_info = ""
 
             bumper_info += "__**Server Bumps Leader board**__\n"
-            dank_merchants = self.bot.get_guild(784491141022220309)
             for rank, user in enumerate(bumpers):
-                member = dank_merchants.get_member(int(user[0]))
-                bumper_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
+                member = self.dank_merchants.get_member(user[0])
+                donor_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
             
             top_bumpers_embed.description=bumper_info
             await dbase.close()
@@ -263,14 +263,14 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             cursor = await dbase.cursor()
 
             await cursor.execute("SELECT user_id, special FROM donations ORDER BY special DESC")
-            special_donors = cursor.fetchmany(10)
+            special_donors = await cursor.fetchmany(10)
 
             top_donors_embed = discord.Embed(title="Top Special Donators", color=0x00ff00)
             donor_info = ""
 
             donor_info += "__**Special Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
-                member = ctx.guild.get_member(int(user[0]))
+                member = self.dank_merchants.get_member(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
@@ -282,14 +282,14 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             cursor = await dbase.cursor()
 
             await cursor.execute("SELECT user_id, heist FROM donations ORDER BY heist DESC")
-            special_donors = cursor.fetchmany(10)
+            special_donors = await cursor.fetchmany(10)
 
             top_donors_embed = discord.Embed(title="Top Heist Donators", color=0x00ff00)
             donor_info = ""
 
             donor_info += "__**Heist Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
-                member = ctx.guild.get_member(int(user[0]))
+                member = self.dank_merchants.get_member(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
@@ -301,14 +301,14 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             cursor = await dbase.cursor()
 
             await cursor.execute("SELECT user_id, event FROM donations ORDER BY event DESC")
-            special_donors = cursor.fetchmany(10)
+            special_donors = await cursor.fetchmany(10)
 
             top_donors_embed = discord.Embed(title="Top Event Donators", color=0x00ff00)
             donor_info = ""
 
             donor_info += "__**Event Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
-                member = ctx.guild.get_member(int(user[0]))
+                member = self.dank_merchants.get_member(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
@@ -320,14 +320,14 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             cursor = await dbase.cursor()
 
             await cursor.execute("SELECT user_id, gaw FROM donations ORDER BY gaw DESC")
-            special_donors = cursor.fetchmany(10)
+            special_donors = await cursor.fetchmany(10)
 
             top_donors_embed = discord.Embed(title="Top Giveaway Donators", color=0x00ff00)
             donor_info = ""
 
             donor_info += "__**Giveaway Donations Leader Board**__\n"
             for rank, user in enumerate(special_donors):
-                member = ctx.guild.get_member(int(user[0]))
+                member = self.dank_merchants.get_member(user[0])
                 donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
 
             top_donors_embed.description=donor_info
@@ -343,7 +343,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def gaw_dono_set(self, ctx, member: discord.Member, amount: str):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -374,7 +374,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -405,7 +405,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -436,7 +436,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def gaw_dono_reset(self, ctx, member: discord.Member):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
 
         await cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [member.id, 0, 0])
         await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
@@ -465,7 +465,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def heist_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -496,7 +496,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def heist_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -527,7 +527,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -558,7 +558,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def heist_dono_reset(self, ctx, member: discord.Member):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
 
         await cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist = ?;", [member.id, 0, 0])
         await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
@@ -587,7 +587,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def event_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -618,7 +618,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def event_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -649,7 +649,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def event_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -680,7 +680,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def event_dono_reset(self, ctx, member: discord.Member):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
 
         await cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event = ?;", [member.id, 0, 0])
         await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
@@ -709,7 +709,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -740,7 +740,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def special_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -771,7 +771,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def special_dono_remove(self, ctx, member: discord.Member, amount: str):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -802,7 +802,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def special_dono_reset(self, ctx, member: discord.Member):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
 
         await cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special = ?;", [member.id, 0, 0])
         await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
@@ -831,7 +831,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -863,7 +863,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -893,7 +893,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
@@ -923,7 +923,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     async def money_dono_reset(self, ctx, member: discord.Member):
         dbase = await aiosqlite.connect('dono.db')
         cursor = await dbase.cursor()
-        await self.get_user(ctx, member)
+        await self.get_member(ctx, member)
 
         await cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money = ?;", [member.id, 0, 0])
         await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
