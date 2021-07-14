@@ -23,7 +23,7 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
         if not "is starting a bank robbery" in message.content:
             return
         
-        await message.channel.set_permissions(message.guild.default_role, send_messages = True)
+        await message.channel.set_permissions(message.guild.default_role, send_messages = None)
         await message.channel.edit(slowmode_delay = 6000)
         await message.channel.send("Good luck bank robbing this person! <a:rainbowheart:792504452900323329>")
 

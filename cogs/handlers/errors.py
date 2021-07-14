@@ -1,10 +1,15 @@
 import discord
 import traceback
 from discord.ext import commands
+from discord.utils import get
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command()
+    async def fire(self, ctx):
+        await ctx.send('fire pog')
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -14,16 +19,11 @@ class CommandErrorHandler(commands.Cog):
         # If nothing is found. We keep the exception passed to on_command_error.
         error = getattr(error, "original", error)
 
-        ignored = (commands.BadArgument, commands.CommandOnCooldown, commands.CheckFailure)
-
-        if isinstance(error, ignored):
-            return
-
         if isinstance(error, commands.CommandNotFound):
             return await ctx.send(f"The command `{ctx.message.content}` is not found")
 
         if isinstance(error, commands.MemberNotFound):
-            return await ctx.send(f"The member was not found")
+            return await ctx.send(f"The member provided was not found")
 
         if isinstance(error, commands.MissingRequiredArgument):
             return await ctx.send(f"You are missing the `{error.param.name}` argument in the command\n```b!{ctx.command} {ctx.command.signature}```")
@@ -38,28 +38,18 @@ class CommandErrorHandler(commands.Cog):
         if isinstance(error, commands.RoleNotFound):
             return await ctx.send(f"The role provided was not found")
 
-
-        if isinstance(error, (commands.MissingRole, commands.MissingAnyRole)):
+        if isinstance(error, commands.MissingAnyRole):
             # allows owners to bypass checking for roles
             if ctx.author.id in self.bot.owner_ids:
                 return await ctx.reinvoke()
+            
+            role_name = [discord.utils.get(ctx.guild.roles, id = id).name for id in error.missing_roles]
+            return await ctx.send(f'You are missing one of the following roles: `{", ".join(role_name)}`')
 
-            # ensures that role_ids will be a list
-            role_ids = [getattr(error, "missing_role")] or getattr(error, "missing_roles")
+        if isinstance(error, commands.MissingPermissions):
+            pass
 
-            # gets the names of each role
-            role_name = [discord.utils.get(ctx.guild.roles, id = id).name for id in role_ids]
-
-            return await ctx.send(f"You are missing any of these roles to run a command: `{', '.join(role_name)}`")
-
-
-        if isinstance(error , commands.MissingPermissions):
-            # formats the perms properly
-            perm_names = map(lambda p: p.replace('_', ' ').replace('guild', 'server').title(), error.missing_perms)
-
-            return await ctx.send(f"You are these permissions to run this command: {', '.join(perm_names)}")
-
-        # else, we send the error to a debug channel
+        # if none of the above we send to a debug channel
         tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
 
         debug = self.bot.get_channel(844759955815006222)
