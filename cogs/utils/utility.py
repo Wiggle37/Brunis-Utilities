@@ -10,7 +10,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
     def __init__(self, bot):
         self.bot = bot
 
-    #Timer
+    # Timer
     @commands.command(name='timer', description='Set a timer for up to 1000')
     async def count(self, ctx, number: int):
         try:
@@ -29,7 +29,13 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         except ValueError:
             await ctx.send('Please provide a valid number')
 
-    #Ping
+    # Account Age
+    @commands.command(name='date', description='Find out the date that your account was created')
+    async def date(self, ctx, member: discord.Member=None):
+        member = member or ctx.author
+        return await ctx.send(f'{member}\'s account was created on: <t:{int(member.created_at.timestamp())}:f>, <t:{int(member.created_at.timestamp())}:R>')
+
+    # Ping
     @commands.command(name='ping', description='Shows the bots current ping', aliases=['ms'])
     async def ping(self, ctx: commands.Context):
         start = time.perf_counter()
@@ -39,7 +45,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
 
         await message.edit(content = f"🏓 Pong! Current latency: `{duration:.2f} ms`")
 
-    #Server Info
+    # Server Info
     @commands.command(name='serverinfo', description='Shows the servers info', aliases=['si', 'server'])
     async def serverinfo(self, ctx):
         members = 0
@@ -60,7 +66,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         info_embed.add_field(name='Total Member Count', value=total)
         await ctx.send(embed=info_embed)
 
-    #Bot Info
+    # Bot Info
     @commands.command()
     async def botinfo(self, ctx):
         msg = f'''
@@ -75,7 +81,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
 
         await ctx.send(msg)
 
-    #Bug
+    # Bug
     @commands.command()
     async def bug(self, ctx, *, bug):
         wiggle = self.bot.get_user(824010269071507536)
@@ -84,7 +90,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         await wiggle.send(embed=embed)
         await ctx.send('Bug sent!')
     
-    #Suggest
+    # Suggest
     @commands.command()
     async def suggest(self, ctx, *, suggestion):
         embed = discord.Embed(title=f'Suggestion From {ctx.author}', description=f'**Suggestion:**\n{suggestion}')
