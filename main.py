@@ -7,8 +7,8 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN") 
-
-
+    
+    
 bot = commands.Bot(
     command_prefix = ["b!", "B!", "b ", "B "],
     intents = discord.Intents.all(),
@@ -22,13 +22,13 @@ bot._BotBase__cogs = commands.core._CaseInsensitiveDict()
 
 
 # creates a global aiohttp session that can be used
-async def aiohttp_sess():
+async def aiohttp_session():
     bot.session = aiohttp.ClientSession()
 
 
 async def load_extensions():
     await bot.wait_until_ready()
-
+    
     # gets the path name and files in every directory
     # includes nested paths
     # only load if it"s in a directory called "cogs"
@@ -67,6 +67,6 @@ async def bot_ready():
     await bot.wait_until_ready()
 
 bot.loop.create_task(load_extensions())
-bot.loop.create_task(aiohttp_sess())
+bot.loop.create_task(aiohttp_session())
 status.start()
 bot.run(TOKEN)

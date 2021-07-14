@@ -22,7 +22,7 @@ class Settings(commands.Cog):
         exist = cursor.fetchone()
         if exist is None:
             cursor.execute(f"INSERT INTO text (trigger) VALUES (?) ON CONFLICT(trigger) DO UPDATE SET trigger = ?", [trigger, trigger])
-            cursor.execute(f"UPDATE reactions SET response = ? WHERE trigger == '{trigger}'", [response])
+            cursor.execute(f"UPDATE text SET response = ? WHERE trigger == '{trigger}'", [response])
 
             await ctx.send(f'A new Trigger has been added with the following information:\nTrigger: {trigger}\nResponse: {response}')
 
