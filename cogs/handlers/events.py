@@ -3,7 +3,6 @@ from discord.ext import commands
 import sqlite3
 import time
 
-
 from config import *
 
 class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
@@ -12,20 +11,12 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
         self.bot = bot
         self.self_roles_channel = self.bot.get_channel(784547669619507201)
 
-    @commands.command(name='date', description='Find out the date that your account was created')
-    async def date(self, ctx):
-        return await ctx.send(f'<t:{int(ctx.author.created_at.timestamp())}>')
-
     '''
     MEMBER EVENTS
     '''
     #On Member Join(Message(Add Data Base))
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        seconds = time.time() - member.created_at.timestamp()
-        seconds_in_day = 60 * 60 * 24
-        days = seconds // seconds_in_day
-
         if member.guild.id == 784491141022220309:
             if time.time() - member.created_at.timestamp() < 1814400:      
                 try:              
@@ -36,7 +27,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
-                await self.bot.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made <t:{member.created_at.timestamp()}')
+                await self.bot.get_channel(784491141022220312).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made <t:{int(member.created_at.timestamp())}, <t:{int(member.created_at.timestamp())}:R>')
 
             else:
                 ping_message = await self.self_roles_channel.send(member.mention)
@@ -48,8 +39,8 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 except:
                     pass
                 members_count = 0
-                for member_ in member.guild.member_count:
-                    if not member_.bot:
+                for i in member.guild.members:
+                    if not i.bot:
                         members_count += 1
                     else:
                         pass
@@ -62,7 +53,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                     join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'{member.mention}\n**{member}** has joined the server!', color=0x00ff00)
                     join_embed.set_thumbnail(url=member.avatar_url)
                     join_embed.add_field(name='What To Do', value=f'Make sure to go check out <#787343840108478474> for the rules in the server and all the perks\n\nAnd if you have any questions go wait for someone in <#787761394664996865> and ask your question and staff will be there as soon as possible!')
-                    join_embed.add_field(name=f'__**More Info:**__', value=f'Date Created: <t:{int(member.created_at.timestamp())}> days ago\nUser ID: {member.id}\nMember Count: {members_count} humans', inline=False)
+                    join_embed.add_field(name=f'__**More Info:**__', value=f'Date Created: <t:{int(member.created_at.timestamp())}:f>\nUser ID: {member.id}\nMember Count: {members_count} humans', inline=False)
                     await self.bot.get_channel(784491141022220312).send(embed=join_embed)
         
         else:
