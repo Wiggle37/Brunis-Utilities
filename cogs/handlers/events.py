@@ -3,7 +3,6 @@ from discord.ext import commands
 import sqlite3
 import time
 
-from discord.ext.commands.core import command
 
 from config import *
 
@@ -13,8 +12,8 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
         self.bot = bot
         self.self_roles_channel = self.bot.get_channel(784547669619507201)
 
-    @commands.command(name='eee')
-    async def eee(self, ctx):
+    @commands.command(name='date', description='Find out the date that your account was created')
+    async def date(self, ctx):
         return await ctx.send(f'<t:{int(ctx.author.created_at.timestamp())}>')
 
     '''
