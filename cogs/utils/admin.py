@@ -32,7 +32,8 @@ class admin(commands.Cog, name = "Admin"):
     @commands.command()
     @commands.is_owner()
     async def test(self, ctx):
-        await ctx.send(CONFIG["blacklistedchannels"])
+        test = CONFIG["config"]["info"]["ids"]["merchants_id"]
+        await ctx.send(test)
 
     # Load
     @commands.command()
