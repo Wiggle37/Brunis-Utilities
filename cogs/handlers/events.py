@@ -56,7 +56,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                     join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'{member.mention}\n**{member}** has joined the server!', color=0x00ff00)
                     join_embed.set_thumbnail(url=member.avatar_url)
                     join_embed.add_field(name='__**What To Do:**__', value=f'Channels:\n<#787343840108478474> ➞ Read the rules of Dank Merchants\n<#784547669619507201> ➞ Get some self roles\n<#863437182131503134> ➞ Check out our amazing grinder perks\n\nAnd any other questions may be asked in <#787761394664996865>')
-                    join_embed.add_field(name=f'__**More Info:**__', value=f'Date Created: <t:{int(member.created_at.timestamp())}:f>\nUser ID: {member.id}\nMember Count: {members_count} humans', inline=False)
+                    join_embed.add_field(name=f'__**More Info:**__', value=f'Account Creation: {member.created_at.year} year(s), {member.created_at.month} month(s), {member.created_at.day} day(s) ago | {member.created_at.day()} <t:{int(member.created_at.timestamp())}:f>\nUser ID: {member.id}\nMember Count: {members_count} humans', inline=False)
                     await self.general.send(embed=join_embed)
         
         else:
