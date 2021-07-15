@@ -1,6 +1,10 @@
 import discord
 import traceback
 from discord.ext import commands
+import traceback
+from discord.ext.commands import errors
+
+from discord.ext.commands.errors import BadArgument, CheckFailure
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
@@ -14,6 +18,12 @@ class CommandErrorHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         error = getattr(error, "original", error)
+        '''
+        ignored = (commands.BadArgument, commands.CheckFailure, commands.CommandOnCooldown)
+
+        if isinstance(error, ignored):
+            return
+        '''
 
         if isinstance(error, commands.CommandNotFound):
             return await ctx.send(f"The command `{ctx.message.content}` is not found")
@@ -35,24 +45,25 @@ class CommandErrorHandler(commands.Cog):
             return await ctx.send(f"The role provided was not found")
 
         if isinstance(error, commands.MissingAnyRole):
-            # allows owners to bypass checking for roles
             if ctx.author.id in self.bot.owner_ids:
+                await ctx.send('Your command was reinvoked because you are a bot dev.')
                 return await ctx.reinvoke()
             
             role_name = [discord.utils.get(self.dank_merchants.roles, id = id).name for id in error.missing_roles]
             return await ctx.send(f'You are missing one of the following roles: `{", ".join(role_name)}`')
 
         if isinstance(error, commands.MissingPermissions):
-            pass
+            if ctx.author.id in self.bot.owner_ids:
+                await ctx.send('Your command was reinvoked because you are a bot dev.')
+                return await ctx.reinvoke()
+
+            return await ctx.send(f'You are missing the following permission to run this command: `{error.missing_perms}`')
 
         # if none of the above we send to a debug channel
         tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
-
         debug = self.bot.get_channel(844759955815006222)
-
         # splits the value into strings less than 2000 chars, in case the tb is long
         tb_split = [tb[i:i+1990] for i in range(0, len(tb), 1990)]
-
         # sends each one
         for info in tb_split:
             await debug.send(f"```py\n{info}\n```")    

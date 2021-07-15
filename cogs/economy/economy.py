@@ -10,8 +10,6 @@ import sqlite3
 import random
 from datetime import datetime
 from itertools import islice
-import traceback
-import sys
 import typing
 
 from config import economysettings
@@ -151,6 +149,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     '''
     # Multi
     @commands.command(name='multi', description='Get your current bot multi in the economy system')
+    @economysettings.economycheck()
     async def multi(self, ctx):
         multi = multis.get_multi(ctx.author.id)
         await ctx.send(f'Your curent multiplier is: **{float(multi * 100)}%**')
@@ -159,10 +158,6 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     @commands.command(name='balance', description='Get your current balance in the economy system', aliases=['bal', 'money'])
     @economysettings.economycheck()
     async def balance(self, ctx, member: discord.Member = None):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-               
         user = member or ctx.author
         
         amount = self.currency.get_amount(user.id)
@@ -171,13 +166,10 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         
     # Rich
     @commands.command(name='rich', description='Get the richest people in the bot', aliases=['lb'])
+    @economysettings.economycheck()
     async def rich(self, ctx):
         dbase = sqlite3.connect("economy.db")
         cursor = dbase.cursor()
-
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
 
         cursor.execute("SELECT balance, user_id FROM economy ORDER BY balance DESC")
         richest = cursor.fetchmany(10)
@@ -197,15 +189,10 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
     # Inventory
     @commands.command(name='inventory', description='See what you or someone else has in their inventory', aliases=["inv"])
+    @economysettings.economycheck()
     async def inventory(self, ctx, member: typing.Optional[discord.Member] = None, page: typing.Optional[int] = 1):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         item_limit_per_page = 5
-
         user = member or ctx.author
-
         inv_embed = discord.Embed(title = f"{user.name}’s Inventory" ,colour = 0x00ff00)
 
         user_items = self.items.copy()
@@ -231,11 +218,8 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
     # Shop
     @commands.command(name='shop', description='See whats in the shop for you to buy', aliases = ["store"])
+    @economysettings.economycheck()
     async def shop(self, ctx, page: typing.Optional[int], *, item_name = None):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         if page is None and item_name is None:
             return await self.shop(ctx, 1)
 
@@ -281,12 +265,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
     # Buy
     @commands.command(name='buy', description='Buy an item from the shop', aliases=['purchase'])
+    @economysettings.economycheck()
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def buy(self, ctx, count: int, *, item_name):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-            
         if count <= 0:
             return await ctx.send("You need to key in an valid amount, dummy")       
 
@@ -315,12 +296,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
        
     # Sell
     @commands.command(name='sell', description="Sell off some of the items you don't want anymore")
+    @economysettings.economycheck()
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def sell(self, ctx, count: int, *, item_name):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         if count <= 0:
             return await ctx.send("You need to key in an valid amount, dummy")       
 
@@ -349,12 +327,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     
     # Use
     @commands.command(name='use', description='Use some of your items, you might even get something from it, who knows')
+    @economysettings.economycheck()
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def use(self, ctx, count: typing.Optional[int] = 1, *, item_name):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         if count <= 0:
             return await ctx.send("You can’t use that number of items, dummy")
 
@@ -382,21 +357,14 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
         if isinstance(error, commands.errors.MissingRequiredArgument):
             return await ctx.send("It's `b!use (amount) <item>`")
-        
-        # print any other error
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     '''
     Giving
     '''
     # Give
     @commands.command(name='give', description='Give someone some money because why not', aliases=['share'])
+    @economysettings.economycheck()
     async def give(self, ctx, member: discord.Member, amount: int):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         if member == ctx.author:
             return await ctx.send("Why would you want to give yourself money?")
         
@@ -421,11 +389,8 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     
     # Gift
     @commands.command(name='gift', description='Gift some items to someone', aliases=['yeet', 'throw', 'chuck'])
+    @economysettings.economycheck()
     async def gift(self, ctx, count: int, *item_and_member):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         if item_and_member == () or len(item_and_member) < 2:
             return await ctx.send("It's `b!gift <amount> <item> <user>`")
         
@@ -457,21 +422,15 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     async def gift_error(self, ctx, error):
         if isinstance(error, BadArgument):
             return await ctx.send("You have to type in a number of items you want to give")
-        
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     '''
     Money Making
     '''
     # Beg
     @commands.command(name='beg', description='Beg for some money from the people of the server')
+    @economysettings.economycheck()
     @commands.cooldown(1, 35, commands.BucketType.user)
     async def beg(self, ctx):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         amount = random.randint(100, 1000)
         names = [
             'Lily',
@@ -507,12 +466,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     
     # Bet
     @commands.command(name='bet', description='Risk your money to possibly win some more money', aliases=['gamble'])
+    @economysettings.economycheck()
     @commands.cooldown(1, 8, commands.BucketType.user)
     async def bet(self, ctx, bet):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         if bet.lower() == "max" or bet.lower() == "all":
             return await self.bet(ctx, str(min(500000, self.currency.get_amount(ctx.author.id))))
 
@@ -552,12 +508,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
     # Slots
     @commands.command(name='slots', description='Throw some money in the slots machine and hope for the best')
+    @economysettings.economycheck()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def slots(self, ctx, bet = None):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         if bet.lower() == "max" or bet.lower() == "all":
             return await self.slots(ctx, str(min(100000, self.currency.get_amount(ctx.author.id))))
 
@@ -616,15 +569,11 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'If I let you go now you wouldnt have much money\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
-    
     # Work
     @commands.command(name='work', description='Work to get some rare items')
+    @economysettings.economycheck()
     @commands.cooldown(1, 600, commands.BucketType.user)
     async def work(self, ctx):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         response = 'You got some stuff for working:'
         possible_items = [
             dukesBadge,
@@ -651,12 +600,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     
     # Dig
     @commands.command(name='dig', description='Go digging and maybe find some cool relics')
+    @economysettings.economycheck()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def dig(self, ctx):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         shovelcheck = shovel.get_item_count(ctx.author.id)
         if shovelcheck < 1:
             await ctx.send('You need to buy a shovel to do this, run the command `b!buy 1 shovel`')
@@ -679,12 +625,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
     # Chop
     @commands.command(name='chop', description='Go chop down some trees to get some wood')
+    @economysettings.economycheck()
     @commands.cooldown(1, 15, BucketType.user)
     async def chop(self, ctx):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         axecheck = axe.get_item_count(ctx.author.id)
         if axecheck < 1:
             await ctx.send('You still need to buy an an axe, to do that run the command `b!buy 1 axe`')
@@ -703,12 +646,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
     # Hunt
     @commands.command(name='hunt', description="Go hunting, but beware some animals arent as friendly as you would think")
+    @economysettings.economycheck()
     @commands.cooldown(1, 15, BucketType.user)
     async def hunt(self, ctx):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         def check(m):
             return m.content == "hello" and m.channel == m.channel
 
@@ -754,12 +694,9 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
     # Fish
     @commands.command(name='fish', description='Go fishing so you will have some food on the table tonight')
+    @economysettings.economycheck()
     @commands.cooldown(1, 15, BucketType.user)
     async def fish(self, ctx):
-        channel = await self.no_general(ctx)
-        if channel:
-            return await ctx.send("Please don't use commands here please go to <#830867486769283072> instead")
-
         rodcheck = fishingRod.get_item_count(ctx.author.id)
         if rodcheck < 1:
             await ctx.send("Buy a fishing rob by running the command: `b!buy 1 pole`")

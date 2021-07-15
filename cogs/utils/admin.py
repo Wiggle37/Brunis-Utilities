@@ -6,6 +6,8 @@ import traceback
 import io
 import os
 
+from config import *
+
 class admin(commands.Cog, name = "Admin"):
     def __init__(self, bot):
         self.bot = bot
@@ -24,6 +26,13 @@ class admin(commands.Cog, name = "Admin"):
                 return str(path)
         
         return None
+
+    # Test | put whatever you want here to test
+    @commands.command()
+    @commands.is_owner()
+    async def test(self, ctx):
+        test = economysettings.banned(ctx.author.id)
+        await ctx.send(test)
 
     # Load
     @commands.command()

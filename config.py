@@ -78,7 +78,7 @@ class economysettings:
     def economycheck():
         async def predicate(ctx):
             return ctx.channel.id not in channels \
-                and economysettings.banned(ctx.author.id) is None
+                and economysettings.banned(ctx.author.id) is False
         return commands.check(predicate)
 
 class heistmode:
