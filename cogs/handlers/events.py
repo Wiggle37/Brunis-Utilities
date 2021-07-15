@@ -53,9 +53,9 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                     await self.general.send(f'{member.mention} has joined the server around a heist time, when the heist starts you may join! <#822567848400388106>')
 
                 if heist is not True:
-                    join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'{member.mention}\n**{member}** has joined the server!', color=0x00ff00)
+                    join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member.mention}** has joined the server!', color=0x00ff00)
                     join_embed.set_thumbnail(url=member.avatar_url)
-                    join_embed.add_field(name='__**What To Do:**__', value=f'Channels:\n<#787343840108478474> ➞ Read the rules of Dank Merchants\n<#784547669619507201> ➞ Get some self roles\n<#863437182131503134> ➞ Check out our amazing grinder perks\n\nAnd any other questions may be asked in <#787761394664996865>')
+                    join_embed.add_field(name='__**What To Do:**__', value=f'<#787343840108478474> ➞ Read the rules of Dank Merchants\n<#784547669619507201> ➞ Get some self roles\n<#863437182131503134> ➞ Check out our amazing grinder perks\n\nAnd any other questions may be asked in <#787761394664996865>')
                     join_embed.add_field(name=f'__**More Info:**__', value=f'Account Creation: <t:{int(member.created_at.timestamp())}:f>\nUser ID: {member.id}\nMember Count: {members_count} humans', inline=False)
                     await self.general.send(embed=join_embed)
         
