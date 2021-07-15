@@ -25,6 +25,7 @@ class admin(commands.Cog, name = "Admin"):
         
         return None
 
+    # Load
     @commands.command()
     @commands.is_owner()
     async def load(self, ctx: commands.Context, extension: str):
@@ -41,6 +42,7 @@ class admin(commands.Cog, name = "Admin"):
         self.bot.load_extension(ext)
         await ctx.send(f'Loaded **{ext}**')
 
+    # Unload
     @commands.command()
     @commands.is_owner()
     async def unload(self, ctx: commands.Context, extension: str):
@@ -57,6 +59,7 @@ class admin(commands.Cog, name = "Admin"):
         self.bot.unload_extension(ext)
         await ctx.send(f'Unloaded **{ext}**')
 
+    # Reload
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx: commands.Context, extension: str):
@@ -73,6 +76,7 @@ class admin(commands.Cog, name = "Admin"):
         self.bot.load_extension(ext)
         await ctx.send(f'Reloaded **{ext}**')
 
+    # Refresh
     @commands.command()
     @commands.is_owner()
     async def refresh(self, ctx: commands.Context):
@@ -104,6 +108,7 @@ class admin(commands.Cog, name = "Admin"):
 
         return content.strip('` \n')
 
+    # Eval
     @commands.is_owner()
     @commands.command()
     async def eval(self, ctx, *, body):        
