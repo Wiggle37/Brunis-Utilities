@@ -5,10 +5,49 @@ import sys
 from datetime import datetime
 import time
 
+import psutil
+import sys
+import discord
+import math
+
 class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
 
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command(name='botinfo', description='Get some info on the bot')
+    async def botinfo(self, ctx):
+        def natural_size(size_in_bytes: int):
+            # turns the number of bytes into readable info
+            units = ('B', 'KB', 'MB', 'GB', 'TB')
+
+            power = int(math.log(size_in_bytes, 1024))
+
+            return f"{size_in_bytes / (1024 ** power):.2f} {units[power]}"
+
+        info = ["asciidoc\n" ,
+                f"=== {self.bot.user} Info === \n" ,
+                f"• Latency                          :: {int(self.bot.latency * 1000)}ms\n" ,
+                f"• Discord.py Module Version        :: {discord.__version__}\n" ,
+                f"• Python Version Info              :: {sys.version}\n"]
+
+        # gets the current process
+        proc = psutil.Process()
+
+        # a context manager to speed up getting values we need
+        with proc.oneshot():
+            mem = proc.memory_full_info()
+            info.append(f"• Physical memory                  :: {natural_size(mem.rss)}\n")
+            info.append(f"• Virtual memory                   :: {natural_size(mem.vms)}\n")
+            info.append(f"• Unique memory to this process    :: {natural_size(mem.uss)}\n")
+            
+            name = proc.name()
+            pid = proc.pid
+            thread_count = proc.num_threads()
+
+            info.append(f"• Running on PID {pid} ({name}) with {thread_count} thread(s).\n")
+
+        await ctx.send(f'```{" ".join(info)}```')
 
     # Timer
     @commands.command(name='timer', description='Set a timer for up to 1000')
@@ -38,10 +77,11 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
     # Ping
     @commands.command(name='ping', description='Shows the bots current ping', aliases=['ms'])
     async def ping(self, ctx: commands.Context):
-        start = time.perf_counter()
-        message = await ctx.send("🏓 Ping...")
-        end = time.perf_counter()
-        duration = (end - start) * 1000
+        async with ctx.typing():
+            start = time.perf_counter()
+            message = await ctx.send("🏓 Ping...")
+            end = time.perf_counter()
+            duration = (end - start) * 1000
 
         await message.edit(content = f"🏓 Pong! Current latency: `{duration:.2f} ms`")
 
@@ -65,21 +105,6 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         info_embed.add_field(name='Server Human Count', value=members)
         info_embed.add_field(name='Total Member Count', value=total)
         await ctx.send(embed=info_embed)
-
-    # Bot Info
-    @commands.command()
-    async def botinfo(self, ctx):
-        msg = f'''
-        ```asciidoc\n
-=== {self.bot.user} Info ===
-
-• Latency             :: {int(self.bot.latency * 1000)}ms
-• Discord Version     :: {discord.__version__}
-• Python Version Info :: {sys.version}
-```
-        '''
-
-        await ctx.send(msg)
 
     # Bug
     @commands.command()
