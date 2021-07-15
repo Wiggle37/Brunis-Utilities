@@ -48,7 +48,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                     else:
                         pass
 
-                if CONFIG["heistmode"] is True:
+                if CONFIG["config"]["settings"]["heistmode"] is True:
                     await self.general.send(f'{member.mention} has joined the server around a heist time, when the heist starts you may join! <#822567848400388106>')
 
                 elif CONFIG["heistmode"] is not True:
