@@ -14,7 +14,6 @@ bot = commands.Bot(
     intents = discord.Intents.all(),
     case_insensitive = True,
     owner_ids = {531317158530121738, 824010269071507536,  737020572906684556},
-    status = discord.Status.dnd
 )
 
 # case insensitive help command for cogs 
@@ -60,7 +59,7 @@ async def on_ready():
 @tasks.loop(seconds = 60)
 async def status():
     memberCount = sum(guild.member_count for guild in bot.guilds)
-    await bot.change_presence(activity = discord.Activity(type = discord.ActivityType.watching, name = f"Over {memberCount} people"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Over {memberCount} people"), status = discord.Status.dnd)
 
 @status.before_loop
 async def bot_ready():
