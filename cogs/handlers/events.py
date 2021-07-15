@@ -16,7 +16,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     '''
     MEMBER EVENTS
     '''
-    #On Member Join(Message(Add Data Base))
+    # On Member Join(Message)
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.guild.id == 784491141022220309:
@@ -61,6 +61,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
         else:
             return
 
+    # Text Response
     @commands.Cog.listener("on_message")
     async def text_response(self, message):
         dbase = sqlite3.connect('autoresponse.db')
@@ -82,6 +83,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 except:
                     pass
         
+    # Emoji Reaction
     @commands.Cog.listener("on_message")
     async def emoji_react(self, message):
         dbase = sqlite3.connect('autoresponse.db')
@@ -106,11 +108,11 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
-        if str(self.bot.user.id) in message.content and not message.author.bot:
+        if str(self.bot.user.mention) in message.content and not message.author.bot:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
 
-    #Other Server Prevention
+    # Other Server Prevention
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         guilds = [

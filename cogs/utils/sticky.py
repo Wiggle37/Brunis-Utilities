@@ -7,7 +7,7 @@ class Sticky(commands.Cog, name='stickys'):
     def __init__(self, bot):
         self.bot = bot
 
-    #Sticky
+    # Sticky
     @commands.Cog.listener()
     async def on_message(self, message):
         dbase = sqlite3.connect('stickys.db')
@@ -28,6 +28,7 @@ class Sticky(commands.Cog, name='stickys'):
 
         dbase.close()
 
+    # Add Sticky
     @commands.command(name='add_sticky', description='Add a stickied message to a channel')
     @commands.has_any_role(785202756641619999, 788738305365114880, 784492058756251669, 788738308879941633) # Bruni, Co-Owner, Admin, Bot Dev
     async def add_sticky(self, ctx):

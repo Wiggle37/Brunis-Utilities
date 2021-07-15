@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import io
 import aiohttp
 import requests
 from requests.models import Response
@@ -9,9 +10,18 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
     def __init__(self, bot):
         self.bot = bot
 
-    #Dog
+    # Dog
     @commands.command(name='dog', description='Get a random picture of a dog', aliases=['doggo', 'bark', 'bork'])
     async def dog(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            async with session.get('https://some-random-api.ml/img/dog') as resp:
+                if resp.status != 200:
+                    return await ctx.send('Could not download file...')
+                data = io.BytesIO(await resp.read())
+                await ctx.send(file=discord.File(data, 'dog.png'))
+
+
+
         response = requests.get('https://some-random-api.ml/img/dog')
         data = response.json()
 
@@ -19,7 +29,7 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
         embed.set_image(url=data['link'])
         await ctx.send(embed=embed)
 
-    #Cat
+    # Cat
     @commands.command(name='Cat', description='Get a random picture of a cat *meow*', aliases=['kitty', 'meow', 'pussy'])
     async def cat(self, ctx):
         response = requests.get('https://some-random-api.ml/img/cat')
@@ -29,7 +39,7 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
         embed.set_image(url=data['link'])            
         await ctx.send(embed=embed)
 
-    #Panda
+    # Panda
     @commands.command(name='panda', description='Get a random picture of a panda')
     async def panda(self, ctx):
         response = requests.get('https://some-random-api.ml/img/panda')
@@ -39,7 +49,7 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
         embed.set_image(url=data['link'])
         await ctx.send(embed=embed)
 
-    #Red Panda
+    # Red Panda
     @commands.command(name='redpanda', description='Get a random picture of a red panda')
     async def redpanda(self, ctx):
         response = requests.get('https://some-random-api.ml/img/red_panda')
@@ -49,7 +59,7 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
         embed.set_image(url=data['link'])
         await ctx.send(embed=embed)
 
-    #Bird
+    # Bird
     @commands.command(name='bird', description='Get a random picture of a bird')
     async def bird(self, ctx):
         response = requests.get('https://some-random-api.ml/img/birb')
@@ -59,7 +69,7 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
         embed.set_image(url=data['link'])
         await ctx.send(embed=embed)
 
-    #Fox
+    # Fox
     @commands.command(name='fox', description='Get a random picture of a fox')
     async def fox(self, ctx):
         response = requests.get('https://some-random-api.ml/img/fox')
@@ -69,7 +79,7 @@ class Images(commands.Cog, name='images', description='Get some pictures of some
         embed.set_image(url=data['link'])
         await ctx.send(embed=embed)
 
-    #Koala
+    # Koala
     @commands.command(name='koala', description='Get a random picture of a koala')
     async def koala(self, ctx):
         response = requests.get('https://some-random-api.ml/img/koala')

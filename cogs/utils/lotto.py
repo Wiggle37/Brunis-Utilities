@@ -17,7 +17,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         dbase.close()
         return tables[0][0]
 
-    #Start Lottery
+    # Start Lottery
     @commands.command(name='startlottery')
     async def startlottery(self, ctx, name):
         def check(message):
@@ -41,7 +41,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         dbase.commit()
         dbase.close()
 
-    #End Lottery
+    # End Lottery
     @commands.command(name='endlottery')
     async def endlottery(self, ctx):
         dbase = sqlite3.connect('lotto.db')
@@ -50,7 +50,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         dbase.commit()
         dbase.close()
 
-    #Add Tickets
+    # Add Tickets
     @commands.command(name='addticket')
     async def addticket(self, ctx, member: discord.Member, amount: int=1):
         dbase = sqlite3.connect('lotto.db')
@@ -65,7 +65,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         dbase.commit()
         dbase.close()
 
-    #Remove Tickets
+    # Remove Tickets
     @commands.command(name='removeticket')
     async def removeticket(self, ctx, member: discord.Member, amount: int=1):
         dbase = sqlite3.connect('lotto.db')
@@ -80,7 +80,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         dbase.commit()
         dbase.close()
 
-    #View Tickets
+    # View Tickets
     @commands.command()
     async def tickets(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('lotto.db')
@@ -101,7 +101,7 @@ class Lottery(commands.Cog, name='lottery', description='Lottery commands for ho
         dbase.commit()
         dbase.close()
 
-    #View All Tickets
+    # View All Tickets
     @commands.command()
     async def viewlotto(self, ctx):
         dbase = sqlite3.connect('lotto.db')

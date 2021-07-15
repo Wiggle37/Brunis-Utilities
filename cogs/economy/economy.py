@@ -124,6 +124,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     '''
     DB Adder
     '''
+    # DB Adder
     @commands.Cog.listener()
     @commands.cooldown(1, 10, commands.BucketType.guild)
     async def on_message(self, message):
@@ -148,12 +149,13 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     '''
     General
     '''
+    # Multi
     @commands.command(name='multi', description='Get your current bot multi in the economy system')
     async def multi(self, ctx):
         multi = multis.get_multi(ctx.author.id)
         await ctx.send(f'Your curent multiplier is: **{float(multi * 100)}%**')
 
-    #Balance
+    # Balance
     @commands.command(name='balance', description='Get your current balance in the economy system', aliases=['bal', 'money'])
     @economysettings.economycheck()
     async def balance(self, ctx, member: discord.Member = None):
@@ -167,7 +169,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         bal_embed = discord.Embed(title = f"{user.name}'s balance",description = f"**Balance:**\n{self.currency.emoji} {self.beautify_number(amount)}",colour = 0x00ff00)
         await ctx.send(embed = bal_embed)
         
-    #Rich
+    # Rich
     @commands.command(name='rich', description='Get the richest people in the bot', aliases=['lb'])
     async def rich(self, ctx):
         dbase = sqlite3.connect("economy.db")
@@ -193,6 +195,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
         dbase.close()
 
+    # Inventory
     @commands.command(name='inventory', description='See what you or someone else has in their inventory', aliases=["inv"])
     async def inventory(self, ctx, member: typing.Optional[discord.Member] = None, page: typing.Optional[int] = 1):
         channel = await self.no_general(ctx)
@@ -226,7 +229,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         inv_embed.set_footer(text = f"Page {page} of {total_pages}")
         return await ctx.send(embed = inv_embed)
 
-    #Shop
+    # Shop
     @commands.command(name='shop', description='See whats in the shop for you to buy', aliases = ["store"])
     async def shop(self, ctx, page: typing.Optional[int], *, item_name = None):
         channel = await self.no_general(ctx)
@@ -276,7 +279,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
 
         return await ctx.send(embed = shop_embed)
 
-    #Buy
+    # Buy
     @commands.command(name='buy', description='Buy an item from the shop', aliases=['purchase'])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def buy(self, ctx, count: int, *, item_name):
@@ -309,11 +312,8 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         
         if isinstance(error, commands.errors.BadArgument):
             return await ctx.send("You need to key in an amount of items to buy")
-
-        # print any other error
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
        
+    # Sell
     @commands.command(name='sell', description="Sell off some of the items you don't want anymore")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def sell(self, ctx, count: int, *, item_name):
@@ -346,11 +346,8 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         
         if isinstance(error, commands.errors.BadArgument):
             return await ctx.send("You need to key in an amount of items to sell")
-
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
-    #Use
+    # Use
     @commands.command(name='use', description='Use some of your items, you might even get something from it, who knows')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def use(self, ctx, count: typing.Optional[int] = 1, *, item_name):
@@ -393,7 +390,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     '''
     Giving
     '''
-    #Give
+    # Give
     @commands.command(name='give', description='Give someone some money because why not', aliases=['share'])
     async def give(self, ctx, member: discord.Member, amount: int):
         channel = await self.no_general(ctx)
@@ -421,11 +418,8 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     async def give_error(self, ctx, error):       
         if isinstance(error, BadArgument):
             return await ctx.send("You have to type in an amount to give")
-        
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
-    #Gift
+    # Gift
     @commands.command(name='gift', description='Gift some items to someone', aliases=['yeet', 'throw', 'chuck'])
     async def gift(self, ctx, count: int, *item_and_member):
         channel = await self.no_general(ctx)
@@ -470,7 +464,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
     '''
     Money Making
     '''
-    #Beg
+    # Beg
     @commands.command(name='beg', description='Beg for some money from the people of the server')
     @commands.cooldown(1, 35, commands.BucketType.user)
     async def beg(self, ctx):
@@ -511,7 +505,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
     
-    #Bet
+    # Bet
     @commands.command(name='bet', description='Risk your money to possibly win some more money', aliases=['gamble'])
     @commands.cooldown(1, 8, commands.BucketType.user)
     async def bet(self, ctx, bet):
@@ -556,7 +550,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'If I let you go now you wouldnt have much money\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
-    #Slots
+    # Slots
     @commands.command(name='slots', description='Throw some money in the slots machine and hope for the best')
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def slots(self, ctx, bet = None):
@@ -623,7 +617,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             await ctx.send(embed=embed)
 
     
-    #Work
+    # Work
     @commands.command(name='work', description='Work to get some rare items')
     @commands.cooldown(1, 600, commands.BucketType.user)
     async def work(self, ctx):
@@ -655,7 +649,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No, stop being a work addict\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
     
-    #Dig
+    # Dig
     @commands.command(name='dig', description='Go digging and maybe find some cool relics')
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def dig(self, ctx):
@@ -683,7 +677,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'Try again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
-    #Chop
+    # Chop
     @commands.command(name='chop', description='Go chop down some trees to get some wood')
     @commands.cooldown(1, 15, BucketType.user)
     async def chop(self, ctx):
@@ -707,7 +701,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No stop choping the trees before you are all tired out\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
-    #Hunt
+    # Hunt
     @commands.command(name='hunt', description="Go hunting, but beware some animals arent as friendly as you would think")
     @commands.cooldown(1, 15, BucketType.user)
     async def hunt(self, ctx):
@@ -758,7 +752,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
             embed = discord.Embed(title=f'WOAH There Slow It Down!',description=f'No stop hunting before you are all tired out\nTry again in `{error.retry_after:.2f}`s', color=0x00ff00)
             await ctx.send(embed=embed)
 
-    #Fish
+    # Fish
     @commands.command(name='fish', description='Go fishing so you will have some food on the table tonight')
     @commands.cooldown(1, 15, BucketType.user)
     async def fish(self, ctx):

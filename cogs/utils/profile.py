@@ -129,6 +129,7 @@ class Profile(commands.Cog, name='profile', description='See your server profile
 
 
 
+    # Profile
     @commands.command(name='profile', description='Check your server profile', aliases=['me', 'user', 'ui'])
     async def profile(self, ctx, member: discord.Member=None):
         user = member or ctx.author

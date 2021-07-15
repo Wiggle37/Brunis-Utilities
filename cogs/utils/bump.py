@@ -7,7 +7,7 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
     def __init__(self, bot):
         self.bot = bot
 
-    #Check Bumps
+    # Check Bumps
     @commands.command(name='bumps', description='Check the amount of successful and unsuccessful bumps you have in the server', aliases=['b', 'bump'])
     async def bumps(self, ctx, member: discord.Member=None):
         dbase = sqlite3.connect('bump.db')
@@ -52,6 +52,7 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
     def get_user_id(self,desc):
         return int(re.search(re.compile(r"\d{17,19}"), desc)[0])
 
+    # Bump Listener
     @commands.Cog.listener()
     async def on_message(self, message):
         dbase = sqlite3.connect('bump.db')

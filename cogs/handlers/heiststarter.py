@@ -15,6 +15,7 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
         except asyncio.TimeoutError:
             return None
 
+    # Heist Listener
     @commands.Cog.listener()
     async def on_message(self,message):
         if message.author.id != 270904126974590976:

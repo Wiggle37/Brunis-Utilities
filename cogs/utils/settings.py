@@ -11,7 +11,7 @@ class Settings(commands.Cog):
     '''
     Auto Reponses
     '''
-    #Add Auto Reponse
+    # Add Auto Reponse
     @commands.command(name='add_auto_response', description='Add an auto response', aliases=['ara'])
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def ara(self, ctx, trigger, *, response):
@@ -32,7 +32,7 @@ class Settings(commands.Cog):
         dbsae.commit()
         dbsae.close()
 
-    #Remove Auto Response
+    # Remove Auto Response
     @commands.command(name='remove_auto_response', description='Remove an auto response', aliases=['arr'])
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def arr(self, ctx, trigger):
@@ -55,7 +55,7 @@ class Settings(commands.Cog):
         dbase.commit()
         dbase.close()
 
-    #Emoji Add Auto Response
+    # Emoji Add Auto Response
     @commands.command(name='add_auto_reaction', description='Add an emoji reaction', aliases=['aea'])
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def aea(self, ctx, trigger, emoji):
@@ -76,7 +76,7 @@ class Settings(commands.Cog):
         dbase.commit()
         dbase.close()
 
-    #Emoji Remove Response
+    # Emoji Remove Response
     @commands.command(name='remove_auto_reaction', description='Remove an emoji reaction', aliases=['aer'])
     @commands.has_any_role(784492058756251669, 788738308879941633, 784528018939969577)
     async def aer(self, ctx, trigger):
@@ -102,6 +102,7 @@ class Settings(commands.Cog):
     '''
     Heist Settings
     '''
+    # Heist Mode
     @commands.command()
     @commands.has_any_role(784527745539375164, 784492058756251669, 788738305365114880, 788738308879941633) # Mod, Admin, Co-Owner, Bot dev
     async def heistmode(self, ctx, mode=True):

@@ -6,7 +6,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
     def __init__(self, bot):
         self.bot = bot
 
-    #Rules
+    # Rules
     @commands.command(name='rules', description='Displays the rules of the server')
     async def rules(self, ctx):
         rules = {
@@ -31,7 +31,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         rules_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=rules_embed)
 
-    #Dank Rules
+    # Dank Rules
     @commands.command(name='dankrules', description='Displays the rules of Dank Memer')
     async def dankrules(self, ctx):
         rules = {
@@ -52,7 +52,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         dank_rules.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=dank_rules)
 
-    #Warning Policy
+    # Warning Policy
     @commands.command(name='warningpolicy', description='The warning policy in the server')
     async def warnp(self, ctx):
         warns = {
@@ -74,7 +74,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         warn_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=warn_embed)
 
-    #Trading Rules
+    # Trading Rules
     @commands.command(name='tradingrules', description='The rule of trading for the server')
     async def traderules(self, ctx):
         rules = {
@@ -92,7 +92,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         traderules_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=traderules_embed)
 
-    #Giveaway Rules
+    # Giveaway Rules
     @commands.command(name='giveawayrules', description='The rules for giveaways for the server')
     async def gawrules(self, ctx):
         rules = {
@@ -110,7 +110,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         gaw_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=gaw_embed)
 
-    #Special Roles
+    # Special Roles
     @commands.command(name='specialroles', description='The info for special roles in the server')
     async def specroles(self, ctx):
         roles = {
@@ -131,7 +131,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         specroles_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=specroles_embed)
 
-    #Exclusive Roles
+    # Exclusive Roles
     @commands.command(name='exclusiveroles', description='Info on some of the most rare roles in the server')
     async def eroles(self, ctx):
         roles = {
@@ -148,7 +148,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         eroles_embed.set_footer(text='Last updated: 6/22/21')
         await ctx.send(embed=eroles_embed)
 
-    #Donations
+    # Donations
     @commands.command(name='donationperks', description='Info on the donation perks')
     async def donoperks(self, ctx):
         donos = {
@@ -171,7 +171,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         donor_embed.set_footer(text='Last updated: 6/23/21')
         await ctx.send(embed=donor_embed)
 
-    #Invites
+    # Invites
     @commands.command(name='inviteperks', description='The perks you get for inviting people in the server')
     async def invperks(self, ctx):
         perks = {
@@ -188,7 +188,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         inv_embed.set_footer(text='Last updated: 6/23/21')
         await ctx.send(embed=inv_embed)
 
-    #Levels
+    # Levels
     @commands.command(name='levelperks', description='The servers leveling perks')
     async def lvlperks(self, ctx):
         level = {
@@ -208,7 +208,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         lvl_embed = discord.Embed(title='__**Dank Merchants Level Perks:**__', description=msg, color=0x00ff00)
         await ctx.send(embed=lvl_embed)
 
-    #Booster Perks
+    # Booster Perks
     @commands.command(name='boosterperks', description='The amazing perks of being a server booster')
     async def booster(self, ctx):
         inv_embed = discord.Embed(title='__**Dank Merchants Booster Perks:**__', description='The Booster Perks Of Dank Merchants', color=0xf47fff)

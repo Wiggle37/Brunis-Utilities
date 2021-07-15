@@ -13,10 +13,6 @@ class CommandErrorHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        # Do note that this will alwaus fire regardless if the command has a cog handler or local handler
-        
-        # Allows us to check for original exceptions raised and sent to CommandInvokeError.
-        # If nothing is found. We keep the exception passed to on_command_error.
         error = getattr(error, "original", error)
 
         if isinstance(error, commands.CommandNotFound):
