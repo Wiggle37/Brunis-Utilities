@@ -7,6 +7,7 @@ import io
 import os
 
 from config import *
+import json
 
 class admin(commands.Cog, name = "Admin"):
     def __init__(self, bot):
@@ -31,8 +32,7 @@ class admin(commands.Cog, name = "Admin"):
     @commands.command()
     @commands.is_owner()
     async def test(self, ctx):
-        test = economysettings.banned(ctx.author.id)
-        await ctx.send(test)
+        await ctx.send(CONFIG["blacklistedchannels"])
 
     # Load
     @commands.command()

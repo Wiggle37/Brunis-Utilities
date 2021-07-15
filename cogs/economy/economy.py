@@ -12,9 +12,8 @@ from datetime import datetime
 from itertools import islice
 import typing
 
-from config import economysettings
-
 from items_bruni import *
+from checks import *
 
 class Economy(commands.Cog, name='economy', description='The servers economy system'):
 

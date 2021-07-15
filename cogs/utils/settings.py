@@ -1,7 +1,8 @@
-from sqlite3.dbapi2 import DatabaseError
 import discord
 from discord.ext import commands
-import sqlite3
+import json
+
+from config import *
 
 class Settings(commands.Cog):
 
@@ -106,19 +107,16 @@ class Settings(commands.Cog):
     @commands.command()
     @commands.has_any_role(784527745539375164, 784492058756251669, 788738305365114880, 788738308879941633) # Mod, Admin, Co-Owner, Bot dev
     async def heistmode(self, ctx, mode=True):
-        dbase = sqlite3.connect('settings.db')
-        cursor = dbase.cursor()
-
         types = [True, False]
         if mode not in types:
             return await ctx.send('That is not a valid option plese user either: `True` or `False`')
 
         elif mode or not mode:
-            cursor.execute(f"UPDATE heistmode SET heistmode = '{mode}'")
-            await ctx.send(f'Heistmode set to {mode}')
-
-        dbase.commit()
-        dbase.close()
+            CONFIG["heistmode"] = mode
+            with open('config.json', 'w') as file:
+                json.dump(CONFIG, file, indent=4)
+                f.close()
+            await ctx.send(f'Heistmode set to `{mode}`')
 
 def setup(bot):
     bot.add_cog(Settings(bot))
