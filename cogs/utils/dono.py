@@ -120,53 +120,55 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='endspecial', description='End the special leaderboard', hidden=True)
     @commands.is_owner()
     async def endspecial(self, ctx):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
+        async with ctx.typing():
+            dbase = await aiosqlite.connect('dono.db')
+            cursor = await dbase.cursor()
 
-        await cursor.execute(f"SELECT user_id, special FROM donations")
-        users = cursor.fetchall()
+            await cursor.execute(f"SELECT user_id, special FROM donations")
+            users = cursor.fetchall()
 
-        for user in users:
-            await cursor.execute(f"UPDATE donations SET special = 0 WHERE user_id = '{int(user[0])}'")
-            await cursor.execute(f"UPDATE donations SET event = '{int(user[1])}' + event WHERE user_id = '{user[0]}'")
+            for user in users:
+                await cursor.execute(f"UPDATE donations SET special = 0 WHERE user_id = '{int(user[0])}'")
+                await cursor.execute(f"UPDATE donations SET event = '{int(user[1])}' + event WHERE user_id = '{user[0]}'")
 
-            person = await self.bot.fetch_user(user[0])
-            await ctx.send(f"{person.name}'s special donations were reset to **0** and added {user[1]} to events")
+                person = await self.bot.fetch_user(user[0])
+                await ctx.send(f"{person.name}'s special donations were reset to **0** and added {user[1]} to events")
 
-        await ctx.send('ALL DONE!!')
+            await ctx.send('All done coverting special donations into normal donations and ready to go for the next big event')
 
-        await dbase.commit()
-        await dbase.close()
+            await dbase.commit()
+            await dbase.close()
 
     #Prune Database
     @commands.command(name='prunedb', description='Delete old users from the database that aren\'t in the server anymore', hidden=True)
     @commands.is_owner()
     async def prunedb(self, ctx):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
+        async with ctx.typing():
+            dbase = await aiosqlite.connect('dono.db')
+            cursor = await dbase.cursor()
 
-        await cursor.execute(f"SELECT user_id FROM donations")
-        results = await cursor.fetchall()
+            await cursor.execute(f"SELECT user_id FROM donations")
+            results = await cursor.fetchall()
 
-        num = 0
+            num = 0
 
-        for user in results:
-            member = self.dank_merchants.get_member(user[0])
-            if member is None:
-                await cursor.execute(f"DELETE FROM donations WHERE user_id = '{user[0]}'")
-                print(f'{user[0]} was deleted from the db')
-                await ctx.send(f'{user[0]} deleted from database')
+            for user in results:
+                member = self.dank_merchants.get_member(user[0])
+                if member is None:
+                    await cursor.execute(f"DELETE FROM donations WHERE user_id = '{user[0]}'")
+                    print(f'{user[0]} was deleted from the db')
+                    await ctx.send(f'{user[0]} deleted from database')
 
-                await asyncio.sleep(2.5)
+                    await asyncio.sleep(2.5)
 
-            else:
-                pass
-            num += 1
+                else:
+                    pass
+                num += 1
 
-        await dbase.commit()
-        await dbase.close()
+            await dbase.commit()
+            await dbase.close()
 
-        await ctx.send('Done pruning members from the database that have left the server')
+            await ctx.send('Done pruning members from the database that have left the server')
 
     '''
     DONATIONS CHECK
