@@ -15,39 +15,40 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
     def __init__(self, bot):
         self.bot = bot
 
+    def natural_size(self, size_in_bytes: int):
+        # turns the number of bytes into readable info
+        units = ('B', 'KB', 'MB', 'GB', 'TB')
+
+        power = int(math.log(size_in_bytes, 1024))
+
+        return f"{size_in_bytes / (1024 ** power):.2f} {units[power]}"
+
     @commands.command(name='botinfo', description='Get some info on the bot')
     async def botinfo(self, ctx):
-        def natural_size(size_in_bytes: int):
-            # turns the number of bytes into readable info
-            units = ('B', 'KB', 'MB', 'GB', 'TB')
+        info = ["```asciidoc" ,
+                f"=== {self.bot.user} Info ===" ,
+                f"• Latency                          :: {int(self.bot.latency * 1000)}ms" ,
+                f"• Discord.py Module Version        :: {discord.__version__}" ,
+                f"• Python Version Info              :: {sys.version}"]
 
-            power = int(math.log(size_in_bytes, 1024))
-
-            return f"{size_in_bytes / (1024 ** power):.2f} {units[power]}"
-
-        info = ["asciidoc\n" ,
-                f"=== {self.bot.user} Info === \n" ,
-                f"• Latency                          :: {int(self.bot.latency * 1000)}ms\n" ,
-                f"• Discord.py Module Version        :: {discord.__version__}\n" ,
-                f"• Python Version Info              :: {sys.version}\n"]
-
-        # gets the current process
+            # gets the current process
         proc = psutil.Process()
 
         # a context manager to speed up getting values we need
         with proc.oneshot():
             mem = proc.memory_full_info()
-            info.append(f"• Physical memory                  :: {natural_size(mem.rss)}\n")
-            info.append(f"• Virtual memory                   :: {natural_size(mem.vms)}\n")
-            info.append(f"• Unique memory to this process    :: {natural_size(mem.uss)}\n")
-            
+            info.append(f"• Physical memory                  :: {self.natural_size(mem.rss)}")
+            info.append(f"• Virtual memory                   :: {self.natural_size(mem.vms)}")
+            info.append(f"• Unique memory (to this process)  :: {self.natural_size(mem.uss)}")
+                
             name = proc.name()
             pid = proc.pid
             thread_count = proc.num_threads()
 
-            info.append(f"• Running on PID {pid} ({name}) with {thread_count} thread(s).\n")
+            info.append(f"• Running on PID {pid} ({name}) with {thread_count} thread(s).")
+            info.append("```")
 
-        await ctx.send(f'```{" ".join(info)}```')
+        await ctx.send("\n".join(info))
 
     # Timer
     @commands.command(name='timer', description='Set a timer for up to 1000')
