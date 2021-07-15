@@ -59,7 +59,7 @@ async def on_ready():
 @tasks.loop(seconds = 60)
 async def status():
     memberCount = sum(guild.member_count for guild in bot.guilds)
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Over {memberCount} people"), status = discord.Status.dnd)
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Over {memberCount} people"), status = discord.Status.idle)
 
 @status.before_loop
 async def bot_ready():
