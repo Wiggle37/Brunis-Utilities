@@ -20,15 +20,11 @@ class Profile(commands.Cog, name='profile', description='See your server profile
             return result
 
         else:
+            dbase.close()
             return result
 
-        dbase.close()
-
     def detail(self, ctx, user):
-        details = ''
-        member = discord.utils.find(lambda r: r.id == 784529268881227796, ctx.message.guild.roles)
-        if member in user.roles:
-            details += 'Member, '
+        details = 'Member, '
         staff = discord.utils.find(lambda r: r.id == 791516118120267806, ctx.message.guild.roles)
         if staff in user.roles:
             details += 'Staff, '
@@ -59,8 +55,8 @@ class Profile(commands.Cog, name='profile', description='See your server profile
         else:
             return result[0]
 
-    def badges(self, ctx, user):
-        badges = '‏‏‎ ‎'
+    def badges_(self, ctx, user):
+        badges = ''
         staff_ = discord.utils.find(lambda r: r.id == 791516118120267806, ctx.message.guild.roles)
         if staff_ in user.roles:
             badges += f'{staff.emoji} '
@@ -111,27 +107,6 @@ class Profile(commands.Cog, name='profile', description='See your server profile
 
         return badges
 
-    @commands.command(name='profile', description='Check your server profile', aliases=['me', 'user'])
-    async def profile(self, ctx, member: discord.Member=None):
-        user = member or ctx.author
-        
-        amount = self.get_donation(user)
-        badges = self.badges(ctx, user)
-        bumps = self.bumps(user)
-        details = self.detail(ctx, user)
-
-        embed = discord.Embed(title=f"{user}'s Server Profile", description=badges[:-1], color=user.color)
-        embed.add_field(name='Dank Memer Donations:', value=f'`⏣{"{:,}".format(amount[0])}`')
-        embed.add_field(name='Real Money Donations:', value=f'`${amount[1]} USD`')
-        embed.add_field(name='Server Bump Stats:', value=f'`{bumps}` successful bumps')
-        embed.add_field(name='Member Details', value=details[:-2], inline=False)
-
-        embed.set_thumbnail(url=user.avatar_url)
-        embed.timestamp = datetime.utcnow()
-        embed.set_footer(text=user.id, icon_url=ctx.guild.icon_url)
-
-        await ctx.send(embed=embed)
-
     @commands.command(name='badges', description='Check all the badges for the `b!profile` command')
     async def badges(self, ctx):
         level_emojis = [level5, level10, level15, level20, level30, level40, level50, level69, level100]
@@ -147,6 +122,32 @@ class Profile(commands.Cog, name='profile', description='See your server profile
         embed = discord.Embed(title='All The Badges', description='A list of all the profile badges')
         embed.add_field(name='Levels', value=levels_, inline=False)
         embed.add_field(name='Donations', value=donations_)
+        await ctx.send(embed=embed)
+
+    
+
+
+
+
+    @commands.command(name='profile', description='Check your server profile', aliases=['me', 'user', 'ui'])
+    async def profile(self, ctx, member: discord.Member=None):
+        user = member or ctx.author
+        
+        amount = self.get_donation(user)
+        badges_ = self.badges_(ctx, user)
+        bumps = self.bumps(user)
+        details = self.detail(ctx, user)
+
+        embed = discord.Embed(title=f"{user}'s Server Profile", description=badges_, color=user.color)
+        embed.add_field(name='Dank Memer Donations:', value=f'`⏣{"{:,}".format(amount[0])}`')
+        embed.add_field(name='Real Money Donations:', value=f'`${amount[1]} USD`')
+        embed.add_field(name='Server Bump Stats:', value=f'`{bumps}` successful bumps')
+        embed.add_field(name='Member Details', value=details[:-2], inline=False)
+
+        embed.set_thumbnail(url=user.avatar_url)
+        embed.timestamp = datetime.utcnow()
+        embed.set_footer(text=user.id, icon_url=ctx.guild.icon_url)
+
         await ctx.send(embed=embed)
 
 def setup(bot):
