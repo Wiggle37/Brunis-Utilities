@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import aiohttp
-import requests
 
 class Images(commands.Cog, name='images', description='Get some pictures of some animals'):
 
