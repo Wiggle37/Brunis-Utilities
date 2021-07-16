@@ -1,4 +1,3 @@
-from cogs.utils.testing import Confirm
 import discord
 from discord.ext import commands
 
@@ -7,21 +6,7 @@ from datetime import datetime
 import asyncio
 
 from config import *
-
-class Confirm(discord.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.value = None
-
-    @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
-    async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
-        self.value = True
-        self.stop()
-
-    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.red)
-    async def cancel(self, button: discord.ui.Button, interaction: discord.Interaction):
-        self.value = False
-        self.stop()
+from buttons import *
 
 class Dono(commands.Cog, name='donations', description='Tracks the servers donations by person'):
     def __init__(self, bot):
