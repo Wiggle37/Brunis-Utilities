@@ -267,7 +267,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         embed.add_field(name='Server Bump Stats:', value=f'`{bumps}` successful bumps')
         embed.add_field(name='Member Details', value=details[:-2], inline=False)
 
-        embed.set_thumbnail(url=user.avatar_url)
+        embed.set_thumbnail(url=user.avatar.url)
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=user.id, icon_url=ctx.guild.icon_url)
 
