@@ -1,7 +1,8 @@
 import discord
-import traceback
 from discord.ext import commands
 import traceback
+
+from config import *
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):

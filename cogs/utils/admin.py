@@ -1,4 +1,6 @@
+import discord
 from discord.ext import commands
+
 import textwrap
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -7,7 +9,6 @@ import io
 import os
 
 from config import *
-import json
 
 class admin(commands.Cog, name = "Admin"):
     def __init__(self, bot):
@@ -32,8 +33,7 @@ class admin(commands.Cog, name = "Admin"):
     @commands.command()
     @commands.is_owner()
     async def test(self, ctx):
-        test = CONFIG["config"]["info"]["ids"]["merchants_id"]
-        await ctx.send(test)
+        pass
 
     # Load
     @commands.command()

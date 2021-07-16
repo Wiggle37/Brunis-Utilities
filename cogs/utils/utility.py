@@ -1,14 +1,16 @@
 import discord
 from discord.ext import commands
+
 import asyncio
 import sys
 from datetime import datetime
 import time
-
 import psutil
 import sys
 import discord
 import math
+
+from config import *
 
 class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
 

@@ -1,6 +1,9 @@
-from discord.ext import commands
 import discord
+from discord.ext import commands
+
 from datetime import datetime
+
+from config import *
 
 class bruniUtilsHelp(commands.HelpCommand):    
     async def send_bot_help(self, mapping):

@@ -12,11 +12,11 @@ from datetime import datetime
 from itertools import islice
 import typing
 
+from config import *
 from items_bruni import *
 from checks import *
 
 class Economy(commands.Cog, name='economy', description='The servers economy system'):
-
     def __init__(self, bot):
         self.bot = bot
         self.items = economy_items

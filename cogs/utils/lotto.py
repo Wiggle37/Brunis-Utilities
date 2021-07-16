@@ -1,10 +1,12 @@
-from datetime import datetime
 import discord
 from discord.ext import commands
+
+from datetime import datetime
 import sqlite3
 
-class Lottery(commands.Cog, name='lottery', description='Lottery commands for hosting lottery events'):
+from config import *
 
+class Lottery(commands.Cog, name='lottery', description='Lottery commands for hosting lottery events'):
     def __init__(self, bot):
         self.bot = bot
 

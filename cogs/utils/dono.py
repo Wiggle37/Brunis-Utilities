@@ -1,14 +1,17 @@
 import discord
-import aiosqlite
 from discord.ext import commands
+
+import aiosqlite
 from datetime import datetime
 import asyncio
+
+from config import *
 
 class Dono(commands.Cog, name='donations', description='Tracks the servers donations by person'):
 
     def __init__(self, bot):
         self.bot = bot
-        self.dank_merchants = self.bot.get_guild(784491141022220309)
+        self.dank_merchants = self.bot.get_guild(CONFIG["config"]["info"]["ids"]["merchants_id"])
 
     #Make Acc Command(Backup)
     @commands.command(hidden=True)

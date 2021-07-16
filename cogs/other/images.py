@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
+
 import aiohttp
 
-class Images(commands.Cog, name='images', description='Get some pictures of some animals'):
+from config import *
 
+class Images(commands.Cog, name='images', description='Get some pictures of some animals'):
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=bot.loop)

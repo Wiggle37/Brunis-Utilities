@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+from config import *
+
 class Info(commands.Cog, name='info', description='Displays some important info about the server'):
 
     def __init__(self, bot):

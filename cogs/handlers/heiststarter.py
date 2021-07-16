@@ -1,5 +1,8 @@
+import discord
 from discord.ext import commands
 import asyncio
+
+from config import *
 
 class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden=True)):
     def __init__(self, bot):

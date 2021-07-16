@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
+
 import sqlite3
 
-class Sticky(commands.Cog, name='stickys'):
+from config import *
 
+class Sticky(commands.Cog, name='stickys'):
     def __init__(self, bot):
         self.bot = bot
 

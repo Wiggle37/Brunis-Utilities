@@ -1,16 +1,15 @@
-from discord.ext import commands
 import discord
-import sys
-import traceback
-import asyncio
-
+from discord.ext import commands
 from discord.ext.commands.errors import MissingRequiredArgument
 
+import asyncio
+
+from config import *
 
 class Auction(commands.Cog, name='auction', description='Host some auctions for the server'):
     def __init__(self, bot):
         self.bot = bot
-        self.auctioner_role = bot.get_guild(784491141022220309).get_role(800496416740605993)
+        self.auctioner_role = self.bot.get_guild(784491141022220309).get_role(800496416740605993)
         self.emoji = "\U0001f3e6"
         self.auction_message_id = None
         self.auction_in_progress = False

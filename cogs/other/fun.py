@@ -1,9 +1,9 @@
+import discord
 from discord.ext import commands
-import http
-import asyncio
+
+from config import *
 
 class Fun(commands.Cog, name='fun', description='Some fun commands'):
-
     def __init__(self, bot):
         self.bot = bot
 

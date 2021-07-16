@@ -1,11 +1,13 @@
-from badges import *
 import discord
 from discord.ext import commands
+
 import sqlite3
 from datetime import datetime
 
-class Profile(commands.Cog, name='profile', description='See your server profile'):
+from config import *
+from badges import *
 
+class Profile(commands.Cog, name='profile', description='See your server profile'):
     def __init__(self, bot):
         self.bot = bot
 

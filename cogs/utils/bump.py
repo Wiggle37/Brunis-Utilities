@@ -1,7 +1,10 @@
 import discord
 from discord.ext import commands
+
 import re
 import sqlite3
+
+from config import *
 
 class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the server gets bumped'):
     def __init__(self, bot):
