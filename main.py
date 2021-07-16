@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, tasks
+
 import os
 from dotenv import load_dotenv
 import aiohttp
@@ -7,7 +8,6 @@ from datetime import datetime
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN") 
-    
     
 bot = commands.Bot(
     command_prefix = ["b!", "B!", "b ", "B "],
@@ -19,14 +19,13 @@ bot = commands.Bot(
 # case insensitive help command for cogs 
 bot._BotBase__cogs = commands.core._CaseInsensitiveDict()
 
-
 # creates a global aiohttp session that can be used
 async def aiohttp_session():
     bot.session = aiohttp.ClientSession()
 
-
 async def load_extensions():
     await bot.wait_until_ready()
+    print("\-/ Loading Cogs... \-/\n")
     
     # gets the path name and files in every directory
     # includes nested paths
@@ -42,19 +41,22 @@ async def load_extensions():
             # prepares the extension to be loaded
             ext = dirpath.replace("\\", ".") + "." + fn[:-3]
 
-            bot.load_extension(ext)
-            print(f"{ext} loaded")
-
+            try:
+                bot.load_extension(ext)
+                print(f"{ext} loaded")
+            
+            except:
+                print(f'There was an error loading {ext} please check the debug channel for more information')
 
 @bot.event
 async def on_ready():
-    print(f"\-/ Loading... \-/\n\n" \
-           "==============================================\n" \
-          f"User: {bot.user}\n" \
-          f"ID: {bot.user.id}\n" \
-          f"Latency: {int(bot.latency * 1000)}\n" \
-          f"Time: {datetime.utcnow()}\n" \
-           "==============================================\n")
+    print("\n /-\ Cogs Loaded /-\\"
+        "\n==============================================\n" \
+        f"User: {bot.user}\n" \
+        f"ID: {bot.user.id}\n" \
+        f"Latency: {round(bot.latency * 1000, 2)}ms\n" \
+        f"Time: {datetime.utcnow()}\n" \
+        "==============================================\n")
 
 @tasks.loop(seconds = 60)
 async def status():
