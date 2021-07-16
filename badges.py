@@ -1,6 +1,3 @@
-import discord
-import sqlite3
-
 ### - - - - - Levels - - - - - ###
 class levels:
     name = None
