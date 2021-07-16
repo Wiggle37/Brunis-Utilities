@@ -29,7 +29,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
     async def botinfo(self, ctx):
         info = ["```asciidoc" ,
                 f"=== {self.bot.user} Info ===" ,
-                f"• Latency                          :: {self.bot.latency * 1000, 2}ms" ,
+                f"• Latency                          :: {round(self.bot.latency * 1000, 2)}ms" ,
                 f"• Discord.py Module Version        :: {discord.__version__}" ,
                 f"• Python Version Info              :: {sys.version}"]
 
