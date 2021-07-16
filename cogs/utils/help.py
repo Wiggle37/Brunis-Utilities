@@ -51,7 +51,7 @@ class bruniUtilsHelp(commands.HelpCommand):
         return await self.send_command_help(group)
     
     def get_command_signature(self, command):
-        return f"```{self.clean_prefix}{command.qualified_name} {command.signature}```"
+        return f"```b!{command.qualified_name} {command.signature}```"
 
     async def command_callback(self, ctx, *, command = None):
         if command is not None:
@@ -61,7 +61,7 @@ class bruniUtilsHelp(commands.HelpCommand):
     async def send_command_help(self, command):
         ctx = self.context
 
-        command_help = discord.Embed(title = f"{self.clean_prefix}{command.qualified_name} info", color=discord.Color.purple())
+        command_help = discord.Embed(title = f"{command.qualified_name} info", color=discord.Color.purple())
 
         description = "No description provided, but a cool command anyway!"
         if command.description != "":
