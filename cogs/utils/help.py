@@ -3,6 +3,8 @@ from discord.ext import commands
 
 from datetime import datetime
 
+from discord.ext.commands.core import Command
+
 from config import *
 
 class bruniUtilsHelp(commands.HelpCommand):    
@@ -13,7 +15,8 @@ class bruniUtilsHelp(commands.HelpCommand):
         ignored_cogs = [
             'CommandErrorHandler',
             'Events',
-            'Heist Starter'
+            'Heist Starter',
+            'Sticky'
         ]
         
         for cog in mapping:
@@ -28,7 +31,7 @@ class bruniUtilsHelp(commands.HelpCommand):
     
     async def send_cog_help(self, cog):
         ctx = self.context
-        cog_help = discord.Embed(title = f"{cog.qualified_name} Commands", colour = discord.Color.purple())
+        cog_help = discord.Embed(title = f"{cog.qualified_name.capitalize()} Commands", colour = discord.Color.purple())
 
         # filters hidden commands
         filtered = await self.filter_commands(cog.walk_commands(), sort = True)
