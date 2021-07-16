@@ -7,6 +7,7 @@ from config import *
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.dank_merchants = self.bot.get_guild(CONFIG["config"]["info"]["ids"]["merchants_id"])
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
