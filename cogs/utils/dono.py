@@ -1,3 +1,4 @@
+from cogs.utils.testing import Confirm
 import discord
 from discord.ext import commands
 
@@ -7,8 +8,22 @@ import asyncio
 
 from config import *
 
-class Dono(commands.Cog, name='donations', description='Tracks the servers donations by person'):
+class Confirm(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
 
+    @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+    async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.value = True
+        self.stop()
+
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.red)
+    async def cancel(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.value = False
+        self.stop()
+
+class Dono(commands.Cog, name='donations', description='Tracks the servers donations by person'):
     def __init__(self, bot):
         self.bot = bot
         self.dank_merchants = self.bot.get_guild(CONFIG["config"]["info"]["ids"]["merchants_id"])
@@ -147,31 +162,41 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.is_owner()
     async def prunedb(self, ctx):
         async with ctx.typing():
-            dbase = await aiosqlite.connect('dono.db')
-            cursor = await dbase.cursor()
+            view = Confirm()
+            await ctx.send('Are you sure you want to clear the datebase of all members that have left Dank Merchants?', view=view)
+            await view.wait()
+            if view.value is None:
+                await ctx.send('Confirmation timed out...')
 
-            await cursor.execute(f"SELECT user_id FROM donations")
-            results = await cursor.fetchall()
+            if view.value:
+                dbase = await aiosqlite.connect('dono.db')
+                cursor = await dbase.cursor()
 
-            num = 0
+                await cursor.execute(f"SELECT user_id FROM donations")
+                results = await cursor.fetchall()
 
-            for user in results:
-                member = self.dank_merchants.get_member(user[0])
-                if member is None:
-                    await cursor.execute(f"DELETE FROM donations WHERE user_id = '{user[0]}'")
-                    print(f'{user[0]} was deleted from the db')
-                    await ctx.send(f'{user[0]} deleted from database')
+                num = 0
 
-                    await asyncio.sleep(2.5)
+                for user in results:
+                    member = self.dank_merchants.get_member(user[0])
+                    if member is None:
+                        num += 1
+                        await cursor.execute(f"DELETE FROM donations WHERE user_id = '{user[0]}'")
+                        print(f'{user[0]} was deleted from the db')
+                        await ctx.send(f'{user[0]} deleted from database')
 
-                else:
-                    pass
-                num += 1
+                        await asyncio.sleep(2.5)
 
-            await dbase.commit()
-            await dbase.close()
+                    else:
+                        pass
 
-            await ctx.send('Done pruning members from the database that have left the server')
+                await dbase.commit()
+                await dbase.close()
+
+                await ctx.send(f'Done pruning members from the database that have left the server, {num} people were removed')
+
+            elif not view.value:
+                await ctx.send('Cancelling...')
 
     '''
     DONATIONS CHECK

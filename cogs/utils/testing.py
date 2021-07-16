@@ -24,7 +24,6 @@ class Confirm(discord.ui.View):
 class Testing(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = aiohttp.ClientSession(loop=bot.loop)
 
     @commands.command()
     async def m(self, ctx: commands.Context):
