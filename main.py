@@ -1,4 +1,5 @@
 import discord
+from discord.colour import Color
 from discord.ext import commands, tasks
 
 import os
@@ -6,8 +7,10 @@ from dotenv import load_dotenv
 import aiohttp
 from datetime import datetime
 
+from color import *
+
 load_dotenv()
-TOKEN = os.getenv("TOKEN") 
+TOKEN = os.getenv("TOKEN")
     
 bot = commands.Bot(
     command_prefix = ["b!", "B!", "b ", "B "],
@@ -46,17 +49,18 @@ async def load_extensions():
                 print(f"{ext} loaded")
             
             except:
-                print(f'There was an error loading {ext} please check the debug channel for more information')
+                print(f'{color.RED}There was an error loading {ext} please check the debug channel for more information{color.END}')
 
 @bot.event
 async def on_ready():
-    print("\n /-\ Cogs Loaded /-\\"
-        "\n==============================================\n" \
-        f"User: {bot.user}\n" \
-        f"ID: {bot.user.id}\n" \
-        f"Latency: {round(bot.latency * 1000, 2)}ms\n" \
-        f"Time: {datetime.utcnow()}\n" \
-        "==============================================\n")
+    print(
+        f"{color.GREEN}\n /-\ Cogs Loaded /-\\{color.END}"
+        f"{color.BLACK}\n==============================================\n{color.END}"
+        f"{color.YELLOW}User: {bot.user}\n{color.END}"
+        f"{color.YELLOW}ID: {bot.user.id}\n{color.END}"
+        f"{color.YELLOW}Latency: {round(bot.latency * 1000, 2)}ms\n{color.END}"
+        f"{color.YELLOW}Time: {datetime.utcnow()}\n{color.END}"
+        f"{color.BLACK}==============================================\n{color.END}")
 
 @tasks.loop(seconds = 60)
 async def status():
