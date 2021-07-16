@@ -29,12 +29,6 @@ class admin(commands.Cog, name = "Admin"):
         
         return None
 
-    # Test | put whatever you want here to test
-    @commands.command()
-    @commands.is_owner()
-    async def test(self, ctx):
-        pass
-
     # Load
     @commands.command()
     @commands.is_owner()
