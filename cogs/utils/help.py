@@ -5,7 +5,7 @@ from datetime import datetime
 
 from config import *
 
-class bruniUtilsHelp(commands.HelpCommand):    
+class bruniUtilsHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping):
         ctx = self.context
 
@@ -21,7 +21,7 @@ class bruniUtilsHelp(commands.HelpCommand):
             if cog is None or cog.qualified_name in ignored_cogs:
                 continue
 
-            help.add_field(name = cog.qualified_name.capitalize(), value = f"{cog.description}\n`{self.clean_prefix}help {cog.qualified_name}`")
+            help.add_field(name = cog.qualified_name.capitalize(), value = f"{cog.description}\n`b!help {cog.qualified_name}`")
         
         help.set_thumbnail(url='https://cdn.discordapp.com/avatars/852670742419603467/e39038e6e8733b14445e99fc2038e1e7.png?size=1024')
         help.timestamp = datetime.utcnow()
@@ -40,7 +40,7 @@ class bruniUtilsHelp(commands.HelpCommand):
         filtered_display = map(lambda c: f"`{c.qualified_name}`", filtered)
 
         cog_help.description = ", ".join(filtered_display)
-        cog_help.set_footer(text = f"Use {self.clean_prefix} before each command!")
+        cog_help.set_footer(text = f"Use b! before each command!")
 
         cog_help.set_thumbnail(url='https://cdn.discordapp.com/avatars/852670742419603467/e39038e6e8733b14445e99fc2038e1e7.png?size=1024')
         cog_help.timestamp = datetime.utcnow()
