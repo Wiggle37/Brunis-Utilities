@@ -101,7 +101,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         total = (ctx.guild.member_count)
 
         info_embed = discord.Embed(title='Server Info/Stats', description='Here is the list of stats for the server', color=discord.Color.green())
-        info_embed.set_thumbnail(url=ctx.guild.icon_url)
+        info_embed.set_thumbnail(url=ctx.guild.icon.url)
         info_embed.add_field(name='Server Name', value=ctx.guild.name)
         info_embed.add_field(name='Server Owner:', value=ctx.guild.owner)
         info_embed.add_field(name='Server ID', value=ctx.guild.id)
