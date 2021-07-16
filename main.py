@@ -1,5 +1,4 @@
 import discord
-from discord.colour import Color
 from discord.ext import commands, tasks
 
 import os
