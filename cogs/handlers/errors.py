@@ -13,6 +13,10 @@ class CommandErrorHandler(commands.Cog):
     async def on_command_error(self, ctx, error):
         error = getattr(error, "original", error)
 
+        # - Check Fail - #
+        if isinstance(error, commands.CheckFailure):
+            return
+
         # - Command On Cooldown Errors - #
         if isinstance(error, commands.CommandOnCooldown):
             return ctx.send('This command is on cooldown, chill out')
@@ -24,6 +28,7 @@ class CommandErrorHandler(commands.Cog):
         # - Not Found Errors - #
         if isinstance(error, commands.MessageNotFound):
             return await ctx.send('The provied message was not found')
+
         if isinstance(error, commands.ChannelNotFound):
             return await ctx.send('The provided channel was not found')
 
