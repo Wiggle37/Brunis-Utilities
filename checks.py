@@ -22,12 +22,3 @@ class economysettings:
             return ctx.channel.id not in CONFIG["config"]["settings"]["blacklistedchannels"] \
                 and await economysettings.banned(ctx.author.id) is False
         return commands.check(predicate)
-
-# DM Checks
-class dms:
-    @staticmethod
-    def dm_check():
-        async def predicate(ctx):
-            return ctx.guild is None \
-                and ctx.author.id != CONFIG["config"]["info"]["ids"]["bUtils_id"]
-        return commands.check(predicate)
