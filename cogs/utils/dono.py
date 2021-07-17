@@ -124,23 +124,33 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.is_owner()
     async def endspecial(self, ctx):
         async with ctx.typing():
-            dbase = await aiosqlite.connect('dono.db')
-            cursor = await dbase.cursor()
+            view = Confirm()
+            await ctx.send('Are you sure you want to continue? This is remove all special donations and convert them into normal donations.', view=view)
+            await view.wait()
+            if view.value is None:
+                await ctx.send('Confirmation timed out...')
 
-            await cursor.execute(f"SELECT user_id, special FROM donations")
-            users = cursor.fetchall()
+            elif view.value:
+                dbase = await aiosqlite.connect('dono.db')
+                cursor = await dbase.cursor()
 
-            for user in users:
-                await cursor.execute(f"UPDATE donations SET special = 0 WHERE user_id = '{int(user[0])}'")
-                await cursor.execute(f"UPDATE donations SET event = '{int(user[1])}' + event WHERE user_id = '{user[0]}'")
+                await cursor.execute(f"SELECT user_id, special FROM donations")
+                users = cursor.fetchall()
 
-                person = await self.bot.fetch_user(user[0])
-                await ctx.send(f"{person.name}'s special donations were reset to **0** and added {user[1]} to events")
+                for user in users:
+                    await cursor.execute(f"UPDATE donations SET special = 0 WHERE user_id = '{int(user[0])}'")
+                    await cursor.execute(f"UPDATE donations SET event = '{int(user[1])}' + event WHERE user_id = '{user[0]}'")
 
-            await ctx.send('All done coverting special donations into normal donations and ready to go for the next big event')
+                    person = await self.bot.fetch_user(user[0])
+                    await ctx.send(f"{person.name}'s special donations were reset to **0** and added {user[1]} to events")
 
-            await dbase.commit()
-            await dbase.close()
+                await ctx.send('All done coverting special donations into normal donations and ready to go for the next big event')
+
+                await dbase.commit()
+                await dbase.close()
+            
+            elif not view.value:
+                await ctx.send('Ok cancelled')
 
     #Prune Database
     @commands.command(name='prunedb', description='Delete old users from the database that aren\'t in the server anymore', hidden=True)
@@ -181,7 +191,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
                 await ctx.send(f'Done pruning members from the database that have left the server, {num} people were removed')
 
             elif not view.value:
-                await ctx.send('Cancelling...')
+                await ctx.send('Ok cancelled')
 
     '''
     DONATIONS CHECK
