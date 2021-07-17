@@ -79,7 +79,7 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
             await cursor.execute("INSERT INTO bumps (user_id, allbumps) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET allbumps = allbumps + ?;", [user_id, bump, bump])
 
             await cursor.execute(f"SELECT bump FROM bumps WHERE user_id = '{user_id}'")
-            bump = cursor.fetchone()
+            bump = await cursor.fetchone()
 
             await cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user_id}'")
             total = await cursor.fetchone()
