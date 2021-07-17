@@ -3,6 +3,7 @@ from discord.ext import commands
 
 from config import *
 
+# Economy Checks
 class economysettings:
     @staticmethod
     async def banned(user_id):
@@ -20,4 +21,13 @@ class economysettings:
         async def predicate(ctx):
             return ctx.channel.id not in CONFIG["config"]["settings"]["blacklistedchannels"] \
                 and await economysettings.banned(ctx.author.id) is False
+        return commands.check(predicate)
+
+# DM Checks
+class dms:
+    @staticmethod
+    def dm_check():
+        async def predicate(ctx):
+            return ctx.guild is None \
+                and ctx.author.id != CONFIG["config"]["info"]["ids"]["bUtils_id"]
         return commands.check(predicate)
