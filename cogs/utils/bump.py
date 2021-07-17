@@ -101,8 +101,8 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
 
             await cursor.execute(f"UPDATE bumps SET precentage = '{precentage}' WHERE user_id == {user_id}")
 
-        cursor.execute("SELECT user_id, MAX(bump) FROM bumps;")
-        top = cursor.fetchone()
+        await cursor.execute("SELECT user_id, MAX(bump) FROM bumps;")
+        top = await cursor.fetchone()
         top = int(top[0])
 
         role = discord.utils.find(lambda r: r.id == 787868761620348929, message.guild.roles)
