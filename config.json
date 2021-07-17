@@ -11,7 +11,6 @@
                 "selfRolesChannel_id": 784547669619507201
             }
         },
-
         "settings": {
             "heistmode": false,
             "blacklistedchannels": [
@@ -47,7 +46,7 @@
                 829510480233103390,
                 826895495481524245,
                 826897659474214974
-                ]
-            }
+            ]
+        }
     }
 }
