@@ -2,15 +2,18 @@ import discord
 from discord.ext import commands
 
 import aiosqlite
+import aiohttp
 from datetime import datetime
 import asyncio
 
 from config import *
+from donofuncs import *
 from buttons import *
 
 class Dono(commands.Cog, name='donations', description='Tracks the servers donations by person'):
     def __init__(self, bot):
         self.bot = bot
+        self.session = aiohttp.ClientSession(loop=bot.loop)
         self.dank_merchants = self.bot.get_guild(CONFIG["config"]["info"]["ids"]["merchants_id"])
 
     #Make Acc Command(Backup)
@@ -348,25 +351,19 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='gds', description='Set someones giveaway donations')
     @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def gaw_dono_set(self, ctx, member: discord.Member, amount: str):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
         else:
-            await cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            giveaway.add(member, amount)
 
             await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            await dbase.commit()
 
             total = await self.get_amount(ctx, member)
             await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
