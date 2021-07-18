@@ -15,7 +15,8 @@ class CommandErrorHandler(commands.Cog):
 
         # - Check Fail - #
         if isinstance(error, commands.CheckFailure):
-            pass
+            if ctx.author.id in self.bot.owner_ids:
+                return await ctx.reinvoke()
 
         # - Command On Cooldown Errors - #
         if isinstance(error, commands.CommandOnCooldown):
