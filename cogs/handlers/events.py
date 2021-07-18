@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-import sqlite3
+
+import aiosqlite
 import time
 
 from config import *
@@ -63,12 +64,9 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     # Text Response
     @commands.Cog.listener("on_message")
     async def text_response(self, message):
-        dbase = sqlite3.connect('autoresponse.db')
-        cur = dbase.cursor()
-
-        cur.execute("SELECT trigger, response FROM text")
-        text_response = cur.fetchall()
-        dbase.close()
+        async with aiosqlite.connect('autoresponse.db') as dbase:
+            cursor = await dbase.execute("SELECT trigger, response FROM text")
+            text_response = await cursor.fetchall()
 
         if text_response is None:
             return
@@ -85,12 +83,9 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     # Emoji Reaction
     @commands.Cog.listener("on_message")
     async def emoji_react(self, message):
-        dbase = sqlite3.connect('autoresponse.db')
-        cur = dbase.cursor()
-
-        cur.execute("SELECT trigger, emoji FROM emoji")
-        emoji_react = cur.fetchall()
-        dbase.close()
+        async with aiosqlite.connect('autoresponse.db') as dbase:
+            cursor = await dbase.execute("SELECT trigger, emoji FROM emoji")
+            emoji_react = await cursor.fetchall()
 
         if emoji_react is None:
             return
@@ -107,7 +102,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
-        if str(self.bot.user.mention) in message.content and not message.author.bot:
+        if str(self.bot.user) in message.content and not message.author.bot:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
             await message.channel.send(embed=embed)
 
