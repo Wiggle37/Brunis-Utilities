@@ -15,7 +15,7 @@ class CommandErrorHandler(commands.Cog):
 
         # - Check Fail - #
         if isinstance(error, commands.CheckFailure):
-            return
+            pass
 
         # - Command On Cooldown Errors - #
         if isinstance(error, commands.CommandOnCooldown):
@@ -56,7 +56,6 @@ class CommandErrorHandler(commands.Cog):
 
         if isinstance(error, commands.MissingAnyRole):
             if ctx.author.id in self.bot.owner_ids:
-                await ctx.send('Your command was reinvoked because you are a bot owner.')
                 return await ctx.reinvoke()
             
             role_name = [discord.utils.get(self.dank_merchants.roles, id = id).name for id in error.missing_roles]
@@ -64,7 +63,6 @@ class CommandErrorHandler(commands.Cog):
 
         if isinstance(error, commands.MissingPermissions):
             if ctx.author.id in self.bot.owner_ids:
-                await ctx.send('Your command was reinvoked because you are a bot owner.')
                 return await ctx.reinvoke()
 
             return await ctx.send(f'You are missing the following permission to run this command: `{error.missing_perms}`')
@@ -78,7 +76,7 @@ class CommandErrorHandler(commands.Cog):
         tb_split = [tb[i:i+1990] for i in range(0, len(tb), 1990)]
         # sends each one
         for info in tb_split:
-            await debug.send(f"```py\n{info}\n```")    
+            await debug.send(f"```py\n{info}\n```")
 
 def setup(bot):
     bot.add_cog(CommandErrorHandler(bot))
