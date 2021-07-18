@@ -354,15 +354,12 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            giveaway.add(member, amount)
+        total = await dono.set(ctx, 'gaw', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
@@ -376,25 +373,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='gda', description='Add to someones giveaway donations')
     @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw + ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.add(ctx, 'gaw', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -407,25 +395,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='gdr', description='Remove from someones giveaway donations')
     @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def gaw_dono_remove(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw - ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.remove(ctx, 'gaw', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -438,20 +417,13 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='gdrs', description='Reset someones giveaway donations')
     @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def gaw_dono_reset(self, ctx, member: discord.Member):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
 
-        await cursor.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [member.id, 0, 0])
-        await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        await dono.reset(ctx, 'gaw', member)
 
         await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-        await dbase.commit()
-
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, 0)
 
@@ -467,25 +439,15 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='hds', description='Set someones heist donations')
     @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manager, Admin, Co-Owner
     async def heist_dono_set(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.set(ctx, 'heist', member, amount)
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThe have now donated a total of **{'{:,}'.format(total)}**")
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThe have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -498,25 +460,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='hda', description='Add to someones heist donations')
     @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manger, Admin, Co-Owner
     async def heist_dono_add(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
             await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist + ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.add(ctx, 'heist', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -529,25 +482,17 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='hdr', description='Remove from someones heist donations')
     @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manger Admin, Co-Owner
     async def heist_dono_remove(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist - ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.remove(ctx, 'heist', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        total = await self.get_amount(ctx, member)
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -560,20 +505,13 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='hdrs', description='Reset someones heist donations')
     @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manger, Admin, Co-Owner
     async def heist_dono_reset(self, ctx, member: discord.Member):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
 
-        await cursor.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist = ?;", [member.id, 0, 0])
-        await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        await dono.reset(ctx, 'heist', member)
 
         await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-        await dbase.commit()
-
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, 0)
 
@@ -589,25 +527,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='eds', description='Set someones event donations')
     @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manager, Admin, Co-Owner
     async def event_dono_set(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
+        
+        total = await dono.set(ctx, 'event', member, amount)
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -620,25 +549,15 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='eda', description='Add to someones event donations')
     @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manger, Admin, Co-Owner
     async def event_dono_add(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event + ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.add(ctx, 'event', member, amount)
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -651,25 +570,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='edr', description='Remove from someones event donations')
     @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manger, Admin, Co-Owner
     async def event_dono_remove(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event - ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.remove(ctx, 'event', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -682,20 +592,13 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='edrs', description='Reset someones event donations')
     @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manger, Admin, Co-Owner
     async def event_dono_reset(self, ctx, member: discord.Member):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
 
-        await cursor.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event = ?;", [member.id, 0, 0])
-        await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        await dono.reset(ctx, 'event', member)
 
         await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-        await dbase.commit()
-
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, 0)
 
@@ -711,25 +614,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='sds', description='Set someones special donations')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Mod, Admin, Co-Owner
     async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.set(ctx, 'special', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -742,25 +636,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='sda', description='Add to someones special donations')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Admin, Co-Owner
     async def special_dono_add(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special + ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.add(ctx, 'special', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -773,25 +658,16 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='sdr', description='Remove from someones special donations')
     @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Mod, Admin, Co-Owner
     async def special_dono_remove(self, ctx, member: discord.Member, amount: str):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special - ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        total = await dono.remove(ctx, 'special', member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
 
-            await dbase.commit()
-
-            total = await self.get_amount(ctx, member)
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{'{:,}'.format(total)}**")
-
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, amount)
 
@@ -804,20 +680,13 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='sdrs', description='Reset someones special donations')
     @commands.has_any_role(784492058756251669, 788738305365114880) # Admin, Co-Owner
     async def special_dono_reset(self, ctx, member: discord.Member):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
 
-        await cursor.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special = ?;", [member.id, 0, 0])
-        await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        await dono.reset(ctx, 'special', member)
 
         await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-        await dbase.commit()
-
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
 
-        await dbase.close()
         await self.roles(ctx, member)
         await self.aboose(ctx, member, 0)
 
@@ -833,28 +702,15 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='mds', description='Set someones money donations')
     @commands.has_any_role(788738305365114880, 788738308879941633) #Co-Owner, Bot Dev
     async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
+        
+        await money.set(member, amount)
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            await dbase.commit()
-
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount set was **${amount}**")
-
-            await self.roles(ctx, member)
-
-        await dbase.close()
-        await self.roles(ctx, member)
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **${amount}**")
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount set: `⏣{amount}`', color=0x00ff00)
         embed.timestamp = datetime.utcnow()
@@ -865,26 +721,15 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='mda', description='Add to someones money donations')
     @commands.has_any_role(788738305365114880, 788738308879941633) #Co-Owner, Bot Dev
     async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money + ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        await money.add(member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            await dbase.commit()
-
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note added for **{member}**\nThe amount added was **${amount}**")
-
-        await dbase.close()
-        await self.roles(ctx, member)
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **${amount}**")
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount added: `⏣{amount}`', color=0x00ff00)
         embed.timestamp = datetime.utcnow()
@@ -895,26 +740,15 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='mdr', description='Remove from someones money donations')
     @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
     async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
         if amount == False:
-            await ctx.send('Not a valid number there bud')
+            return await ctx.send('Not a valid number there bud')
 
-        else:
-            await cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money - ?;", [member.id, amount, amount])
-            await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+        await money.remove(member, amount)
 
-            await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-            await dbase.commit()
-
-            amount = ('{:,}'.format(amount))
-            await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **${amount}**")
-
-        await dbase.close()
-        await self.roles(ctx, member)
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **${amount}**")
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\nAmount removed: `⏣{amount}`', color=0xff0000)
         embed.timestamp = datetime.utcnow()
@@ -925,21 +759,12 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.command(name='mdrs', description='Reset someones money donations')
     @commands.has_any_role(788738305365114880, 788738308879941633) #Co-Owner, Bot Dev
     async def money_dono_reset(self, ctx, member: discord.Member):
-        dbase = await aiosqlite.connect('dono.db')
-        cursor = await dbase.cursor()
         await self.get_member(ctx, member)
 
-        await cursor.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money = ?;", [member.id, 0, 0])
-        await cursor.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
+        await money.reset(member)
+        
         await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
-
-        await dbase.commit()
-
         await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **$0**")
-
-        await dbase.close()
-        await self.roles(ctx, member)
 
         embed = discord.Embed(title=f'Donations Updated For {member.display_name}', description=f'Category: `Money`\n**AMOUNT RESET TO 0**', color=0xff0000)
         embed.timestamp = datetime.utcnow()

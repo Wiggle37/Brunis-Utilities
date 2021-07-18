@@ -2,172 +2,106 @@ import discord
 
 import aiosqlite
 
-class giveaway:
-    # Set Amount
-    async def set(member: discord.Member, amount: int):
+categories = [
+    'gaw',
+    'heist',
+    'event',
+    'special'
+]
+
+async def get_amount(ctx, member: discord.Member):
+    async with aiosqlite.connect('dono.db') as dbase:
+        member = member or ctx.author
+
+        cursor = await dbase.execute(f"SELECT total FROM donations WHERE user_id = '{member.id}'")
+        amount = await cursor.fetchone()
+
+    return amount[0]
+
+'''
+Normal
+'''
+class dono:
+    # Set Any Dono Amount
+    async def set(ctx, category, member: discord.Member, amount: int):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            if category not in categories:
+                return
 
-            dbase.commit()
+            await dbase.execute(f"INSERT INTO donations (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-    # Add Amount
-    @staticmethod
-    async def add(member: discord.Member, amount: int):
+            await dbase.commit()
+            return await get_amount(ctx, member)
+
+    # Add Any Dono Amount
+    async def add(ctx, category, member: discord.Member, amount: int):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw + ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            if category not in categories:
+                return
+                
+            await dbase.execute(f"INSERT INTO donations (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = {category} + ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-            dbase.commit()
+            await dbase.commit()
+            return await get_amount(ctx, member)
 
-    # Remove Amount
-    async def remove(member: discord.Member, amount: int):
+    # Remove Any Dono Amount
+    async def remove(ctx, category, member: discord.Member, amount: int):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = gaw - ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            if category not in categories:
+                return
+                
+            await dbase.execute(f"INSERT INTO donations (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = {category} - ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-            dbase.commit()
+            await dbase.commit()
+            return await get_amount(ctx, member)
 
-    # Reset Amount
-    async def reset(member: discord.Member):
+    # Reset Any Dono Amount
+    async def reset(ctx, category, member: discord.Member):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET gaw = ?;", [member.id, 0, 0])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            if category not in categories:
+                return
+                
+            await dbase.execute(f"INSERT INTO donations (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = 0;", [member.id, 0])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-            dbase.commit()
+            await dbase.commit()
+            return await get_amount(ctx, member)
 
-class heist:
-    # Set Amount
-    async def set(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Add Amount
-    @staticmethod
-    async def add(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, gaw) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist + ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Remove Amount
-    async def remove(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = heist - ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Reset Amount
-    async def reset(member: discord.Member):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, heist) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET heist = ?;", [member.id, 0, 0])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-class event:
-    # Set Amount
-    async def set(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Add Amount
-    @staticmethod
-    async def add(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event + ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Remove Amount
-    async def remove(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = event - ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Reset Amount
-    async def reset(member: discord.Member):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, event) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET event = ?;", [member.id, 0, 0])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-class special:
-    # Set Amount
-    async def set(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Add Amount
-    @staticmethod
-    async def add(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special + ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Remove Amount
-    async def remove(member: discord.Member, amount: int):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = special - ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
-    # Reset Amount
-    async def reset(member: discord.Member):
-        async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, special) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET special = ?;", [member.id, 0, 0])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
-
-            dbase.commit()
-
+'''
+Money
+'''
 class money:
-    # Set Amount
+    # Set Money Dono Amount
     async def set(member: discord.Member, amount: int):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            await dbase.execute(f"INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-            dbase.commit()
+            await dbase.commit()
 
-    # Add Amount
-    @staticmethod
+    # Add Money Dono Amount
     async def add(member: discord.Member, amount: int):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money + ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            await dbase.execute(f"INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money + ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-            dbase.commit()
+            await dbase.commit()
 
-    # Remove Amount
+    # Remove Money Dono Amount
     async def remove(member: discord.Member, amount: int):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money - ?;", [member.id, amount, amount])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            await dbase.execute(f"INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = money - ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-            dbase.commit()
+            await dbase.commit()
 
-    # Reset Amount
+    # Reset Money Dono Amount
     async def reset(member: discord.Member):
         async with aiosqlite.connect('dono.db') as dbase:
-            dbase.execute("INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = ?;", [member.id, 0, 0])
-            dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
+            await dbase.execute(f"INSERT INTO donations (user_id, money) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET money = 0;", [member.id, 0])
+            await dbase.execute(f"UPDATE donations SET total = gaw + heist + event + special WHERE user_id == {member.id}")
 
-            dbase.commit()
+            await dbase.commit()
