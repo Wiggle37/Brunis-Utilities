@@ -7,13 +7,10 @@ from config import *
 class economysettings:
     @staticmethod
     async def banned(user_id):
-        dbase = await aiosqlite.connect('settings.db')
-        cursor = await dbase.cursor()
+        async with aiosqlite.connect('settings.db') as dbase:
+            cursor = await dbase.execute(f"SELECT ban FROM bans WHERE user_id = '{user_id}'")
+            result = await cursor.fetchone()
 
-        await cursor.execute(f"SELECT ban FROM bans WHERE user_id = '{user_id}'")
-        result = await cursor.fetchone()
-
-        await dbase.close()
         return result is not None
 
     @staticmethod
