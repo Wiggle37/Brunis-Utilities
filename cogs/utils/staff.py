@@ -52,7 +52,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         await ctx.send("Channel unlocked")
 
 
-        '''
+    '''
     Auto Reponses
     '''
     # Add Auto Reponse
