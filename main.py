@@ -61,7 +61,7 @@ async def on_ready():
         f"{color.YELLOW}Time: {datetime.utcnow()}\n{color.END}"
         f"{color.BLACK}==============================================\n{color.END}")
 
-@tasks.loop(seconds = 3600)
+@tasks.loop(seconds = 10)
 async def close_threads():
     import threading
     for t in threading.enumerate():
