@@ -9,6 +9,7 @@ import psutil
 import sys
 import discord
 import math
+import sqlite3
 
 from config import *
 from badges import *
