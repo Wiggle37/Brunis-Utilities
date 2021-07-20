@@ -5,6 +5,9 @@ class Confirm(discord.ui.View):
         super().__init__()
         self.value = None
 
+    def check_author(self, ctx, interaction: discord.Integration):
+        return ctx.author == interaction.author
+
     @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
     async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
         self.value = True
