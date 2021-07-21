@@ -23,6 +23,8 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
             cursor = await cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
             total = await cursor.fetchone()[0]
 
+            await dbase.commit()
+
             embed = discord.Embed(title=f'Bumps for **{await ctx.guild.fetch_member(user)}**', description='The server bump tracker', color=0x00ff00)
             embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
             embed.add_field(name='Total Bumps:', value=f'`{int(total)}`')
@@ -74,6 +76,8 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
             cursor = await dbase.execute("SELECT user_id, MAX(bump) FROM bumps;")
             top = await cursor.fetchone()
             top = int(top[0])
+
+            await dbase.commit()
 
             role = discord.utils.find(lambda r: r.id == 787868761620348929, message.guild.roles)
 
