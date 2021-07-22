@@ -50,6 +50,9 @@ class CommandErrorHandler(commands.Cog):
             return await ctx.send(f"You are missing the `{error.param.name}` argument in the command\n```b!{ctx.command} {ctx.command.signature}```")
 
         # - Permission Errors - #
+        if isinstance(error, discord.errors.Forbidden):
+            return await ctx.author.send(f'The bot does not have to correct permissions in this channel please contact a staff member to get perms fixed in {ctx.channel.mention}')
+
         if isinstance(error, commands.NotOwner):
             return await ctx.send("You need to be the owner of the bot to run this command")
 
