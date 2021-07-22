@@ -31,6 +31,9 @@ class CommandErrorHandler(commands.Cog):
         if isinstance(error, commands.MessageNotFound):
             return await ctx.send('The provied message was not found')
 
+        if isinstance(error, commands.RoleNotFound):
+            return await ctx.send(f"The role provided was not found")
+
         if isinstance(error, commands.ChannelNotFound):
             return await ctx.send('The provided channel was not found')
 
@@ -55,9 +58,6 @@ class CommandErrorHandler(commands.Cog):
 
         if isinstance(error, commands.NotOwner):
             return await ctx.send("You need to be the owner of the bot to run this command")
-
-        if isinstance(error, commands.RoleNotFound):
-            return await ctx.send(f"The role provided was not found")
 
         if isinstance(error, commands.MissingAnyRole):
             if ctx.author.id in self.bot.owner_ids:
