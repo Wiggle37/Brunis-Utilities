@@ -63,7 +63,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         cursor = await dbsae.cursor()
 
         await cursor.execute(f"SELECT trigger FROM text WHERE trigger == ?", [trigger])
-        exist = cursor.fetchone()
+        exist = await cursor.fetchone()
         if exist is None:
             await cursor.execute(f"INSERT INTO text (trigger) VALUES (?) ON CONFLICT(trigger) DO UPDATE SET trigger = ?", [trigger, trigger])
             await cursor.execute(f"UPDATE text SET response = ? WHERE trigger == '{trigger}'", [response])
