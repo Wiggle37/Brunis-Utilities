@@ -68,8 +68,6 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
             cursor = await dbase.execute("SELECT trigger, response FROM text")
             text_response = await cursor.fetchall()
 
-            await dbase.commit()
-
         if text_response is None:
             return
 
@@ -88,8 +86,6 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
         async with aiosqlite.connect('autoresponse.db') as dbase:
             cursor = await dbase.execute("SELECT trigger, emoji FROM emoji")
             emoji_react = await cursor.fetchall()
-
-            await dbase.commit()
 
         if emoji_react is None:
             return
