@@ -48,10 +48,10 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                     else:
                         pass
 
-                if CONFIG["config"]["settings"]["heistmode"]:
+                if CONFIG["settings"]["heistmode"]:
                     await self.general.send(f'{member.mention} has joined the server around a heist time, when the heist starts you may join! <#822567848400388106>')
 
-                elif not CONFIG["config"]["settings"]["heistmode"]:
+                elif not CONFIG["settings"]["heistmode"]:
                     join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member.mention}** has joined the server!', color=0x00ff00)
                     join_embed.set_thumbnail(url=member.avatar.url)
                     join_embed.add_field(name='__**What To Do:**__', value=f'<#787343840108478474> ➞ Read the rules of Dank Merchants\n<#784547669619507201> ➞ Get some self roles\n<#863437182131503134> ➞ Check out our amazing grinder perks\n\nAnd any other questions may be asked in <#787761394664996865>')
