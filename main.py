@@ -61,13 +61,6 @@ async def on_ready():
         f"{color.YELLOW}Time: {datetime.utcnow()}\n{color.END}"
         f"{color.BLACK}==============================================\n{color.END}")
 
-@tasks.loop(seconds = 10)
-async def close_threads():
-    import threading
-    for t in threading.enumerate():
-        try: await t.close()
-        except: pass
-
 @tasks.loop(seconds = 60)
 async def status():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Over {len(bot.users)} people"), status = discord.Status.idle)
@@ -79,5 +72,4 @@ async def bot_ready():
 bot.loop.create_task(load_extensions())
 bot.loop.create_task(aiohttp_session())
 status.start()
-close_threads.start()
 bot.run(TOKEN)
