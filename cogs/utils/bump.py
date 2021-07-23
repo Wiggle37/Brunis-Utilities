@@ -16,18 +16,15 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
         user = (member or ctx.author).id
 
         async with aiosqlite.connect('bump.db') as dbase:
-            await dbase.execute(f"INSERT INTO bumps (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user, user])
             cursor = await dbase.execute(f"SELECT bump FROM bumps WHERE user_id = '{user}'")
             bump = await cursor.fetchone()[0]
 
             cursor = await cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
             total = await cursor.fetchone()[0]
 
-            await dbase.commit()
-
             embed = discord.Embed(title=f'Bumps for **{await ctx.guild.fetch_member(user)}**', description='The server bump tracker', color=0x00ff00)
-            embed.add_field(name='Successful Bumps:', value=f'`{int(bump)}`')
-            embed.add_field(name='Total Bumps:', value=f'`{int(total)}`')
+            embed.add_field(name='Successful Bumps:', value=f'`{bump}`')
+            embed.add_field(name='Total Bumps:', value=f'`{total}`')
             embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
 
             if bump > 0:
@@ -72,16 +69,12 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
             else:
                 await dbase.execute("INSERT INTO bumps (user_id, allbumps) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET allbumps = allbumps + ?;", [user_id, bump, bump])
                 
-
             cursor = await dbase.execute("SELECT user_id, MAX(bump) FROM bumps;")
             top = await cursor.fetchone()
-            top = int(top[0])
-
-            await dbase.commit()
 
             role = discord.utils.find(lambda r: r.id == 787868761620348929, message.guild.roles)
 
-            user = await message.guild.fetch_member(top)
+            user = await message.guild.fetch_member(int(top[0]))
                 
             if role in user.roles:
                 await user.remove_roles(role)
