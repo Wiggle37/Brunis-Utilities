@@ -206,7 +206,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
         }
         msg = ''
         for num, perk in level.items():
-            msg += f'**{num}** ➞ {perk}'
+            msg += f'**{num}** ➞ {perk}\n'
         lvl_embed = discord.Embed(title='__**Dank Merchants Level Perks:**__', description=msg, color=0x00ff00)
         await ctx.send(embed=lvl_embed)
 
