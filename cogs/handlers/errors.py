@@ -76,7 +76,7 @@ class CommandErrorHandler(commands.Cog):
 
         # if none of the above we send to a debug channel
         tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
-        debug = self.bot.get_channel(844759955815006222)
+        debug = self.bot.get_channel(CONFIG["info"]["ids"]["debugChannel_id"])
         # splits the value into strings less than 2000 chars, in case the tb is long
         tb_split = [tb[i:i+1990] for i in range(0, len(tb), 1990)]
         # sends each one

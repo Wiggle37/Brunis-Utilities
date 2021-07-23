@@ -11,7 +11,7 @@ class Testing(commands.Cog):
     @commands.command()
     async def test(self, ctx):
         from config import CONFIG
-        return await ctx.send(CONFIG["settings"])
+        return await ctx.send(CONFIG["se"]["settings"])
 
 def setup(bot):
     bot.add_cog(Testing(bot))
