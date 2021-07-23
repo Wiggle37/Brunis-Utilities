@@ -17,18 +17,18 @@ class BumpTracker(commands.Cog, name='bumps', description='Tracks how much the s
 
         async with aiosqlite.connect('bump.db') as dbase:
             cursor = await dbase.execute(f"SELECT bump FROM bumps WHERE user_id = '{user}'")
-            bump = await cursor.fetchone()[0]
+            bump = await cursor.fetchone()
 
-            cursor = await cursor.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
-            total = await cursor.fetchone()[0]
+            cursor = await dbase.execute(f"SELECT allbumps FROM bumps WHERE user_id = '{user}'")
+            total = await cursor.fetchone()
 
             embed = discord.Embed(title=f'Bumps for **{await ctx.guild.fetch_member(user)}**', description='The server bump tracker', color=0x00ff00)
-            embed.add_field(name='Successful Bumps:', value=f'`{bump}`')
-            embed.add_field(name='Total Bumps:', value=f'`{total}`')
+            embed.add_field(name='Successful Bumps:', value=f'`{bump[0]}`')
+            embed.add_field(name='Total Bumps:', value=f'`{total[0]}`')
             embed.set_footer(text='Big thanks to Firecracker for helping with the bump system')
 
-            if bump > 0:
-                embed.add_field(name='Percentage:', value=f'`{int(round(bump / total, 2) * 100)}%`')
+            if bump[0] > 0:
+                embed.add_field(name='Percentage:', value=f'`{int(round(bump[0] / total[0], 2) * 100)}%`')
             
             await ctx.send(embed=embed)
 
