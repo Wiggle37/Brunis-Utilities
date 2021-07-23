@@ -270,7 +270,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
 
         embed.set_thumbnail(url=user.avatar.url)
         embed.timestamp = datetime.utcnow()
-        embed.set_footer(text=user.id, icon_url=ctx.guild.icon_url)
+        embed.set_footer(text=user.id, icon_url=ctx.guild.icon.url)
 
         await ctx.send(embed=embed)
 
