@@ -14,7 +14,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=bot.loop)
-        self.dank_merchants = self.bot.get_guild(CONFIG["config"]["info"]["ids"]["merchants_id"])
+        self.dank_merchants = self.bot.get_guild(CONFIG["info"]["ids"]["merchants_id"])
 
     #Make Acc Command(Backup)
     @commands.command(hidden=True)

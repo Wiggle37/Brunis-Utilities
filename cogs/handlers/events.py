@@ -9,9 +9,9 @@ from config import *
 class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     def __init__(self, bot):
         self.bot = bot
-        self.general = self.bot.get_channel(CONFIG["config"]["info"]["ids"]["general_id"])
-        self.rules_channel = self.bot.get_channel(CONFIG["config"]["info"]["ids"]["rulesChannel_id"])
-        self.self_roles_channel = self.bot.get_channel(CONFIG["config"]["info"]["ids"]["selfRolesChannel_id"])
+        self.general = self.bot.get_channel(CONFIG["info"]["ids"]["general_id"])
+        self.rules_channel = self.bot.get_channel(CONFIG["info"]["ids"]["rulesChannel_id"])
+        self.self_roles_channel = self.bot.get_channel(CONFIG["info"]["ids"]["selfRolesChannel_id"])
 
     '''
     MEMBER EVENTS
