@@ -13,20 +13,20 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     # Add Roles
     @commands.command(name = "addrole", description = "Adds role(s) to a member", aliases = ["ar"])
     @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def addrole(self, ctx, member: discord.Member, roles: commands.Greedy[discord.Role]):
-        await member.add_roles(roles)
+    async def addrole(self, ctx, member: discord.Member, role: discord.Role):
+        await member.add_roles(role)
         await ctx.send(f"Role added to **{member}**")
 
     # Remove Roles
     @commands.command(name = "removerole", description = "Removes role(s) from a member", aliases = ["rr"])
-    @commands.has_any_role(784492058756251669, 784527745539375164) #Admin, Mod
-    async def removerole(self, ctx, member: discord.Member, roles: commands.Greedy[discord.Role]):
-        await member.remove_roles(roles)
+    @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
+    async def removerole(self, ctx, member: discord.Member, role: discord.Role):
+        await member.remove_roles(role)
         await ctx.send(f"Role removed from **{member}**")
 
     # Purge
     @commands.command(name = "purge", description = "Delete a certain amount of messages given")
-    @commands.has_any_role(784492058756251669, 784527745539375164) #Admin, Mod
+    @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
     async def purge(self, ctx, amount: int = 1):
         if amount > 500:
             return await ctx.send(f"Purge less than 500 messages please")
@@ -39,14 +39,14 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
 
     # Lock
     @commands.command(name = "Lock", description = "Locks the current channel for @\u200beveryone")
-    @commands.has_any_role(791516118120267806) # staff
+    @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
     async def lock(self, ctx):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
         await ctx.send("Channel locked")
 
     # Unlock
     @commands.command(name = "unlock", description = "Unlocks the current channel for @\u200beveryone")
-    @commands.has_any_role(791516118120267806) # staff
+    @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
     async def unlock(self, ctx):
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
         await ctx.send("Channel unlocked")
