@@ -700,7 +700,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     '''
     #Dono Set
     @commands.command(name='mds', description='Set someones money donations')
-    @commands.has_any_role(788738305365114880, 788738308879941633) #Co-Owner, Bot Dev
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
@@ -719,7 +719,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
     #Dono Add
     @commands.command(name='mda', description='Add to someones money donations')
-    @commands.has_any_role(788738305365114880, 788738308879941633) #Co-Owner, Bot Dev
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
@@ -738,7 +738,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
     #Dono Remove
     @commands.command(name='mdr', description='Remove from someones money donations')
-    @commands.has_any_role(788738305365114880, 785202756641619999, 788738308879941633) #Co-Owner, Bruni, Bot Dev
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
@@ -757,7 +757,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
 
     #Dono Reset
     @commands.command(name='mdrs', description='Reset someones money donations')
-    @commands.has_any_role(788738305365114880, 788738308879941633) #Co-Owner, Bot Dev
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def money_dono_reset(self, ctx, member: discord.Member):
         await self.get_member(ctx, member)
 

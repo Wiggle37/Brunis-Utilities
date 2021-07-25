@@ -5,8 +5,8 @@ class Confirm(discord.ui.View):
         super().__init__()
         self.value = None
 
-    def check_author(self, ctx, interaction: discord.Integration):
-        return ctx.author == interaction.author
+    async def interaction_check(self, interaction: discord.Integration) -> bool:
+        return await super().interaction_check(interaction)
 
     @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
     async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
@@ -19,8 +19,9 @@ class Confirm(discord.ui.View):
         self.stop()
 
 class ChosePremium(discord.ui.View):
-    def __init__(self):
+    def __init__(self, interaction):
         super().__init__()
+        self.interaction_check(interaction)
         self.value = None
 
     @discord.ui.button(label='Premium', style=discord.ButtonStyle.green)
