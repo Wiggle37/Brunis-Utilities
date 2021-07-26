@@ -3,6 +3,7 @@ from discord.ext import commands
 
 import os
 import sys
+import json
 import textwrap
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -29,6 +30,20 @@ class admin(commands.Cog, name = "Admin"):
                 return str(path)
         
         return None
+
+    # Add Staff
+    @commands.command()
+    @commands.is_owner()
+    async def add_staff(self, ctx, members: commands.Greedy[discord.Member]):
+        with open('config.json', 'w') as file:
+            for staff in members:
+                if staff.id not in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+                    CONFIG["settings"]["anti_raid"]["whitelisted_members"] += [staff.id]
+                else:
+                    continue
+            json.dump(CONFIG, file, indent=4)
+
+        await ctx.send(f'Added **{len(members)}** to the whitelisted anitraid whitelisted staff list')
 
     # Load
     @commands.command()
@@ -121,8 +136,8 @@ class admin(commands.Cog, name = "Admin"):
         return content.strip('` \n')
 
     # Eval
-    @commands.is_owner()
     @commands.command()
+    @commands.is_owner()
     async def eval(self, ctx, *, body):
         if 'ctx.bot.http.token' in body or '.env' in body:
             return await ctx.send('no token for you :|')
@@ -180,6 +195,10 @@ class admin(commands.Cog, name = "Admin"):
             # else we send the returned value
             else:
                 await self.send_code(ctx, f'{value}{ret}')
+
+    @eval.error
+    async def eval_error(self, ctx, error):
+        pass
 
 def setup(bot):
     bot.add_cog(admin(bot))

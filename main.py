@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import aiohttp
 from datetime import datetime
 
+from config import *
 from color import *
 
 load_dotenv()
@@ -15,7 +16,7 @@ bot = commands.Bot(
     command_prefix = ["b!", "B!", "b ", "B "],
     intents = discord.Intents.all(),
     case_insensitive = True,
-    owner_ids = {531317158530121738, 824010269071507536, 732627627235606629},
+    owner_ids = CONFIG["info"]["owner_ids"],
 )
 
 # case insensitive help command for cogs 

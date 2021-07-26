@@ -16,6 +16,6 @@ class economysettings:
     @staticmethod
     def economycheck():
         async def predicate(ctx):
-            return ctx.channel.id not in CONFIG["settings"]["blacklistedchannels"] \
+            return ctx.channel.id not in CONFIG["settings"]["economy"]["blacklistedchannels"] \
                 and await economysettings.banned(ctx.author.id) is False
         return commands.check(predicate)
