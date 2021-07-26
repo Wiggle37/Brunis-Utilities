@@ -13,6 +13,22 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     def __init__(self, bot):
         self.bot = bot
 
+    # Dump Role
+    @commands.command(name='dump', description='Shows all the members with a specified role')
+    async def dump(self, ctx, role: discord.Role):
+        msg = ''
+        for member in role.members:
+            msg += f'{member.name}({member.id})\n'
+
+        if len(msg) > 3999:
+            msg_split = [msg[i:i+1900] for i in range(0, len(msg), 1900)]
+            # sends each one
+            for info in msg_split:
+                await ctx.send(f"```py\n{msg}```")
+
+        else:
+            await ctx.send(f'```py\n{msg}```')
+
     # Add Roles
     @commands.command(name = "addrole", description = "Adds role(s) to a member", aliases = ["ar"])
     @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
