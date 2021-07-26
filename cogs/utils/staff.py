@@ -4,8 +4,6 @@ from discord.ext import commands
 import aiosqlite
 import sqlite3
 
-from discord.ui import view
-
 from config import *
 from buttons import *
 
@@ -20,14 +18,10 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         for member in role.members:
             msg += f'{member.name}({member.id})\n'
 
-        if len(msg) > 3999:
-            msg_split = [msg[i:i+1900] for i in range(0, len(msg), 1900)]
-            # sends each one
-            for info in msg_split:
-                await ctx.send(f"```py\n{msg}```")
-
-        else:
-            await ctx.send(f'```py\n{msg}```')
+        msg_split = [msg[i:i+1900] for i in range(0, len(msg), 1900)]
+        # sends each one
+        for info in msg_split:
+            await ctx.send(f"```py\n{info}```")
 
     # Add Roles
     @commands.command(name = "addrole", description = "Adds role(s) to a member", aliases = ["ar"])
