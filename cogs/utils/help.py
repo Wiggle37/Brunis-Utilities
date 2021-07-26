@@ -14,7 +14,9 @@ class bruniUtilsHelp(commands.HelpCommand):
             'CommandErrorHandler',
             'Events',
             'Heist Starter',
-            'Sticky'
+            'Sticky',
+            'AntiRaid',
+            'Help'
         ]
         
         for cog in mapping:
