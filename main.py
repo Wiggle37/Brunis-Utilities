@@ -15,7 +15,7 @@ bot = commands.Bot(
     command_prefix = ["b!", "B!", "b ", "B "],
     intents = discord.Intents.all(),
     case_insensitive = True,
-    owner_ids = {531317158530121738, 824010269071507536,  737020572906684556},
+    owner_ids = {531317158530121738, 824010269071507536, 732627627235606629},
 )
 
 # case insensitive help command for cogs 
