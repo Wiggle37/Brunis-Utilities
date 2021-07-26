@@ -1,12 +1,15 @@
 import discord
 from discord.ext import commands
 
+import os
+import sys
 import textwrap
 from contextlib import redirect_stdout
 from pathlib import Path
 import traceback
 import io
-import os
+
+from discord.ext.commands import context
 
 from config import *
 
@@ -95,6 +98,13 @@ class admin(commands.Cog, name = "Admin"):
 
         await ctx.send('Refreshed the whole bot')
 
+    # Restart
+    @commands.command()
+    @commands.is_owner()
+    async def restart(self, ctx):
+        await ctx.send('The bot is being restarted')
+        os.system('cls')
+        os.execv(sys.executable, ['python'] + sys.argv)
     
     async def send_code(self, ctx, line):
         """Ensures that outputs do not exceed 2000 messages to throw an error
