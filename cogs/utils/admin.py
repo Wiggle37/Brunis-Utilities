@@ -31,20 +31,6 @@ class admin(commands.Cog, name = "Admin"):
         
         return None
 
-    # Add Staff
-    @commands.command()
-    @commands.is_owner()
-    async def add_staff(self, ctx, members: commands.Greedy[discord.Member]):
-        with open('config.json', 'w') as file:
-            for staff in members:
-                if staff.id not in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
-                    CONFIG["settings"]["anti_raid"]["whitelisted_members"] += [staff.id]
-                else:
-                    continue
-            json.dump(CONFIG, file, indent=4)
-
-        await ctx.send(f'Added **{len(members)}** to the whitelisted anitraid whitelisted staff list')
-
     # Load
     @commands.command()
     @commands.is_owner()

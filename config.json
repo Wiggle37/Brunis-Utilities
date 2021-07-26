@@ -24,11 +24,7 @@
             "eval_perms": []
         },
         "anti_raid": {
-            "whitelisted_members": [
-                824010269071507536,
-                852670742419603467,
-                783306479721512960
-            ],
+            "whitelisted_members": [],
             "staff_roles": []
         },
         "heists": {

@@ -12,6 +12,51 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     def __init__(self, bot):
         self.bot = bot
 
+    '''
+    AntiRaid Staff Commands
+    '''
+    # Add Staff
+    @commands.command()
+    @commands.is_owner()
+    async def add_staff(self, ctx, members: commands.Greedy[discord.Member]):
+        with open('config.json', 'w') as file:
+            for staff in members:
+                if staff.id not in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+                    CONFIG["settings"]["anti_raid"]["whitelisted_members"] += [staff.id]
+                else:
+                    continue
+            json.dump(CONFIG, file, indent=4)
+
+        await ctx.send(f'Added **{len(members)}** to the whitelisted anitraid whitelisted staff list')
+
+    # Remove Staff
+    @commands.command()
+    @commands.is_owner()
+    async def remove_staff(self, ctx, members: discord.Member):
+        index = 0
+        with open('config.json', 'w') as file:
+            for staff in members:
+                if staff.id in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+                    for user in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+                        if user == staff.id:
+                            del CONFIG["settings"]["anti_raid"]["whitelisted_members"][index]
+                        index += 1
+                else:
+                    continue
+            json.dump(CONFIG, file, indent=4)
+
+        await ctx.send(f'Removed **{len(members)}** from the whitelisted staff list')
+
+    # Staff List
+    @commands.command()
+    async def staff_list(self, ctx):
+        staff = ''
+        for staffs in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+            staff_ = self.bot.get_user(staffs)
+            staff += f'{staff_.name}({staff_.id})\n'
+
+        await ctx.send(f'```{staff}```')
+
     # Add Overides
     @commands.command(name='addoveride', aliases=['ao'])
     @commands.is_owner()
@@ -23,7 +68,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         for channel in ctx.guild.text_channels:
             try:
                 await msg.edit(content=f'Channels Updated: {num}\nFailed Channel Updates: {num_}')
-                await channel.set_permissions(ctx.me, read_messages=True, send_messages=True, embed_links=True, add_reactions=True, external_emojis=True)
+                await channel.set_permissions(ctx.me, read_messages=True, send_messages=True, embed_links=True, add_reactions=True, external_emojis=True, manager_permissions=True)
                 
                 num += 1
 
