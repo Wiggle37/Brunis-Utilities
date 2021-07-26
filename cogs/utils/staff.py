@@ -1,3 +1,4 @@
+from os import error
 import discord
 from discord.ext import commands
 
@@ -11,8 +12,34 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     def __init__(self, bot):
         self.bot = bot
 
+    # Add Overides
+    @commands.command(name='addoveride', aliases=['ao'])
+    @commands.is_owner()
+    async def addoveride(self, ctx):
+        num = 0
+        num_ = 0
+        errors = ''
+        msg = await ctx.send('Attempting to add overides to all channels')
+        for channel in ctx.guild.text_channels:
+            try:
+                await msg.edit(content=f'Channels Updated: {num}\nFailed Channel Updates: {num_}')
+                await channel.set_permissions(ctx.me, read_messages=True, send_messages=True, embed_links=True, add_reactions=True, external_emojis=True)
+                
+                num += 1
+
+            except:
+                num_ += 1
+                errors += f'Error Updating: {channel.name}\n'
+
+        tb_split = [errors[i:i+1990] for i in range(0, len(errors), 1990)]
+        # sends each one
+        for info in tb_split:
+            await ctx.send(f"```{info}\n```")
+        await ctx.send(f'{num} channels updated')
+
     # Dump Role
     @commands.command(name='dump', description='Shows all the members with a specified role')
+    @commands.is_owner()
     async def dump(self, ctx, role: discord.Role):
         msg = ''
         for member in role.members:
