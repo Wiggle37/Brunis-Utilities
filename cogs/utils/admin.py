@@ -9,8 +9,6 @@ from pathlib import Path
 import traceback
 import io
 
-from discord.ext.commands import context
-
 from config import *
 
 class admin(commands.Cog, name = "Admin"):
@@ -126,8 +124,11 @@ class admin(commands.Cog, name = "Admin"):
     @commands.is_owner()
     @commands.command()
     async def eval(self, ctx, *, body):
-        if 'ctx.bot.http.token' in body:
+        if 'ctx.bot.http.token' in body or '.env' in body:
             return await ctx.send('no token for you :|')
+        
+        if 'lambda' in body:
+            return await ctx.send('no lambda for you :)')
 
         # defining variables we can use in the eval function
         env = {
