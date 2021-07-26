@@ -125,7 +125,9 @@ class admin(commands.Cog, name = "Admin"):
     # Eval
     @commands.is_owner()
     @commands.command()
-    async def eval(self, ctx, *, body):        
+    async def eval(self, ctx, *, body):
+        if 'ctx.bot.http.token' in body:
+            return await ctx.send('no token for you :|')
 
         # defining variables we can use in the eval function
         env = {
