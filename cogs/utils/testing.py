@@ -38,7 +38,8 @@ class Testing(commands.Cog):
             691798464107118622, # Copi
             732627627235606629, # Suhii
             737020572906684556, # Adit
-            824010269071507536  # Wiggle
+            824010269071507536, # Wiggle
+            852670742419603467  # Bruni's Utilities
         ]
 
         member = merchants.get_member(after._user.id)
