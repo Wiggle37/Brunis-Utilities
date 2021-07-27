@@ -29,6 +29,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
 
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
+                embed = discord.Embed(title=f'{member.name} Was Kicked', description=f'They were kicked because thier account age was too young.\nAccount Creation Date: <t:{int(member.created_at.timestamp())}:f>\nThey need <t:{int(member.created_at.timestamp())}:R>')
                 await self.general.send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made <t:{int(member.created_at.timestamp())}:f>, <t:{int(member.created_at.timestamp())}:R>')
 
             else:
