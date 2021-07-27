@@ -82,7 +82,7 @@ class CommandErrorHandler(commands.Cog):
         existing_webhooks = await debug.webhooks()
         
         if existing_webhooks == []:
-            debug_webhook = await debug.create_webhook(name = "Bruni's Utilities error log", avatar = await ctx.me.avatar.read())
+            debug_webhook = await debug.create_webhook(name = "Bruni's Utilities Error Log", avatar = await ctx.me.avatar.read())
         else:
             debug_webhook = existing_webhooks[0]
         

@@ -108,12 +108,11 @@ class admin(commands.Cog, name = "Admin"):
         os.execv(sys.executable, ['python'] + sys.argv)
     
     async def send_code(self, ctx, line):
-        """Ensures that outputs do not exceed 2000 messages to throw an error
-        Does this by splitting the output into exactly 2000 messages each"""
-        lines = [line[i:i+1990] for i in range(0, len(line), 1990)]
-
-        for l in lines:
-            await ctx.send(f"```py\n{l}\n```")
+        """Ensures that outputs do not exceed 4096 messages to throw an error
+        Does this by splitting the output into exactly 4096 messages each"""
+        lines = [line[i:i+4086] for i in range(0, len(line), 4086)]
+        embed_list = [discord.Embed(description = f"```py\n{l}\n```") for l in lines]
+        await ctx.send(embeds = embed_list)
         
     
     def cleanup_code(self, content):
@@ -129,9 +128,6 @@ class admin(commands.Cog, name = "Admin"):
     async def eval(self, ctx, *, body):
         if 'ctx.bot.http.token' in body or '.env' in body:
             return await ctx.send('no token for you :|')
-        
-        if 'lambda' in body:
-            return await ctx.send('no lambda for you :)')
 
         # defining variables we can use in the eval function
         env = {
