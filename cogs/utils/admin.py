@@ -3,6 +3,7 @@ from discord.ext import commands
 
 import os
 import sys
+import aiohttp
 import json
 import textwrap
 from contextlib import redirect_stdout
@@ -15,6 +16,7 @@ from config import *
 class admin(commands.Cog, name = "Admin"):
     def __init__(self, bot):
         self.bot = bot
+        self.session = aiohttp.ClientSession(loop=bot.loop)
 
     def is_valid_ext(self, ext_name: str) -> bool:
         # only looks in files in a directory called cogs
