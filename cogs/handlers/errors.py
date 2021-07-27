@@ -77,11 +77,19 @@ class CommandErrorHandler(commands.Cog):
         # if none of the above we send to a debug channel
         tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
         debug = self.bot.get_channel(CONFIG["info"]["ids"]["debugChannel_id"])
-        # splits the value into strings less than 2000 chars, in case the tb is long
-        tb_split = [tb[i:i+1990] for i in range(0, len(tb), 1990)]
-        # sends each one
-        for info in tb_split:
-            await debug.send(f"```py\n{info}\n```")
+        
+        # checking if there's an existing webhook to use
+        existing_webhooks = await debug.webhooks()
+        
+        if existing_webhooks == []:
+            debug_webhook = await debug.create_webhook(name = "Bruni's Utilities error log", avatar = await ctx.me.avatar.read())
+        else:
+            debug_webhook = existing_webhooks[0]
+        
+        # splits the value into strings less than 4096 chars, in case the tb is long
+        tb_split = [tb[i:i+4086] for i in range(0, len(tb), 4086)]
+        embed_list = [discord.Embed(description = f"```py\n{tb}\n```") for tb in tb_split]
+        await debug_webhook.send(embeds = embed_list)
 
 def setup(bot):
     bot.add_cog(CommandErrorHandler(bot))
