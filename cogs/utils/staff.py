@@ -68,7 +68,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         for channel in ctx.guild.text_channels:
             try:
                 await msg.edit(content=f'Channels Updated: {num}\nFailed Channel Updates: {num_}')
-                await channel.set_permissions(ctx.me, read_messages=True, send_messages=True, embed_links=True, add_reactions=True, external_emojis=True, manager_permissions=True)
+                await channel.set_permissions(ctx.me, read_messages=True, send_messages=True, embed_links=True, add_reactions=True, external_emojis=True, manage_permissions=True)
                 
                 num += 1
 
