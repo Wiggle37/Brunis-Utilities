@@ -81,7 +81,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
 
     @commands.command()
     @commands.cooldown(2, 5, commands.BucketType.user)
-    async def pingg(self, ctx):
+    async def ping(self, ctx):
         start = time.monotonic()
         message = await ctx.send("Pinging...")
         end = time.monotonic()
