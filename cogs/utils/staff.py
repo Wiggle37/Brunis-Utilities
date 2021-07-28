@@ -1,9 +1,9 @@
-from os import error
 import discord
 from discord.ext import commands
 
 import aiosqlite
 import sqlite3
+import asyncio
 
 from config import *
 from buttons import *
@@ -11,6 +11,92 @@ from buttons import *
 class Staff(commands.Cog, name = "Staff", description = "Commands only staff can use"):
     def __init__(self, bot):
         self.bot = bot
+
+    # Staff Day
+    @commands.command()
+    @commands.has_any_role(784492058756251669, 788738305365114880) # Admin, Co-Owner
+    async def staffday(self, ctx):
+        merchants = self.bot.get_guild(784491141022220309)
+        view = Confirm(ctx.author.id)
+        success = 0
+        failed = 0
+        failed_channels = []
+
+        ignored_channels = [
+            784530970220953660, # Welcome
+            792948346268286986, # Vote For Us
+            822567848400388106, # Big Heist Channel
+            787343840108478474, # Rules
+            784547669619507201, # Self Roles
+            787390795182506005, # FAQ
+            854845899493474364, # Role Perks
+            863437182131503134, # Grinder Perks
+            827293945003376650, # BUtils Updates
+            787737517901217893, # Apply For Staff
+            800371218242601000, # Booster Shoutout
+            787385929987522560, # Staff Intro
+            818667976316289024, # Server Change Log
+            868358619043889172, # Ban Appeal
+            787761394664996865, # Support
+            861928682825711616, # Trade Rules
+            787760571972845568, # Scammer Alert
+            787817916820357161, # Sale Item
+            785338471639547918, # Bot News
+            785159189022244894, # Bot Tips
+            797304436175273994, # Prestige Here
+            861939728324755456, # Fight Rules
+            795122854613614614, # Donation Info
+            796200850908774411, # Events Info
+            784494364754706462, # Events
+            850526312865988638, # Mafia
+            861580122984546315, # Rumble
+            789227950636793887, # Auction Court
+            789227726355562547, # Auction Rule
+        ]
+        
+        ignored_categories = [
+            788160365711458314, # Private Property
+            848216650306289704, # Giveaway Managing
+            784498914073116692, # Staff
+            826893902984118272, # Gambling
+            788764981957099520, # Archived
+            788010175402344448, # Fun
+            854730780785115167, # Leveling
+            848038640566403102, # Partnership
+            784494228084228157, # Events
+            796200447571787826, # Heists
+            784535143250788352, # Giveaways
+        ]
+
+        async with ctx.typing():
+            await ctx.send('Are you sure you want to lockdown the server for staffday?', view=view)
+            await view.wait()
+            if view.value is None:
+                return await ctx.send('Timed out...')
+            
+            if view.value:
+                msg = await ctx.send('Attempting to lock all channels...')
+                await asyncio.sleep(2)
+                for channel in merchants.text_channels:
+                    try:
+                        if not channel.category.id in ignored_categories and channel.id not in ignored_channels:
+                            await channel.set_permissions(merchants.default_role, send_messages=False)
+                            success += 1
+                            await msg.edit(content=f'Success: {success}\nFailed: {failed}')
+                        else:
+                            continue
+                    except Exception as error:
+                        await ctx.send(error)
+                        failed_channels.append(channel.name)
+                        failed += 1
+                        await msg.edit(content=f'Success: {success}\nFailed: {failed}')
+                if len(failed_channels) > 0:
+                    await ctx.send(f'Done locking channels, however there were a few channels that could not be updated due to a lack of permissions\nFailed Channels: {", ".join(failed_channels)}')
+                elif len(failed_channels) == 0:
+                    await ctx.send('Done updating all channels, there were no problems along the way!')
+
+            if not view.value:
+                return await ctx.send('Ok, cancelled')
 
     # Dump Role
     @commands.command(name='dump', description='Shows all the members with a specified role')

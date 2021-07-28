@@ -1,12 +1,13 @@
 import discord
 
 class Confirm(discord.ui.View):
-    def __init__(self):
+    def __init__(self, invoked_user_id):
         super().__init__()
         self.value = None
+        self.invoked_user_id = invoked_user_id
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        return interaction.user.id == interaction.message.author.id
+        return interaction.user.id == self.invoked_user_id
 
     @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
     async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):

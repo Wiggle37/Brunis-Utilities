@@ -127,11 +127,11 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     @commands.is_owner()
     async def endspecial(self, ctx):
         async with ctx.typing():
-            view = Confirm()
+            view = Confirm(ctx.author.id)
             await ctx.send('Are you sure you want to continue? This is remove all special donations and convert them into normal donations.', view=view)
             await view.wait()
             if view.value is None:
-                await ctx.send('Confirmation timed out...')
+                return await ctx.send('Confirmation timed out...')
 
             elif view.value:
                 dbase = await aiosqlite.connect('dono.db')
@@ -153,18 +153,18 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
                 await dbase.close()
             
             elif not view.value:
-                await ctx.send('Ok cancelled')
+                return await ctx.send('Ok cancelled')
 
     #Prune Database
     @commands.command(name='prunedb', description='Delete old users from the database that aren\'t in the server anymore', hidden=True)
     @commands.is_owner()
     async def prunedb(self, ctx):
         async with ctx.typing():
-            view = Confirm()
+            view = Confirm(ctx.author.id)
             await ctx.send('Are you sure you want to clear the datebase of all members that have left Dank Merchants?', view=view)
             await view.wait()
             if view.value is None:
-                await ctx.send('Confirmation timed out...')
+                return await ctx.send('Confirmation timed out...')
 
             if view.value:
                 dbase = await aiosqlite.connect('dono.db')
@@ -194,7 +194,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
                 await ctx.send(f'Done pruning members from the database that have left the server, {num} people were removed')
 
             elif not view.value:
-                await ctx.send('Ok cancelled')
+                return await ctx.send('Ok cancelled')
 
     '''
     DONATIONS CHECK
