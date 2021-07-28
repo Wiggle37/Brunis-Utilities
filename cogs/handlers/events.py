@@ -35,6 +35,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
             else:
                 await self.self_roles_channel.send(member.mention, delete_after=7)
                 await self.rules_channel.send(member.mention, delete_after=7)
+                await self.bot.get_channel(869879723776421928).send(member.mention, delete_after=7)
 
                 try:
                     dm_embed = discord.Embed(title=f'Welcome To Dank Merchants!', description=f'In case of you getting banned from the server join [this](https://discord.gg/ubtz7gK2js) server to appeal, **DO NOT OPEN A TICKET UNLESS YOU ARE BANNED OPENING A TICKET FOR NO REASON WASTES MODS TIME**', color=0x00ff00)
