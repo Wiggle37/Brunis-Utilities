@@ -23,6 +23,16 @@ class CommandErrorHandler(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             return ctx.send('This command is on cooldown, chill out')
 
+        # - Extenstion Errors - #
+        if isinstance(error, commands.ExtensionAlreadyLoaded):
+            return await ctx.send('This extenstion is already loaded')
+
+        if isinstance(error, commands.ExtensionNotLoaded):
+            return await ctx.send('This extenstion is not loaded')
+
+        if isinstance(error, commands.ExtensionNotFound):
+            return await ctx.send('The provided extension was not found')
+
         # - Disabled Command - #
         if isinstance(error, commands.DisabledCommand):
             return await ctx.send('This command is currently disabled')
@@ -36,9 +46,6 @@ class CommandErrorHandler(commands.Cog):
 
         if isinstance(error, commands.ChannelNotFound):
             return await ctx.send('The provided channel was not found')
-
-        if isinstance(error, commands.ExtensionNotFound):
-            return await ctx.send('The provided cog was not found')
 
         if isinstance(error, commands.EmojiNotFound):
             return await ctx.send('The emoji provided was not found')
