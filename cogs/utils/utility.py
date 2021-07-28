@@ -55,6 +55,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
 
     # Timer
     @commands.command(name='timer', description='Set a timer for up to 1000')
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     async def count(self, ctx, number: int):
         try:
             if number < 0:
@@ -78,16 +79,46 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         member = member or ctx.author
         return await ctx.send(f'{member}\'s account was created on: <t:{int(member.created_at.timestamp())}:f>, <t:{int(member.created_at.timestamp())}:R>')
 
-    # Ping
-    @commands.command(name='ping', description='Shows the bots current ping', aliases=['ms'])
-    async def ping(self, ctx: commands.Context):
-        async with ctx.typing():
-            start = time.perf_counter()
-            message = await ctx.send("🏓 Ping...")
-            end = time.perf_counter()
-            duration = (end - start) * 1000
+    @commands.command()
+    @commands.cooldown(2, 5, commands.BucketType.user)
+    async def pingg(self, ctx):
+        start = time.monotonic()
+        message = await ctx.send("Pinging...")
+        end = time.monotonic()
+        totalPing = round((end - start) * 1000, 2)
+        e = discord.Embed(title="Pinging...", description=f"Overall Latency: {totalPing}ms")
+        await asyncio.sleep(0.25)
+        try:
+            await message.edit(content=None, embed=e)
+        except discord.NotFound:
+            return
 
-        await message.edit(content = f"🏓 Pong! Current latency: `{duration:.2f} ms`")
+        botPing = round(self.bot.latency * 1000, 2)
+        e.description = e.description + f"\nDiscord WebSocket Latency: {botPing}ms"
+        await asyncio.sleep(0.25)
+
+        averagePing = (botPing + totalPing) / 2
+        if averagePing >= 10000:
+            color = discord.Color.dark_blue()
+        elif averagePing >= 1000:
+            color = discord.Colour.red()
+        elif averagePing >= 200:
+            color = discord.Colour.orange()
+        else:
+            color = discord.Colour.green()
+
+        e.color = color
+        try:
+            await message.edit(embed=e)
+        except discord.NotFound:
+            return
+
+        e.title = "Ponged!"
+        await asyncio.sleep(0.25)
+        try:
+            await message.edit(embed=e)
+        except discord.NotFound:
+            return
 
     # Server Info
     @commands.command(name='serverinfo', description='Shows the servers info', aliases=['si', 'server'])

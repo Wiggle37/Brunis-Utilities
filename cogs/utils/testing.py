@@ -4,6 +4,11 @@ from discord.ext import commands
 import aiohttp
 import json
 import time
+import asyncio
+import concurrent
+import speedtest
+
+from config import *
 
 class Testing(commands.Cog):
     def __init__(self, bot):
