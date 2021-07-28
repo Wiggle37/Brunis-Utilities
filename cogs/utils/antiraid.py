@@ -1,13 +1,60 @@
 import discord
 from discord.ext import commands
 
+import json
+
+from config import *
+
 class AntiRaid(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # Add Staff
+    @commands.command()
+    @commands.is_owner()
+    async def add_staff(self, ctx, members: commands.Greedy[discord.Member]):
+        with open('config.json', 'w') as file:
+            for staff in members:
+                if staff.id not in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+                    CONFIG["settings"]["anti_raid"]["whitelisted_members"] += [staff.id]
+                else:
+                    continue
+            json.dump(CONFIG, file, indent=4)
+
+        await ctx.send(f'Added **{len(members)}** to the whitelisted anitraid whitelisted staff list')
+
+    # Remove Staff
+    @commands.command()
+    @commands.is_owner()
+    async def remove_staff(self, ctx, members: discord.Member):
+        index = 0
+        with open('config.json', 'w') as file:
+            for staff in members:
+                if staff.id in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+                    for user in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+                        if user == staff.id:
+                            del CONFIG["settings"]["anti_raid"]["whitelisted_members"][index]
+                        index += 1
+                else:
+                    continue
+            json.dump(CONFIG, file, indent=4)
+
+        await ctx.send(f'Removed **{len(members)}** from the whitelisted staff list')
+
+    # Staff List
+    @commands.command()
+    async def staff_list(self, ctx):
+        staff = ''
+        for staffs in CONFIG["settings"]["anti_raid"]["whitelisted_members"]:
+            staff_ = self.bot.get_guild(784491141022220309).get_member(staffs)
+            staff += f'{staff_.name}({staff_.id})\n'
+
+        await ctx.send(f'```{staff}```')
+
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         merchants = self.bot.get_guild(784491141022220309)
+        member = merchants.get_member(after._user.id)
 
         staff_roles_ids = [
             802939606671949866, # helper
@@ -20,37 +67,13 @@ class AntiRaid(commands.Cog):
             784499226230784000  # bots
         ]
 
-        whitelisted_staff = [
-            497017441591885824, # Aiiiden
-            656565295586082828, # Sea
-            710656296445018143, # Ethereal
-            710656296445018143, # Euph
-            840223106345336882, # Dark
-            294068906132242432, # Rach
-            579393034761011200, # Vogl
-            654688268138577931, # Awesome
-            695353371535736944, # q13x
-            761304458206249000, # Neon
-            716525960643739798, # Dukie
-            759774736279404614, # Thean
-            701713045574909984, # Amercy
-            738796323872047204, # Bug
-            691798464107118622, # Copi
-            732627627235606629, # Suhii
-            737020572906684556, # Adit
-            824010269071507536, # Wiggle
-            852670742419603467  # Bruni's Utilities
-        ]
-
-        member = merchants.get_member(after._user.id)
-
         role_objs = []
         for role in staff_roles_ids:
             role_ = discord.utils.get(merchants.roles, id=role)
             role_objs.append(role_)
 
         for role in after.roles:
-            if role in role_objs and member.id not in whitelisted_staff and not member.bot:
+            if role in role_objs and member.id not in CONFIG["settings"]["anti_raid"]["whitelisted_members"] and not member.bot:
                 await member.remove_roles(role)
                 await self.bot.get_channel(863178240680394793).send(f'**{after._user}** has been granted a staff role. The role given to **{after._user}** was `{role}`\nThis role was removed, if you think this is a mistake please contact wiggle to get it added to the whitelisted staff members')
 
