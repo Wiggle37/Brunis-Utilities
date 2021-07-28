@@ -18,6 +18,31 @@ class admin(commands.Cog, name = "Admin"):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=bot.loop)
 
+    # Add Overides
+    @commands.command(name='addoveride', aliases=['ao'])
+    @commands.is_owner()
+    async def addoveride(self, ctx):
+        num = 0
+        num_ = 0
+        errors = ''
+        msg = await ctx.send('Attempting to add overides to all channels')
+        for channel in ctx.guild.text_channels:
+            try:
+                await msg.edit(content=f'Channels Updated: {num}\nFailed Channel Updates: {num_}')
+                await channel.set_permissions(ctx.me, read_messages=True, send_messages=True, embed_links=True, add_reactions=True, external_emojis=True, manage_permissions=True)
+                
+                num += 1
+
+            except:
+                num_ += 1
+                errors += f'Error Updating: {channel.name}\n'
+
+        split = [errors[i:i+1990] for i in range(0, len(errors), 1990)]
+        # sends each one
+        for info in split:
+            await ctx.send(f"```{info}\n```")
+        await ctx.send(f'{num} channels updated')
+
     def is_valid_ext(self, ext_name: str) -> bool:
         # only looks in files in a directory called cogs
         py_paths = Path("cogs").glob('**/*.py')
