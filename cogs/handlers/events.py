@@ -103,9 +103,13 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     #Triggers
     @commands.Cog.listener()
     async def on_message(self, message):
-        if str(self.bot.user) in message.content and not message.author.bot:
+        if str(self.bot.user.id) in message.content and not message.author.bot:
             embed = discord.Embed(title='Hello!', description='My prefix is `b!`\nUse the command `b!help` for help', color=0x00ff00)
-            await message.channel.send(embed=embed)
+            return await message.channel.send(embed=embed)
+
+        if str('heist') in message.content:
+            if CONFIG["settings"]["heists"]["heistmode"] and not message.channel.id == 822567848400388106 and not message.author.id == self.bot.user.id:
+                await message.channel.send('<#822567848400388106>')
 
     # Other Server Prevention
     @commands.Cog.listener()
