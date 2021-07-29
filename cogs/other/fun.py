@@ -3,6 +3,7 @@ from discord.ext import commands
 
 import aiohttp
 from typing import List
+import urllib
 
 from config import *
 
@@ -124,16 +125,30 @@ class Fun(commands.Cog, name='fun', description='Some fun commands'):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=bot.loop)
 
-    '''
-    Tic Tac Toe
-    '''
-    
-
-
     # TTT
     @commands.command(name='tictactoe', decription='Play tic tac toe with a friend(still has some bugs)', aliases=['ttt'])
     async def ttt(self, ctx: commands.Context):
         await ctx.send('Tic Tac Toe: X goes first', view=TicTacToe())
+
+    # Tiny URL
+    @commands.command(name='tinyurl', description='Shorten any link')
+    async def tinyurl(self, ctx, *, link: str):
+        await ctx.message.delete()
+        url = 'http://tinyurl.com/api-create.php?url=' + link
+        async with ctx.session.get(url) as resp:
+            new = await resp.text()
+        emb = discord.Embed(colour=await ctx.get_dominant_color(ctx.author.avatar_url))
+        emb.add_field(name="Original Link", value=link, inline=False)
+        emb.add_field(name="Shortened Link", value=new, inline=False)
+        await ctx.send(embed=emb)
+
+    @commands.command(name='ascii', description='Get a ASCII form of the imputed text')
+    async def ascii(self, ctx, *, text):
+        async with self.session.get(f"http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}") as f:
+            message = await f.text()
+        if len('```' + message + '```') > 2000:
+            return await ctx.send('Your ASCII is too long!')
+        await ctx.send('```' + message + '```')
 
 def setup(bot):
     bot.add_cog(Fun(bot))
