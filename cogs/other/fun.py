@@ -142,6 +142,7 @@ class Fun(commands.Cog, name='fun', description='Some fun commands'):
         emb.add_field(name="Shortened Link", value=new, inline=False)
         await ctx.send(embed=emb)
 
+    # ASCII
     @commands.command(name='ascii', description='Get a ASCII form of the imputed text')
     async def ascii(self, ctx, *, text):
         async with self.session.get(f"http://artii.herokuapp.com/make?text={urllib.parse.quote_plus(text)}") as f:
