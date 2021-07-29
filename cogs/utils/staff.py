@@ -11,18 +11,7 @@ from buttons import *
 class Staff(commands.Cog, name = "Staff", description = "Commands only staff can use"):
     def __init__(self, bot):
         self.bot = bot
-
-    # Staff Day
-    @commands.command()
-    @commands.has_any_role(784492058756251669, 788738305365114880) # Admin, Co-Owner
-    async def staffday(self, ctx):
-        merchants = self.bot.get_guild(784491141022220309)
-        view = Confirm(ctx.author.id)
-        success = 0
-        failed = 0
-        failed_channels = []
-
-        ignored_channels = [
+        self.ignored_channels = [
             784530970220953660, # Welcome
             792948346268286986, # Vote For Us
             822567848400388106, # Big Heist Channel
@@ -54,7 +43,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
             789227726355562547, # Auction Rule
         ]
         
-        ignored_categories = [
+        self.ignored_categories = [
             788160365711458314, # Private Property
             848216650306289704, # Giveaway Managing
             784498914073116692, # Staff
@@ -68,6 +57,16 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
             784535143250788352, # Giveaways
         ]
 
+    # Lockdown
+    @commands.command()
+    @commands.has_any_role(784492058756251669, 788738305365114880) # Admin, Co-Owner
+    async def lockdown(self, ctx):
+        merchants = self.bot.get_guild(784491141022220309)
+        view = Confirm(ctx.author.id)
+        success = 0
+        failed = 0
+        failed_channels = []
+
         async with ctx.typing():
             await ctx.send('Are you sure you want to lockdown the server for staffday?', view=view)
             await view.wait()
@@ -79,7 +78,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
                 await asyncio.sleep(2)
                 for channel in merchants.text_channels:
                     try:
-                        if not channel.category.id in ignored_categories and channel.id not in ignored_channels:
+                        if not channel.category.id in self.ignored_categories and channel.id not in self.ignored_channels:
                             await channel.set_permissions(merchants.default_role, send_messages=False)
                             success += 1
                             await msg.edit(content=f'Success: {success}\nFailed: {failed}')

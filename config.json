@@ -23,6 +23,11 @@
         "bot_perms": {
             "eval_perms": []
         },
+        "lockdowns": {
+            "staffday": false,
+            "lockdown": false,
+            "secure": false
+        },
         "anti_raid": {
             "whitelisted_members": [
                 497017441591885824,
