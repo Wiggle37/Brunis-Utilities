@@ -77,5 +77,10 @@ class AntiRaid(commands.Cog):
                 await member.remove_roles(role)
                 await self.bot.get_channel(863178240680394793).send(f'**{after._user}** has been granted a staff role. The role given to **{after._user}** was `{role}`\nThis role was removed, if you think this is a mistake please contact wiggle to get it added to the whitelisted staff members')
 
+    # Save Backup
+    @commands.command()
+    async def backup(self, ctx):
+        pass
+
 def setup(bot):
     bot.add_cog(AntiRaid(bot))
