@@ -30,8 +30,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 await self.general.send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made <t:{int(member.created_at.timestamp())}:f>, <t:{int(member.created_at.timestamp())}:R>')
 
             else:
-                await self.bot_get_channel(787343840108478474).send(member.mention, delete_after=7)
-                await self.bot.get_channel(870193314413019216).send(member.mention, delete_after=7)
+                await self.bot.get_channel(787343840108478474).send(member.mention, delete_after=7)
 
                 try:
                     dm_embed = discord.Embed(title=f'Welcome To Dank Merchants!', description=f'In case of you getting banned from the server join [this](https://discord.gg/ubtz7gK2js) server to appeal, **DO NOT OPEN A TICKET UNLESS YOU ARE BANNED OPENING A TICKET FOR NO REASON WASTES MODS TIME**', color=0x00ff00)
@@ -47,14 +46,14 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                         pass
 
                 if CONFIG["settings"]["heists"]["heistmode"]:
-                    await self.general.send(f'{member.mention} has joined the server around a heist time, when the heist starts you may join! <#822567848400388106>')
+                    await self.bot.get_channel(870193314413019216).send(f'{member.mention} has joined the server around a heist time, when the heist starts you may join! <#822567848400388106>')
 
                 elif not CONFIG["settings"]["heists"]["heistmode"]:
                     join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member.mention}** has joined the server!', color=0x00ff00)
                     join_embed.set_thumbnail(url=member.avatar.url)
                     join_embed.add_field(name='__**What To Do:**__', value=f'<#787343840108478474> ➞ Read the rules of Dank Merchants\n<#784547669619507201> ➞ Get some self roles\n<#863437182131503134> ➞ Check out our amazing grinder perks\n\nAnd any other questions may be asked in <#787761394664996865>')
                     join_embed.add_field(name=f'__**More Info:**__', value=f'Account Creation: <t:{int(member.created_at.timestamp())}:f>\nUser ID: {member.id}\nMember Count: {members_count} humans', inline=False)
-                    await self.general.send(embed=join_embed)
+                    await self.bot.get_channel(870193314413019216).send(embed=join_embed)
         
         else:
             return
