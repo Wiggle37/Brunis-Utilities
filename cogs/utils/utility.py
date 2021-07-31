@@ -156,10 +156,10 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
         embed = discord.Embed(title=f'Suggestion From {ctx.author}', description=f'**Suggestion:**\n{suggestion}')
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text=f'User id: {ctx.author.id}')
-        msg = await self.bot.get_channel(827293945003376650).send(embed=embed)
+        msg = await self.bot.get_channel(870234228766425119).send(embed=embed)
         await msg.add_reaction('✔')
         await msg.add_reaction('✖')
-        await ctx.send('Suggestion sent in <#827293945003376650>')
+        await ctx.send('Suggestion sent in <#870234228766425119>')
 
     """PROFILE STUFF BELOW"""
 

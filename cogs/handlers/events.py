@@ -9,9 +9,6 @@ from config import *
 class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     def __init__(self, bot):
         self.bot = bot
-        self.general = self.bot.get_channel(CONFIG["info"]["ids"]["general_id"])
-        self.rules_channel = self.bot.get_channel(CONFIG["info"]["ids"]["rulesChannel_id"])
-        self.self_roles_channel = self.bot.get_channel(CONFIG["info"]["ids"]["selfRolesChannel_id"])
 
     '''
     MEMBER EVENTS
@@ -33,9 +30,8 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 await self.general.send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made <t:{int(member.created_at.timestamp())}:f>, <t:{int(member.created_at.timestamp())}:R>')
 
             else:
-                await self.self_roles_channel.send(member.mention, delete_after=7)
-                await self.rules_channel.send(member.mention, delete_after=7)
-                await self.bot.get_channel(869879723776421928).send(member.mention, delete_after=7)
+                await self.bot_get_channel(787343840108478474).send(member.mention, delete_after=7)
+                await self.bot.get_channel(870193314413019216).send(member.mention, delete_after=7)
 
                 try:
                     dm_embed = discord.Embed(title=f'Welcome To Dank Merchants!', description=f'In case of you getting banned from the server join [this](https://discord.gg/ubtz7gK2js) server to appeal, **DO NOT OPEN A TICKET UNLESS YOU ARE BANNED OPENING A TICKET FOR NO REASON WASTES MODS TIME**', color=0x00ff00)
