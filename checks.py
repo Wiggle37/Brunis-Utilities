@@ -19,3 +19,11 @@ class economysettings:
             return ctx.channel.id not in CONFIG["settings"]["economy"]["blacklistedchannels"] \
                 and await economysettings.banned(ctx.author.id) is False
         return commands.check(predicate)
+
+# Server Checks
+class serverChecks:
+    @staticmethod
+    def merchants():
+        async def predicate(ctx):
+            return ctx.guild.id == 784491141022220309
+        return commands.check(predicate)

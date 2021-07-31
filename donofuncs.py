@@ -1,6 +1,16 @@
+import asyncio
 import discord
 
 import aiosqlite
+
+'''
+Rewrite
+'''
+class donations:
+    async def set(ctx, member, amount: int, category: str):
+        async with aiosqlite.connect('dono.db') as dbase:
+            await dbase.execute(f"INSERT INTO {ctx.guild.id} (user_id), {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = ?;", [member.id, amount, amount])
+
 
 categories = [
     'gaw',

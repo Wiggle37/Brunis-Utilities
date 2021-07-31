@@ -2,11 +2,14 @@ import discord
 from discord.ext import commands
 
 import aiosqlite
+import motor
+import motor.motor_asyncio
 import aiohttp
 from datetime import datetime
 import asyncio
 
 from config import *
+from checks import serverChecks
 from donofuncs import *
 from buttons import *
 
@@ -14,6 +17,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=bot.loop)
+        self.motor_session = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/donations?retryWrites=true&w=majority')
         self.dank_merchants = self.bot.get_guild(CONFIG["info"]["ids"]["merchants_id"])
 
     #Make Acc Command(Backup)
@@ -125,6 +129,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     #Reset Special
     @commands.command(name='endspecial', description='End the special leaderboard', hidden=True)
     @commands.is_owner()
+    @serverChecks.merchants()
     async def endspecial(self, ctx):
         async with ctx.typing():
             view = Confirm(ctx.author.id)
@@ -158,6 +163,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     #Prune Database
     @commands.command(name='prunedb', description='Delete old users from the database that aren\'t in the server anymore', hidden=True)
     @commands.is_owner()
+    @serverChecks.merchants()
     async def prunedb(self, ctx):
         async with ctx.typing():
             view = Confirm(ctx.author.id)
@@ -212,7 +218,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
         gaw, heist, event, special, total, money = map(self.beautify_numbers, await cursor.fetchone())
 
         donation_embed = discord.Embed(title="Donation Stats", color=0x7008C2)
-        donation_embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/827369094776356905/828079209623584818/dankmerchants.gif')
+        donation_embed.set_thumbnail(url=ctx.guild.icon.url)
         donation_embed.add_field(name="User:", value = f"{user.mention}(User id: {user.id})", inline=False)
         donation_embed.add_field(name="__**✦ Normal Donations ✦**__", value="Dank Memer Donations", inline=False)
         donation_embed.add_field(name="Giveaway Donations:", value = f"⏣`{gaw}` donated for giveaways", inline=True)
@@ -248,101 +254,42 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             await dbase.close()
             return await ctx.send(embed=top_donors_embed)
 
-        if board.lower() == 'money' or board.lower() == 'moneys':
-            dbase = await aiosqlite.connect("dono.db")
-            cursor = await dbase.cursor()
+    '''
+    Donations
+    '''
+    # Set-Up Donations
+    @commands.command()
+    @commands.has_guild_permissions(manage_guild=True)
+    async def setup(self, ctx):
+        db = self.motor_session.donations
+        collection = db[f'{ctx.guild.id}']
 
-            await cursor.execute("SELECT user_id, money FROM donations ORDER BY money DESC")
-            money_donors = await cursor.fetchmany(5)
+        collection.insert_one({"_id": ctx.author.id, "giveaway": 0, "heist": 0, "event": 0, "special": 0, "money": 0})
+        e = await collection.find_one({"_id": ctx.author.id})
+        #await collection.replace_one({"giveaway": e["giveaway"]}, {"giveaway": e["giveaway"] + 21})
 
-            top_donors_embed = discord.Embed(title="Top Money Donators", color=0x00ff00)
-            donor_info = ""
+        await ctx.send('done')
+    
+    # Check Donations
+    @commands.command()
+    async def dd(self, ctx, member: discord.Member=None):
+        member = member or ctx.author
 
-            donor_info += "__**Real Money Donations Leader Board**__\n"
-            for rank, user in enumerate(money_donors):
-                member = self.bot.get_user(user[0])
-                donor_info += f"**{rank + 1}. {member}**: `${'{:,}'.format(user[1])} USD`\n"
+        async with aiosqlite.connect('dono.db') as dbase:
+            cursor = await dbase.execute(f"SELECT * FROM '{ctx.guild.id}' WHERE user_id = '{member.id}'")
+            e = await cursor.fetchall()
 
-            top_donors_embed.description=donor_info
-            await dbase.close()
-            return await ctx.send(embed=top_donors_embed)
+            await ctx.send(e)
 
-        if board.lower() == 'bumps' or board.lower() == 'bump':
-            dbase = await aiosqlite.connect("bump.db")
-            cursor = await dbase.cursor()
+    @commands.command()
+    @commands.is_owner()
+    async def add_donations(self, ctx, member: discord.Member, amount: str):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
 
-            await cursor.execute("SELECT user_id, bump FROM bumps ORDER BY bump DESC")
-            bumpers = await cursor.fetchmany(10)
-
-            top_bumpers_embed = discord.Embed(title="Top Bumpers", color=0x00ff00)
-            bumper_info = ""
-
-            bumper_info += "__**Server Bumps Leader board**__\n"
-            for rank, user in enumerate(bumpers):
-                member = self.bot.get_user(user[0])
-                bumper_info += f"**{rank + 1}. {member}**: `{'{:,}'.format(user[1])}`\n"
-            
-            top_bumpers_embed.description=bumper_info
-            await dbase.close()
-            
-            return await ctx.send(embed=top_bumpers_embed)
-        
-        if board.lower() == 'special':
-            dbase = await aiosqlite.connect("dono.db")
-            cursor = await dbase.cursor()
-
-            await cursor.execute("SELECT user_id, special FROM donations ORDER BY special DESC")
-            special_donors = await cursor.fetchmany(10)
-
-            top_donors_embed = discord.Embed(title="Top Special Donators", color=0x00ff00)
-            donor_info = ""
-
-            donor_info += "__**Special Donations Leader Board**__\n"
-            for rank, user in enumerate(special_donors):
-                member = self.bot.get_user(user[0])
-                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
-
-            top_donors_embed.description=donor_info
-            await dbase.close()
-            return await ctx.send(embed=top_donors_embed)
-
-        if board.lower() == 'heist':
-            dbase = await aiosqlite.connect("dono.db")
-            cursor = await dbase.cursor()
-
-            await cursor.execute("SELECT user_id, heist FROM donations ORDER BY heist DESC")
-            special_donors = await cursor.fetchmany(10)
-
-            top_donors_embed = discord.Embed(title="Top Heist Donators", color=0x00ff00)
-            donor_info = ""
-
-            donor_info += "__**Heist Donations Leader Board**__\n"
-            for rank, user in enumerate(special_donors):
-                member = self.bot.get_user(user[0])
-                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
-
-            top_donors_embed.description=donor_info
-            await dbase.close()
-            return await ctx.send(embed=top_donors_embed)
-
-        if board.lower() == 'event':
-            dbase = await aiosqlite.connect("dono.db")
-            cursor = await dbase.cursor()
-
-            await cursor.execute("SELECT user_id, event FROM donations ORDER BY event DESC")
-            special_donors = await cursor.fetchmany(10)
-
-            top_donors_embed = discord.Embed(title="Top Event Donators", color=0x00ff00)
-            donor_info = ""
-
-            donor_info += "__**Event Donations Leader Board**__\n"
-            for rank, user in enumerate(special_donors):
-                member = self.bot.get_user(user[0])
-                donor_info += f"**{rank + 1}. {member}**: `⏣{'{:,}'.format(user[1])}`\n"
-
-            top_donors_embed.description=donor_info
-            await dbase.close()
-            return await ctx.send(embed=top_donors_embed)
+        await donations.set(ctx, member, amount, 'e')
 
     '''
     GIVEAWAY DONATIONS

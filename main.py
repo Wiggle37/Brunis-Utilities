@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 import aiohttp
 from datetime import datetime
+import motor.motor_asyncio
 
 from config import *
 from color import *
@@ -25,6 +26,10 @@ bot._BotBase__cogs = commands.core._CaseInsensitiveDict()
 # creates a global aiohttp session that can be used
 async def aiohttp_session():
     bot.session = aiohttp.ClientSession()
+
+async def motor_session():
+    bot.motor_session = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/donations?retryWrites=true&w=majority')
+
 
 async def load_extensions():
     await bot.wait_until_ready()
@@ -72,5 +77,6 @@ async def bot_ready():
 
 bot.loop.create_task(load_extensions())
 bot.loop.create_task(aiohttp_session())
+bot.loop.create_task(motor_session())
 status.start()
 bot.run(TOKEN)

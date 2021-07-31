@@ -138,9 +138,9 @@ class Info(commands.Cog, name='info', description='Displays some important info 
     async def eroles(self, ctx):
         roles = {
             '__Dank Harbor Verteran__': '<@&784560843890753577> - For those who survived Dank Harbor',
-            '__Server Bot Developer:__': '<@&788738308879941633> - Develop a bot for the server(already taken by <@765322777329664089>)',
+            '__Server Bot Developer:__': '<@&788738308879941633> - Develop a bot for the server',
             '__Christmas 2020__': '<@&791229305320767510> - For those who were around in Chrismas 2020',
-            '__1k Special Winner': '<@&807824584396767292> - For those that won in 1k special event',
+            '__1k Special Winner__': '<@&807824584396767292> - For those that won in 1k special event',
             '__Highest Donor__': '<@&793189820151234620> - Highest donor gets their own custom channel'
         }
         msg = ''
