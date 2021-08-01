@@ -17,7 +17,7 @@ class Testing(commands.Cog):
         self.session = aiohttp.ClientSession(loop=bot.loop)
 
     @commands.command()
-    async def test(self, ctx):
+    async def testy(self, ctx):
         await ctx.send(f'<t:{int((ctx.author.created_at.timestamp() - 1814400) + time.time())}:R>')
 
 def setup(bot):

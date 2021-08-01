@@ -8,6 +8,7 @@ from datetime import datetime
 import motor.motor_asyncio
 
 from config import *
+from buttons import *
 from color import *
 
 load_dotenv()
@@ -29,7 +30,6 @@ async def aiohttp_session():
 
 async def motor_session():
     bot.motor_session = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/donations?retryWrites=true&w=majority')
-
 
 async def load_extensions():
     await bot.wait_until_ready()
@@ -65,7 +65,10 @@ async def on_ready():
         f"{color.YELLOW}ID: {bot.user.id}\n{color.END}"
         f"{color.YELLOW}Latency: {round(bot.latency * 1000, 2)}ms\n{color.END}"
         f"{color.YELLOW}Time: {datetime.utcnow()}\n{color.END}"
-        f"{color.BLACK}==============================================\n{color.END}")
+        f"{color.BLACK}==============================================\n{color.END}"
+        )
+
+    bot.add_view(ChoseSupport(bot.get_guild(784491141022220309)))
 
 @tasks.loop(seconds = 60)
 async def status():
