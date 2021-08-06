@@ -28,23 +28,33 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
         if not "is starting a bank robbery" in message.content:
             return
         
-        await message.channel.set_permissions(message.guild.default_role, send_messages = None)
-        await message.channel.edit(slowmode_delay = 6000)
-        await message.channel.send("Good luck bank robbing this person! <a:rainbowheart:792504452900323329>")
+        try:
+            await message.channel.set_permissions(message.guild.default_role, send_messages = None)
+            await message.channel.edit(slowmode_delay = 6000)
+            await message.channel.send("Good luck bank robbing this person! <a:rainbowheart:792504452900323329>")
 
-        results = await self.get_heist_results(message)
-        await message.channel.set_permissions(message.guild.default_role, send_messages = False)
+            results = await self.get_heist_results(message)
+            await message.channel.set_permissions(message.guild.default_role, send_messages = False)
+
+        except:
+            pass
 
         if results is None:
-            await message.channel.send("Damn dank's probably dead right now you must have to wait a little bit")
+            try:
+                await message.channel.send("Damn dank's probably dead right now you must have to wait a little bit")
+            except:
+                pass
         elif "you're not popular enough" in results.content or "for an unsuccessful robbery" in results.content:
-            await message.channel.send("Well that sucks you didn't get enough people to join you heist, try again later I guess")
+            try:
+                await message.channel.send("Well that sucks you didn't get enough people to join you heist, try again later I guess")
+            except:
+                pass
         else:
             await asyncio.sleep(3)
             if message.channel.id == 822567848400388106:
                 await message.channel.send("Remember freeloaders get a 7 day ban so don't free load also to support us vote for us at https://top.gg/servers/784491141022220309/vote")
 
-            msg = await message.channel.send(f"I hope that was a good heist!")
+            msg = await message.channel.send(f"I hope that was a good heist! Make sure to vote for the server at https://top.gg/servers/{message.guild.id}/vote")
             await msg.add_reaction('✅')
             await msg.add_reaction('❌')
         
