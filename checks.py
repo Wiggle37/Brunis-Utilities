@@ -1,7 +1,13 @@
-import aiosqlite
+import discord
 from discord.ext import commands
 
+import aiosqlite
+import motor.motor_asyncio
+
 from config import *
+
+db = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/donations?retryWrites=true&w=majority')
+collection = db.guild_config
 
 # Economy Checks
 class economysettings:

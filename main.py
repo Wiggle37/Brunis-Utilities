@@ -68,8 +68,6 @@ async def on_ready():
         f"{color.BLACK}==============================================\n{color.END}"
         )
 
-    bot.add_view(ChoseSupport(bot.get_guild(784491141022220309)))
-
 @tasks.loop(seconds = 60)
 async def status():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Over {len(bot.users)} people"), status = discord.Status.idle)

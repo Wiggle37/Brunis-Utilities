@@ -21,37 +21,37 @@ class CommandErrorHandler(commands.Cog):
 
         # - Command On Cooldown Errors - #
         if isinstance(error, commands.CommandOnCooldown):
-            return ctx.send('This command is on cooldown, chill out')
+            return ctx.send(f"This command is on cooldown for another {error.cooldown}")
 
         # - Extenstion Errors - #
         if isinstance(error, commands.ExtensionAlreadyLoaded):
-            return await ctx.send('This extenstion is already loaded')
+            return await ctx.send("This extenstion is already loaded")
 
         if isinstance(error, commands.ExtensionNotLoaded):
-            return await ctx.send('This extenstion is not loaded')
+            return await ctx.send("This extenstion is not loaded")
 
         if isinstance(error, commands.ExtensionNotFound):
-            return await ctx.send('The provided extension was not found')
+            return await ctx.send("The provided extension was not found")
 
         # - Disabled Command - #
         if isinstance(error, commands.DisabledCommand):
-            return await ctx.send('This command is currently disabled')
+            return await ctx.send("This command is currently disabled")
 
         # - Not Found Errors - #
         if isinstance(error, commands.MessageNotFound):
-            return await ctx.send('The provied message was not found')
+            return await ctx.send(f"The message `{error.argument}` was not found")
 
         if isinstance(error, commands.RoleNotFound):
-            return await ctx.send(f"The role provided was not found")
+            return await ctx.send(f'The role `{error.argument}` was not found')
 
         if isinstance(error, commands.ChannelNotFound):
-            return await ctx.send('The provided channel was not found')
+            return await ctx.send(f"The channel `{error.argument}` was not found")
 
         if isinstance(error, commands.EmojiNotFound):
-            return await ctx.send('The emoji provided was not found')
+            return await ctx.send(f"{error.args[0]}")
 
         if isinstance(error, commands.CommandNotFound):
-            return await ctx.send(f"The command `{ctx.message.content}` is not found")
+            return await ctx.send(f"{error.args[0]}")
 
         if isinstance(error, commands.MemberNotFound):
             return await ctx.send(f"The member provided was not found")
@@ -71,15 +71,18 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.reinvoke()
             
             role_name = [discord.utils.get(self.dank_merchants.roles, id = id).name for id in error.missing_roles]
-            return await ctx.send(f'You are missing one of the following roles: `{", ".join(role_name)}`')
+            return await ctx.send(f"You are missing one of the following roles: `{', '.join(role_name)}`")
+        if isinstance(error, commands.MissingRole):
+            if ctx.author.id in self.bot.owner_ids:
+                return await ctx.reinvoke()
+
+            return await ctx.send(f"You are missing the required role to run this command: `{error.missing_role}`")
 
         if isinstance(error, commands.MissingPermissions):
             if ctx.author.id in self.bot.owner_ids:
                 return await ctx.reinvoke()
 
-            return await ctx.send(f'You are missing the following permission to run this command: `{error.missing_perms}`')
-
-
+            return await ctx.send(f'You are missing the following permission to run this command: `{error.missing_permissions}`')
 
         # if none of the above we send to a debug channel
         tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))

@@ -255,43 +255,6 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
             return await ctx.send(embed=top_donors_embed)
 
     '''
-    Donations
-    '''
-    # Set-Up Donations
-    @commands.command()
-    @commands.has_guild_permissions(manage_guild=True)
-    async def setup(self, ctx):
-        db = self.motor_session.donations
-        collection = db[f'{ctx.guild.id}']
-
-        collection.insert_one({"_id": ctx.author.id, "giveaway": 0, "heist": 0, "event": 0, "special": 0, "money": 0})
-        e = await collection.find_one({"_id": ctx.author.id})
-        #await collection.replace_one({"giveaway": e["giveaway"]}, {"giveaway": e["giveaway"] + 21})
-
-        await ctx.send('done')
-    
-    # Check Donations
-    @commands.command()
-    async def dd(self, ctx, member: discord.Member=None):
-        member = member or ctx.author
-
-        async with aiosqlite.connect('dono.db') as dbase:
-            cursor = await dbase.execute(f"SELECT * FROM '{ctx.guild.id}' WHERE user_id = '{member.id}'")
-            e = await cursor.fetchall()
-
-            await ctx.send(e)
-
-    @commands.command()
-    @commands.is_owner()
-    async def add_donations(self, ctx, member: discord.Member, amount: str):
-        await self.get_member(ctx, member)
-        amount = self.is_valid_int(amount)
-        if amount == False:
-            return await ctx.send('Not a valid number there bud')
-
-        await donations.set(ctx, member, amount, 'e')
-
-    '''
     GIVEAWAY DONATIONS
     '''
     #Dono Set
