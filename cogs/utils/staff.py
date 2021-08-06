@@ -59,7 +59,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
 
     # Lockdown
     @commands.command()
-    @commands.has_any_role(784492058756251669, 788738305365114880) # Admin, Co-Owner
+    @commands.is_owner()
     async def lockdown(self, ctx):
         merchants = self.bot.get_guild(784491141022220309)
         view = Confirm(ctx.author.id)
@@ -99,7 +99,6 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
 
     # Dump Role
     @commands.command(name='dump', description='Shows all the members with a specified role')
-    @commands.is_owner()
     async def dump(self, ctx, role: discord.Role):
         msg = ''
         for member in role.members:
@@ -110,19 +109,18 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         for info in msg_split:
             await ctx.send(f"```py\n{info}```")
 
-    # Add Roles
-    @commands.command(name = "addrole", description = "Adds role(s) to a member", aliases = ["ar"])
-    @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def addrole(self, ctx, member: discord.Member, role: discord.Role):
-        await member.add_roles(role)
-        await ctx.send(f"Role added to **{member}**")
 
-    # Remove Roles
-    @commands.command(name = "removerole", description = "Removes role(s) from a member", aliases = ["rr"])
-    @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def removerole(self, ctx, member: discord.Member, role: discord.Role):
-        await member.remove_roles(role)
-        await ctx.send(f"Role removed from **{member}**")
+    # Role
+    @commands.command(name='role', description='Add or remove a role from someone')
+    @commands.is_owner()
+    async def role(self, ctx, member: discord.Member, role: discord.Role):
+        if role not in member.roles:
+            await member.add_roles(role)
+            return await ctx.send(f'`{role.name}` added to **{member.name}**')
+
+        elif role in member.roles:
+            await member.remove_roles(role)
+            return await ctx.send(f'`{role.name}` removed from **{member.name}**')
 
     # Purge
     @commands.command(name = "purge", description = "Delete a certain amount of messages given")
