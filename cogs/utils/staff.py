@@ -111,8 +111,8 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
 
 
     # Role
-    @commands.command(name='role', description='Add or remove a role from someone')
-    @commands.is_owner()
+    @commands.group(name='role', description='Add or remove a role from someone', invoke_without_command=True)
+    @commands.has_guild_permissions(manage_roles=True)
     async def role(self, ctx, member: discord.Member, role: discord.Role):
         if role not in member.roles:
             await member.add_roles(role)
@@ -121,6 +121,21 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         elif role in member.roles:
             await member.remove_roles(role)
             return await ctx.send(f'`{role.name}` removed from **{member.name}**')
+
+    @role.command(name='info', description='Get info on a role')
+    async def info(self, ctx, role: discord.Role):
+        embed = discord.Embed(title=f'{role.name} info', color=role.color)
+        embed.add_field(name='Members', value=len(role.members))
+        embed.add_field(name='Color', value=role.color)
+        embed.add_field(name='Created', value=f'<t:{int(role.created_at.timestamp())}>')
+        embed.add_field(name='Permissions', value=f'[{role.permissions.value}](https://discordapi.com/permissions.html#{role.permissions.value})')
+        embed.add_field(name='Position', value=role.position)
+        embed.add_field(name='ID and Mention', value=f'{role.id}\n`{role.mention}`')
+
+        embed.add_field(name='Managed By Bot', value=role.is_bot_managed())
+        embed.add_field(name='Managed By Boosts', value=role.is_premium_subscriber())
+        embed.add_field(name='Is Assignable', value=role.is_assignable())
+        await ctx.send(embed=embed)
 
     # Purge
     @commands.command(name = "purge", description = "Delete a certain amount of messages given")
