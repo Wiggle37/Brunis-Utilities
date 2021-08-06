@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 from config import *
+from checks import *
 
 class Info(commands.Cog, name='info', description='Displays some important info about the server'):
 
@@ -10,6 +11,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Rules
     @commands.command(name='rules', description='Displays the rules of the server')
+    @serverChecks.merchants()
     async def rules(self, ctx):
         rules = {
             '__Rule One__': '**Respect all members** of this community. Swearing is allowed but not when you use those words to offend others. You\'ll be warned for being toxic',
@@ -35,6 +37,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Dank Rules
     @commands.command(name='dankrules', description='Displays the rules of Dank Memer')
+    @serverChecks.merchants()
     async def dankrules(self, ctx):
         rules = {
             '__Rule One__\nUser-bots, Spamming and Macros': 'Usage of user-bots, macros, scripts, auto-typers or anything else enabling automation of commands is strictly forbidden. In addition to this, massive amounts of spam is not allowed and will be punished with equal severity.',
@@ -56,6 +59,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Warning Policy
     @commands.command(name='warningpolicy', description='The warning policy in the server')
+    @serverChecks.merchants()
     async def warnp(self, ctx):
         warns = {
             '__First Warning__': 'Nothing',
@@ -78,6 +82,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Trading Rules
     @commands.command(name='tradingrules', description='The rule of trading for the server')
+    @serverChecks.merchants()
     async def traderules(self, ctx):
         rules = {
             '__Rule One__': 'If you want to trade, post your ads at <#785645266790252554>. Inappropriate and out-of-place ads will be removed.',
@@ -96,6 +101,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Giveaway Rules
     @commands.command(name='giveawayrules', description='The rules for giveaways for the server')
+    @serverChecks.merchants()
     async def gawrules(self, ctx):
         rules = {
             '__Rule One__': 'Only level amari 2s may claim giveaway prizes to avoid freeloaders.',
@@ -114,6 +120,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Special Roles
     @commands.command(name='specialroles', description='The info for special roles in the server')
+    @serverChecks.merchants()
     async def specroles(self, ctx):
         roles = {
             '__Member Of The Week__': '<@&786610856158429204> - Get hoisted just below staff followed by a week of premium. The person who sends the most messages in a week gets this role.',
@@ -135,6 +142,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Exclusive Roles
     @commands.command(name='exclusiveroles', description='Info on some of the most rare roles in the server')
+    @serverChecks.merchants()
     async def eroles(self, ctx):
         roles = {
             '__Dank Harbor Verteran__': '<@&784560843890753577> - For those who survived Dank Harbor',
@@ -152,6 +160,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Donations
     @commands.command(name='donationperks', description='Info on the donation perks')
+    @serverChecks.merchants()
     async def donoperks(self, ctx):
         donos = {
             '__5 Million Donor__': '<@&787342154862166046> - Access to exclusive giveaways/heists',
@@ -175,6 +184,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Invites
     @commands.command(name='inviteperks', description='The perks you get for inviting people in the server')
+    @serverChecks.merchants()
     async def invperks(self, ctx):
         perks = {
             '__2 Invites__': '<@&787342156611321857> - Access to nitro giveaways',
@@ -192,6 +202,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Levels
     @commands.command(name='levelperks', description='The servers leveling perks')
+    @serverChecks.merchants()
     async def lvlperks(self, ctx):
         level = {
             '__Level 5__': '<@&785676777585639464> - `pls weekly/monthly` access',
@@ -212,6 +223,7 @@ class Info(commands.Cog, name='info', description='Displays some important info 
 
     # Booster Perks
     @commands.command(name='boosterperks', description='The amazing perks of being a server booster')
+    @serverChecks.merchants()
     async def booster(self, ctx):
         inv_embed = discord.Embed(title='__**Dank Merchants Booster Perks:**__', description='The Booster Perks Of Dank Merchants', color=0xf47fff)
         inv_embed.set_thumbnail(url='https://cdn.discordapp.com/emojis/757131348539473920.gif?v=1')
