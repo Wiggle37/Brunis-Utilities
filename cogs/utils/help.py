@@ -9,21 +9,22 @@ class bruniUtilsHelp(commands.HelpCommand):
     async def send_bot_help(self, mapping):
         ctx = self.context
 
-        help = discord.Embed(title = "Bruni's Utilities", description = "All commands for the bot", colour = discord.Color.purple())
+        help = discord.Embed(title = "Help", color = discord.Color.purple())
         ignored_cogs = [
             'CommandErrorHandler',
             'Events',
             'Heist Starter',
-            'Sticky',
             'AntiRaid',
-            'Help'
+            'Help',
+            'Testing',
+            'lottery'
         ]
         
         for cog in mapping:
             if cog is None or cog.qualified_name in ignored_cogs:
                 continue
 
-            help.add_field(name = cog.qualified_name.capitalize(), value = f"{cog.description}\n`b!help {cog.qualified_name}`")
+            help.add_field(name = cog.qualified_name.capitalize(), value = f"`b!help {cog.qualified_name}`")
         
         help.set_thumbnail(url='https://cdn.discordapp.com/avatars/852670742419603467/e39038e6e8733b14445e99fc2038e1e7.png?size=1024')
         help.timestamp = datetime.utcnow()
@@ -65,7 +66,7 @@ class bruniUtilsHelp(commands.HelpCommand):
 
         command_help = discord.Embed(title = f"{command.qualified_name} info", color=discord.Color.purple())
 
-        description = "No description provided, but a cool command anyway!"
+        description = "No description provided for this command"
         if command.description != "":
             description = command.description
         command_help.add_field(name = "Description:", value = description, inline = False)
