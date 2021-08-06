@@ -113,7 +113,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     # Role
     @commands.group(name='role', description='Add or remove a role from someone', invoke_without_command=True)
     @commands.has_guild_permissions(manage_roles=True)
-    async def role(self, ctx, member: discord.Member, role: discord.Role):
+    async def role(self, ctx, member: discord.Member, *, role: discord.Role):
         if role not in member.roles:
             await member.add_roles(role)
             return await ctx.send(f'`{role.name}` added to **{member.name}**')
