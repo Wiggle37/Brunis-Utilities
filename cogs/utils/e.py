@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import discord
 from discord import role
 from discord.ext import commands
@@ -14,6 +15,8 @@ import motor
 import motor.motor_asyncio
 from datetime import datetime
 import time
+from operator import itemgetter
+
 
 from config import *
 from buttons import *
@@ -199,7 +202,7 @@ class Testing(commands.Cog):
         collection = self.db.guild_config
         info = await collection.find_one({"_id": ctx.guild.id})
         roles = ''
-        for amount, role in info["donation_roles"].items():
+        for amount, role in (sorted(info["donation_roles"].items(), key=lambda x: int(x[0]))):
             roles += f'**{self.beautify_numbers(int(amount))}:** `{discord.utils.get(ctx.guild.roles, id=role).name}`\n'
             
         embed = discord.Embed(title='Donation Roles', description=roles)
@@ -213,7 +216,7 @@ class Testing(commands.Cog):
         
         collection = self.db.guild_config
         await collection.update_one({"_id": ctx.guild.id}, {"$set": {f'donation_roles.{str(amount)}': role.id}})
-        await ctx.send(f'Donation role added. Amount: `{amount}`, Role: `{role.name}`')
+        await ctx.send(f'Donation role added. Amount: `{self.beautify_numbers(amount)}`, Role: `{role.name}`')
 
     @donation_roles.command()
     async def remove(self, ctx, amount: str):
@@ -224,7 +227,7 @@ class Testing(commands.Cog):
         collection = self.db.guild_config
         info = await collection.find_one({"_id": ctx.guild.id})
         await collection.update_one({"_id": ctx.guild.id}, {"$unset": {f"donation_roles.{str(amount)}": info["donation_roles"][str(amount)]}})
-        await ctx.send(f'Donation role removed for `{amount}`')
+        await ctx.send(f'Donation role removed for `{self.beautify_numbers(amount)}`')
     
     # Check Donations
     @commands.command()
