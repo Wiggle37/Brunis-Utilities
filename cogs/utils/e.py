@@ -99,7 +99,7 @@ class Testing(commands.Cog):
         
         collection = db[f'{ctx.guild.id}']
         guild_config = db['guild_config']
-        await guild_config.insert_one({"_id": ctx.guild.id, "giveaway_ids": [], "heist_ids": [], "event_ids": [], "special_ids": [], "money_ids": [], "donation_roles": {}, "bypass_roles": [], "admin_roles": []})
+        await guild_config.insert_one({"_id": ctx.guild.id, "giveaway_ids": [], "heist_ids": [], "event_ids": [], "special_ids": [], "money_ids": [], "donation_roles": {}})
         await collection.insert_one({"_id": ctx.author.id, "giveaway": 0, "heist": 0, "event": 0, "special": 0, "money": 0})
         await ctx.send(f'Guild added to database, to edit who can use commands use `b!donation_config`')
 
