@@ -100,7 +100,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     @commands.Cog.listener()
     async def on_message(self, message):
         if str('heist') in message.content and message.guild.id == 784491141022220309:
-            if CONFIG["settings"]["heists"]["heistmode"] and not message.channel.id == 822567848400388106 and not message.author.id == self.bot.user.id:
+            if CONFIG["settings"]["heists"]["heistmode"] and not message.channel.id == 870284332810526750 and not message.author.id == self.bot.user.id:
                 await message.channel.send('<#870284332810526750>')
 
 def setup(bot):
