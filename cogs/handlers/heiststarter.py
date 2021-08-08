@@ -51,8 +51,6 @@ class HeistStarter(commands.Cog, name='Heist Starter', command_attrs=dict(hidden
                 pass
         else:
             await asyncio.sleep(3)
-            if message.channel.id == 822567848400388106:
-                await message.channel.send("Remember freeloaders get a 7 day ban so don't free load also to support us vote for us at https://top.gg/servers/784491141022220309/vote")
 
             msg = await message.channel.send(f"I hope that was a good heist! Make sure to vote for the server at https://top.gg/servers/{message.guild.id}/vote")
             await msg.add_reaction('✅')
