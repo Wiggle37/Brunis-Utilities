@@ -16,7 +16,8 @@
         "owner_ids": [
             824010269071507536,
             531317158530121738,
-            732627627235606629
+            732627627235606629,
+            852631920864788550
         ]
     },
     "settings": {
@@ -52,7 +53,7 @@
             "staff_roles": []
         },
         "heists": {
-            "heistmode": true
+            "heistmode": false
         },
         "economy": {
             "blacklistedchannels": [

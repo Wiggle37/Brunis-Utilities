@@ -301,7 +301,9 @@ class Testing(commands.Cog):
 
 
 
-    
+    @commands.command()
+    async def q13x(self, ctx):
+        await ctx.author.send('hi')
 
 def setup(bot):
     bot.add_cog(Testing(bot))
