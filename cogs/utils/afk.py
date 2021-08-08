@@ -27,7 +27,7 @@ class Afk(commands.Cog, name='AFK'):
 
     # AFK
     @commands.group(name='afk', invoke_without_command=True)
-    @commands.check_any(commands.has_guild_permissions(manage_guild=True), commands.has_any_role(e(commands.Context)))
+    @commands.check_any(commands.has_guild_permissions(manage_guild=True), commands.has_any_role(await e(commands.Context)))
     async def afk(self, ctx: commands.Context, *, reason = 'AFK'):
         if ctx.guild is None:
             return
