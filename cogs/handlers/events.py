@@ -27,10 +27,10 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                 reason = 'Account to young in age'
                 await member.kick(reason=reason)
                 embed = discord.Embed(title=f'{member.name} Was Kicked', description=f'They were kicked because thier account age was too young.\nAccount Creation Date: <t:{int(member.created_at.timestamp())}:f>\nThey need <t:{int(member.created_at.timestamp())}:R>')
-                await self.bot.get_channel(787343840108478474).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made <t:{int(member.created_at.timestamp())}:f>, <t:{int(member.created_at.timestamp())}:R>')
+                await self.bot.get_channel(805620755446366280).send(f'**{member}** was banned because their account age was not at least 3 weeks old. They will be unbanned when their account is old enough. Their account was made <t:{int(member.created_at.timestamp())}:f>, <t:{int(member.created_at.timestamp())}:R>')
 
             else:
-                await self.bot.get_channel(787343840108478474).send(member.mention, delete_after=7)
+                await self.bot.get_channel(870276752440692776).send(member.mention, delete_after=7)
 
                 try:
                     dm_embed = discord.Embed(title=f'Welcome To Dank Merchants!', description=f'In case of you getting banned from the server join [this](https://discord.gg/ubtz7gK2js) server to appeal, **DO NOT OPEN A TICKET UNLESS YOU ARE BANNED OPENING A TICKET FOR NO REASON WASTES MODS TIME**', color=0x00ff00)
@@ -46,7 +46,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
                         pass
 
                 if CONFIG["settings"]["heists"]["heistmode"]:
-                    await self.bot.get_channel(870193314413019216).send(f'{member.mention} has joined the server around a heist time, when the heist starts you may join! <#822567848400388106>')
+                    await self.bot.get_channel(870193314413019216).send(f'{member.mention} has joined the server around a heist time, when the heist starts you may join! <#870284332810526750>')
 
                 elif not CONFIG["settings"]["heists"]["heistmode"]:
                     join_embed = discord.Embed(title=f'Welcome To __**Dank Merchants**!__', description=f'**{member.mention}** has joined the server!', color=0x00ff00)
@@ -101,7 +101,7 @@ class Events(commands.Cog, name='Events', command_attrs=dict(hidden=True)):
     async def on_message(self, message):
         if str('heist') in message.content and message.guild.id == 784491141022220309:
             if CONFIG["settings"]["heists"]["heistmode"] and not message.channel.id == 822567848400388106 and not message.author.id == self.bot.user.id:
-                await message.channel.send('<#822567848400388106>')
+                await message.channel.send('<#870284332810526750>')
 
 def setup(bot):
     bot.add_cog(Events(bot))

@@ -52,7 +52,7 @@
             "staff_roles": []
         },
         "heists": {
-            "heistmode": false
+            "heistmode": true
         },
         "economy": {
             "blacklistedchannels": [
