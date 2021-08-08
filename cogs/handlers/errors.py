@@ -18,10 +18,16 @@ class CommandErrorHandler(commands.Cog):
         if isinstance(error, commands.CheckFailure):
             if ctx.author.id in self.bot.owner_ids:
                 return await ctx.reinvoke()
+            return await ctx.send(f'You do not have permission to run this command')
+
+        if isinstance(error, commands.CheckAnyFailure):
+            if ctx.author.id in self.bot.owner_ids:
+                return await ctx.reinvoke()
+            return await ctx.send(f'You do not have permission to run this command')
 
         # - Command On Cooldown Errors - #
         if isinstance(error, commands.CommandOnCooldown):
-            return ctx.send(f"This command is on cooldown for another {error.cooldown}")
+            return ctx.send(error.cooldown[0])
 
         # - Extenstion Errors - #
         if isinstance(error, commands.ExtensionAlreadyLoaded):

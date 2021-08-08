@@ -9,9 +9,25 @@ class Afk(commands.Cog, name='AFK'):
         self.bot = bot
         self.motor_session = AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/afk?retryWrites=true&w=majority')
         self.db = self.motor_session.afk
+    
+    async def e(ctx):
+        motor_session = AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/afk?retryWrites=true&w=majority')
+        db = motor_session.afk
+
+        guild_config = await db.guild_config.find_one({"_id": ctx.guild.id})
+        roles = []
+
+        for role in guild_config["accessable_roles"]:
+            role = discord.utils.get(ctx.guild.roles, id=role)
+            roles.append(role.name)
+
+        for role in ctx.author.roles:
+            if role in roles:
+                return True
 
     # AFK
     @commands.group(name='afk', invoke_without_command=True)
+    @commands.check_any(commands.has_guild_permissions(manage_guild=True), commands.has_any_role(e(commands.Context)))
     async def afk(self, ctx: commands.Context, *, reason = 'AFK'):
         if ctx.guild is None:
             return
@@ -33,8 +49,37 @@ class Afk(commands.Cog, name='AFK'):
 
         await ctx.send(f'{ctx.author.mention}: I have marked you afk for: {reason}', allowed_mentions = mentions)
 
-    @afk.command(name='config')
-    async def config(self, ctx, )
+    @afk.group(name='config', invoke_without_command=True)
+    async def config(self, ctx):
+        await ctx.send('Please send something to config')
+
+    @config.group(name='access', invoke_without_command=True)
+    async def access(self, ctx):
+        await ctx.send('Please send something to config in access')
+
+    @access.command(name='add')
+    async def add(self, ctx, roles: commands.Greedy[discord.Role]):
+        guild_config = await self.db.guild_config.find_one({"_id": ctx.guild.id})
+        roles_ = []
+        for role in roles:
+            if role.id in guild_config["accessable_roles"]:
+                continue
+            roles_.append(role.name)
+            await self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$push": {"accessable_roles": role.id}})
+
+        await ctx.send(f'Added the following role(s) for using the afk command, however the manage server permission will bypass it: `{", ".join(roles_)}`')
+
+    @access.command(name='remove')
+    async def remove(self, ctx, roles: commands.Greedy[discord.Role]):
+        guild_config = await self.db.guild_config.find_one({"_id": ctx.guild.id})
+        roles_ = []
+        for role in roles:
+            if role.id in guild_config["accessable_roles"]:
+                continue
+            roles_.append(role.name)
+            await self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"accessable_roles": role.id}})
+
+        await ctx.send(f'Removed the following role(s) for using the afk command, however the manage server permission will bypass it: `{", ".join(roles_)}`')
 
     @commands.Cog.listener('on_message')
     async def unafk(self, message):
