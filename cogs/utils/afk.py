@@ -11,7 +11,7 @@ class Afk(commands.Cog, name='AFK'):
         self.db = self.motor_session.afk
 
     # AFK
-    @commands.command(name='afk')
+    @commands.group(name='afk', invoke_without_command=True)
     async def afk(self, ctx: commands.Context, *, reason = 'AFK'):
         if ctx.guild is None:
             return
@@ -32,6 +32,9 @@ class Afk(commands.Cog, name='AFK'):
         mentions.users = True
 
         await ctx.send(f'{ctx.author.mention}: I have marked you afk for: {reason}', allowed_mentions = mentions)
+
+    @afk.command(name='config')
+    async def config(self, ctx, )
 
     @commands.Cog.listener('on_message')
     async def unafk(self, message):
