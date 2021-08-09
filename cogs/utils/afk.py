@@ -19,13 +19,11 @@ class Afk(commands.Cog, name='AFK'):
 
         for role in guild_config["accessable_roles"]:
             role = discord.utils.get(ctx.guild.roles, id=role)
-            roles.append(role.name)
+            roles.append(role)
 
         for role in ctx.author.roles:
             if role in roles:
                 return True
-            elif role not in roles:
-                return False
 
     # AFK
     @commands.group(name='afk', invoke_without_command=True)
