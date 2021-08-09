@@ -205,9 +205,5 @@ class admin(commands.Cog, name = "Admin"):
             else:
                 await self.send_code(ctx, f'{value}{ret}')
 
-    @eval.error
-    async def eval_error(self, ctx, error):
-        pass
-
 def setup(bot):
     bot.add_cog(admin(bot))

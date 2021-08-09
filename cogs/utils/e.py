@@ -1,6 +1,4 @@
-from collections import OrderedDict
 import discord
-from discord import role
 from discord.ext import commands
 
 import aiohttp
@@ -15,7 +13,8 @@ import motor
 import motor.motor_asyncio
 from datetime import datetime
 import time
-from operator import itemgetter
+from operator import itemgetter, truediv
+from typing import OrderedDict
 
 
 from config import *
@@ -87,6 +86,18 @@ class Testing(commands.Cog):
         except ValueError:
             return False
 
+    def embed(self, ctx, member: discord.Member, amount: int, category: int):
+        e = {
+            0: 'giveaway',
+            1: 'heist', 
+            2: 'event',
+            3: 'special',
+            4: 'money'
+        }
+        if category not in e:
+            raise IndexError(f'No found category found for "{category}"')
+        embed = discord.Embed(title=f'Donations Updated For __{member.name}__', description=f'')
+
     # Set-Up Donations
     @commands.command()
     @commands.has_guild_permissions(manage_guild=True)
@@ -105,10 +116,10 @@ class Testing(commands.Cog):
 
     # Donation Config
     @commands.group(name='donation_config', invoke_without_command=True)
+    @commands.has_guild_permissions(manage_guild=True)
     async def donation_config(self, ctx):
         info = await self.get_guild_config(ctx, ctx.guild)
         collections = await self.db.list_collection_names()
-        self.db['guild_config']
         if str(ctx.guild.id) not in collections:
             return await ctx.send(f'This guild is not currently setup, to setup the guild please run the command `b!setup`')
 
@@ -119,8 +130,7 @@ class Testing(commands.Cog):
                 \nHeist Access: {", ".join([discord.utils.get(ctx.guild.roles, id = id).name for id in info["heist_ids"]])} \
                 \nEvent Access: {", ".join([discord.utils.get(ctx.guild.roles, id = id).name for id in info["event_ids"]])} \
                 \nSpecial Access: {", ".join([discord.utils.get(ctx.guild.roles, id = id).name for id in info["special_ids"]])} \
-                \nMoney Access: {", ".join([discord.utils.get(ctx.guild.roles, id = id).name for id in info["money_ids"]])}'
-            ),
+                \nMoney Access: {", ".join([discord.utils.get(ctx.guild.roles, id = id).name for id in info["money_ids"]])}'),
             color=0x9b59b6
             )
 
@@ -129,12 +139,10 @@ class Testing(commands.Cog):
     @donation_config.group(invoke_without_command=True)
     async def giveaway(self, ctx):
         await ctx.send('Please provide an action to complete either add or remove')
-
     @giveaway.command()
     async def add(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$push": {"giveaway_ids": role.id}})
         await ctx.send(f'Role `{role.name}` added for managing giveaway donations')
-
     @giveaway.command()
     async def remove(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"giveaway_ids": role.id}})
@@ -143,12 +151,10 @@ class Testing(commands.Cog):
     @donation_config.group(invoke_without_command=True)
     async def heist(self, ctx):
         await ctx.send('Please provide an action to complete either add or remove')
-
     @heist.command()
     async def add(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$push": {"giveaway_ids": role.id}})
         await ctx.send(f'Role `{role.name}` added for managing heist donations')
-
     @heist.command()
     async def remove(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"giveaway_ids": role.id}})
@@ -157,12 +163,10 @@ class Testing(commands.Cog):
     @donation_config.group(invoke_without_command=True)
     async def event(self, ctx):
         await ctx.send('Please provide an action to complete either add or remove')
-
     @event.command()
     async def add(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$push": {"giveaway_ids": role.id}})
         await ctx.send(f'Role `{role.name}` added for managing event donations')
-
     @event.command()
     async def remove(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"giveaway_ids": role.id}})
@@ -171,12 +175,10 @@ class Testing(commands.Cog):
     @donation_config.group(invoke_without_command=True)
     async def special(self, ctx):
         await ctx.send('Please provide an action to complete either add or remove')
-
     @special.command()
     async def add(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$push": {"giveaway_ids": role.id}})
         await ctx.send(f'Role `{role.name}` added for managing special donations')
-
     @special.command()
     async def remove(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"giveaway_ids": role.id}})
@@ -185,12 +187,10 @@ class Testing(commands.Cog):
     @donation_config.group(invoke_without_command=True)
     async def money(self, ctx):
         await ctx.send('Please provide an action to complete either add or remove')
-
     @money.command()
     async def add(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$push": {"giveaway_ids": role.id}})
         await ctx.send(f'Role `{role.name}` added for managing money donations')
-
     @money.command()
     async def remove(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"giveaway_ids": role.id}})
@@ -198,6 +198,7 @@ class Testing(commands.Cog):
 
     # Donation Roles
     @commands.group(invoke_without_command=True)
+    @commands.has_guild_permissions(manage_guild=True)
     async def donation_roles(self, ctx):
         collection = self.db.guild_config
         info = await collection.find_one({"_id": ctx.guild.id})
@@ -231,9 +232,9 @@ class Testing(commands.Cog):
     
     # Check Donations
     @commands.command()
+    @commands.has_guild_permissions(send_messages=True)
     async def dd(self, ctx, member: discord.Member=None):
-        db = self.motor_session.donations
-        collection = db[str(ctx.guild.id)]
+        collection = self.db[str(ctx.guild.id)]
         member = member or ctx.author
         await self.get_user(ctx, member)
         info = await collection.find_one({"_id": member.id})
@@ -301,9 +302,292 @@ class Testing(commands.Cog):
 
 
 
-    @commands.command()
-    async def q13x(self, ctx):
-        await ctx.author.send('hi')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #Dono Set
+    @commands.command(name='gds', description='Set someones giveaway donations')
+    @commands.has_any_role()
+    async def gaw_dono_set(self, ctx, member: discord.Member, amount: str):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Add
+    @commands.command(name='gda', description='Add to someones giveaway donations')
+    @commands.has_any_role()
+    async def gaw_dono_add(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Remove
+    @commands.command(name='gdr', description='Remove from someones giveaway donations')
+    @commands.has_any_role()
+    async def gaw_dono_remove(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{amount}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Reset
+    @commands.command(name='gdrs', description='Reset someones giveaway donations')
+    @commands.has_any_role()
+    async def gaw_dono_reset(self, ctx, member: discord.Member):
+        await self.get_member(ctx, member)
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
+
+        await self.roles(ctx, member)
+        await self.aboose(ctx, member, 0)
+
+    '''
+    HEIST DONATIONS
+    '''
+    #Dono Set
+    @commands.command(name='hds', description='Set someones heist donations')
+    @commands.has_any_role()
+    async def heist_dono_set(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThe have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Add
+    @commands.command(name='hda', description='Add to someones heist donations')
+    @commands.has_any_role()
+    async def heist_dono_add(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Remove
+    @commands.command(name='hdr', description='Remove from someones heist donations')
+    @commands.has_any_role()
+    async def heist_dono_remove(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Reset
+    @commands.command(name='hdrs', description='Reset someones heist donations')
+    @commands.has_any_role()
+    async def heist_dono_reset(self, ctx, member: discord.Member):
+        await self.get_member(ctx, member)
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
+
+        await self.roles(ctx, member)
+
+    '''
+    EVENT DONATIONS
+    '''
+    #Dono Set
+    @commands.command(name='eds', description='Set someones event donations')
+    @commands.has_any_role()
+    async def event_dono_set(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+        
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Add
+    @commands.command(name='eda', description='Add to someones event donations')
+    @commands.has_any_role()
+    async def event_dono_add(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Remove
+    @commands.command(name='edr', description='Remove from someones event donations')
+    @commands.has_any_role()
+    async def event_dono_remove(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Reset
+    @commands.command(name='edrs', description='Reset someones event donations')
+    @commands.has_any_role()
+    async def event_dono_reset(self, ctx, member: discord.Member):
+        await self.get_member(ctx, member)
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
+
+        await self.roles(ctx, member)
+
+    '''
+    SPECIAL EVENT
+    '''
+    #Dono Set
+    @commands.command(name='sds', description='Set someones special donations')
+    @commands.has_any_role()
+    async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Add
+    @commands.command(name='sda', description='Add to someones special donations')
+    @commands.has_any_role()
+    async def special_dono_add(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+        await self.aboose(ctx, member, amount)
+
+    #Dono Remove
+    @commands.command(name='sdr', description='Remove from someones special donations')
+    @commands.has_any_role()
+    async def special_dono_remove(self, ctx, member: discord.Member, amount: str):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **⏣{'{:,}'.format(amount)}**\nThey have now donated a total of **{self.beautify_numbers(await self.get_user_amount(ctx, member)['giveaway'])}**")
+
+        await self.roles(ctx, member)
+
+    #Dono Reset
+    @commands.command(name='sdrs', description='Reset someones special donations')
+    @commands.has_any_role()
+    async def special_dono_reset(self, ctx, member: discord.Member):
+        await self.get_member(ctx, member)
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **⏣0**")
+
+        await self.roles(ctx, member)
+
+    '''
+    MONEY DONATIONS
+    '''
+    #Dono Set
+    @commands.command(name='mds', description='Set someones money donations')
+    @commands.has_any_role()
+    async def money_dono_set(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+        
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount set was **${amount}**")
+
+    #Dono Add
+    @commands.command(name='mda', description='Add to someones money donations')
+    @commands.has_any_role()
+    async def money_dono_add(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note added for **{member}**\nThe amount added was **${amount}**")
+
+    #Dono Remove
+    @commands.command(name='mdr', description='Remove from someones money donations')
+    @commands.has_any_role()
+    async def money_dono_remove(self, ctx, member: discord.Member, amount: str=None):
+        await self.get_member(ctx, member)
+        amount = self.is_valid_int(amount)
+        if amount == False:
+            return await ctx.send('Not a valid number there bud')
+
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note removed for **{member}**\nThe amount removed was **${amount}**")
+
+    #Dono Reset
+    @commands.command(name='mdrs', description='Reset someones money donations')
+    @commands.has_any_role()
+    async def money_dono_reset(self, ctx, member: discord.Member):
+        await self.get_member(ctx, member)
+        
+        await ctx.message.add_reaction(emoji='<a:greencheck:853007357709910086>')
+        await ctx.send(f"Donation note reset for **{member}**\nThe amount was set to **$0**")
+
 
 def setup(bot):
     bot.add_cog(Testing(bot))
