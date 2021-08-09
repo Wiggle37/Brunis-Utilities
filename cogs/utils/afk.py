@@ -10,7 +10,7 @@ class Afk(commands.Cog, name='AFK'):
         self.motor_session = AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/afk?retryWrites=true&w=majority')
         self.db = self.motor_session.afk
     
-    async def e(ctx):
+    async def e(self, ctx):
         motor_session = AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/afk?retryWrites=true&w=majority')
         db = motor_session.afk
 
@@ -24,13 +24,17 @@ class Afk(commands.Cog, name='AFK'):
         for role in ctx.author.roles:
             if role in roles:
                 return True
+            elif role not in roles:
+                return False
 
     # AFK
     @commands.group(name='afk', invoke_without_command=True)
-    @commands.check_any(commands.has_guild_permissions(manage_guild=True), commands.has_any_role(await e(commands.Context)))
     async def afk(self, ctx: commands.Context, *, reason = 'AFK'):
         if ctx.guild is None:
             return
+
+        if not await self.e(ctx) and not ctx.author.guild_permissions.manage_guild:
+            return await ctx.send('You do not have the required roles to run this command')
 
         guild_info = self.db[str(ctx.guild.id)]
         try:

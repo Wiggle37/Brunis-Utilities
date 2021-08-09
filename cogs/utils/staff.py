@@ -123,7 +123,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
             return await ctx.send(f'`{role.name}` removed from **{member.name}**')
 
     @role.command(name='info', description='Get info on a role')
-    async def info(self, ctx, role: discord.Role):
+    async def info(self, ctx, *, role: discord.Role):
         embed = discord.Embed(title=f'{role.name} info', color=role.color)
         embed.add_field(name='Members', value=len(role.members))
         embed.add_field(name='Color', value=role.color)
