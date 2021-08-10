@@ -284,7 +284,7 @@ class Utility(commands.Cog, name='utility', description='Some commands that will
 
 
     # Profile
-    @commands.command(name='profile', description='Check your server profile', aliases=['me', 'user', 'ui'])
+    @commands.command(name='profile', description='Check your server profile')
     async def profile(self, ctx, member: discord.Member=None):
         user = member or ctx.author
         
