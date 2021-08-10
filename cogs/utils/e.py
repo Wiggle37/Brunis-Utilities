@@ -87,16 +87,15 @@ class Testing(commands.Cog):
             return False
 
     def embed(self, ctx, member: discord.Member, amount: int, category: int):
-        e = {
-            0: 'giveaway',
-            1: 'heist', 
-            2: 'event',
-            3: 'special',
-            4: 'money'
-        }
+        e = {0: 'giveaway', 1: 'heist', 2: 'event', 3: 'special', 4: 'money'}
+        currency = '⏣'
+        if category == 4:
+            currency = '$'
         if category not in e:
             raise IndexError(f'No found category found for "{category}"')
-        embed = discord.Embed(title=f'Donations Updated For __{member.name}__', description=f'')
+
+        embed = discord.Embed(title=f'Donations Updated For __{member.name}__', description=f'**User:** {member.mention}({member.id})\n**Amount:** `{currency}{self.beautify_numbers(amount)}`')
+        return embed
 
     # Set-Up Donations
     @commands.command()
@@ -274,8 +273,6 @@ class Testing(commands.Cog):
             return await ctx.send(f'Please select a valid category, `{", ".join(self.categories)}`')
 
         await collection.update_one({"_id": member.id}, {"$set": {f"{category}": info[f"{category}"] + amount}})
-
-        await ctx.send(f'`{amount}` added to **{member.name}**')
 
     # Remove Donations
     @commands.command()
