@@ -27,7 +27,7 @@ class CommandErrorHandler(commands.Cog):
 
         # - Command On Cooldown Errors - #
         if isinstance(error, commands.CommandOnCooldown):
-            return ctx.send(error.cooldown[0])
+            return ctx.send(error.cooldown)
 
         # - Extenstion Errors - #
         if isinstance(error, commands.ExtensionAlreadyLoaded):
