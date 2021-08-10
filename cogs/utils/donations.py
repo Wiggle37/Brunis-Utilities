@@ -2,20 +2,9 @@ import discord
 from discord.ext import commands
 
 import aiohttp
-import json
-import time
-import asyncio
-import concurrent
-from discord.ext.commands.core import command
-import speedtest
-import aiosqlite
 import motor
 import motor.motor_asyncio
 from datetime import datetime
-import time
-from operator import itemgetter, truediv
-from typing import OrderedDict
-
 
 from config import *
 from buttons import *
@@ -136,6 +125,8 @@ class Testing(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    '''
+
     @donation_config.group(invoke_without_command=True)
     async def giveaway(self, ctx):
         await ctx.send('Please provide an action to complete either add or remove')
@@ -196,6 +187,8 @@ class Testing(commands.Cog):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"giveaway_ids": role.id}})
         await ctx.send(f'Role `{role.name}` removed for managing money donations')
 
+    '''
+
     # Donation Roles
     @commands.group(invoke_without_command=True)
     @commands.has_guild_permissions(manage_guild=True)
@@ -239,13 +232,18 @@ class Testing(commands.Cog):
         await self.get_user(ctx, member)
         info = await collection.find_one({"_id": member.id})
 
-        embed = discord.Embed(title=f'{member}\'s Donations For {ctx.guild.name}', color=member.color)
-        embed.add_field(name=f'Giveaway Donations:', value=f'{info["giveaway"]}')
-        embed.add_field(name=f'Heist Donations:', value=f'{info["heist"]}')
-        embed.add_field(name=f'Event Donations:', value=f'{info["event"]}')
-        embed.add_field(name=f'Special Donations:', value=f'{info["special"]}')
-        embed.add_field(name=f'Money Donations:', value=f'{info["money"]}')
+        embed = discord.Embed(title=f'{member}\'s Donations', color=discord.Color.dark_purple())
+        embed.description = (
+            f'\
+            \nGiveaway: `⏣{info["giveaway"]}` \
+            \nHeist: `⏣{info["heist"]}` \
+            \nEvent: `⏣{info["event"]}` \
+            \nSpecial: `⏣{info["special"]}` \
+            \nMoney: `${info["money"]}`'
+
+        )
         embed.timestamp = datetime.utcnow()
+        embed.set_footer(text='This is a rewrite version of donations all changes are NOT final')
         await ctx.send(embed=embed)
 
 
@@ -254,65 +252,83 @@ class Testing(commands.Cog):
 
 
 
-
-
-
-
-
-    # Add Donations
-    @commands.command()
-    @commands.is_owner()
-    async def add_donations(self, ctx, category: str, member: discord.Member, amount: str):
-        collection = self.db[f'{ctx.guild.id}']
-        info = await self.get_user_amount(ctx, member)
-        await self.get_user(ctx, member)
-        amount = self.is_valid_int(amount)
-        if amount == False:
-            return await ctx.send('Not a valid number there bud')
-        
-        if category not in self.categories:
-            return await ctx.send(f'Please select a valid category, `{", ".join(self.categories)}`')
-
-        await collection.update_one({"_id": member.id}, {"$set": {f"{category}": info[f"{category}"] + amount}})
-
-    # Remove Donations
-    @commands.command()
-    @commands.is_owner()
-    async def remove_donations(self, ctx, category: str, member: discord.Member, amount: str):
-        collection = self.db[f'{ctx.guild.id}']
-        info = await self.get_user_amount(ctx, member)
-        await self.get_user(ctx, member)
-        amount = self.is_valid_int(amount)
-        if amount == False:
-            return await ctx.send('Not a valid number there bud')
-        
-        if category not in self.categories:
-            return await ctx.send(f'Please select a valid category, `{", ".join(self.categories)}`')
-
-        await collection.update_one({"_id": member.id}, {"$set": {f"{category}": info[f"{category}"] - amount}})
-
-        await ctx.send(f'`{amount}` remove to **{member.name}**')
-
-
-
-
     '''
-    Donations
+    Add Donations
     '''
     @commands.group(name='add_donations', description='Add donations to a user', invoke_without_command=True)
     @commands.has_any_role()
     async def add_donations(self, ctx):
         return await ctx.send('Please specify a category to add donations to.')
 
+    # Giveaway
     @add_donations.group(name='giveaway', invoke_without_command=True)
     @commands.has_any_role()
     async def giveaway(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await collection.update_one({"_id": member.id}, {"$set": {f"giveaway": self.get_user_amount["giveaway"] - amount}})
+        await collection.update_one({"_id": member.id}, {"$set": {f"giveaway": user_info["giveaway"] + amount}})
+
+        await ctx.send(embed=self.embed(ctx, member, amount, 0))
+
+    # Heist
+    @add_donations.group(name='heist', invoke_without_command=True)
+    @commands.has_any_role()
+    async def heist(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
+        amount = self.is_valid_int(amount)
+        if not amount:
+            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
+
+        await collection.update_one({"_id": member.id}, {"$set": {f"heist": user_info["heist"] + amount}})
+
+        await ctx.send(embed=self.embed(ctx, member, amount, 1))
+
+    # Event
+    @add_donations.group(name='event', invoke_without_command=True)
+    @commands.has_any_role()
+    async def event(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
+        amount = self.is_valid_int(amount)
+        if not amount:
+            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
+
+        await collection.update_one({"_id": member.id}, {"$set": {f"event": user_info["event"] + amount}})
+
+        await ctx.send(embed=self.embed(ctx, member, amount, 2))
+
+    # Special
+    @add_donations.group(name='special', invoke_without_command=True)
+    @commands.has_any_role()
+    async def special(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
+        amount = self.is_valid_int(amount)
+        if not amount:
+            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
+
+        await collection.update_one({"_id": member.id}, {"$set": {f"special": user_info["special"] + amount}})
+
+        await ctx.send(embed=self.embed(ctx, member, amount, 3))
+
+    # Money
+    @add_donations.group(name='money', invoke_without_command=True)
+    @commands.has_any_role()
+    async def money(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
+        amount = self.is_valid_int(amount)
+        if not amount:
+            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
+
+        await collection.update_one({"_id": member.id}, {"$set": {f"money": user_info["money"] + amount}})
+
+        await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
 def setup(bot):
     bot.add_cog(Testing(bot))
