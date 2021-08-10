@@ -70,7 +70,7 @@ async def on_ready():
 
 @tasks.loop(seconds = 60)
 async def status():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Over {len(bot.users)} people"), status = discord.Status.idle)
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"Over {len(bot.users)} people in {len(bot.guilds)} servers"), status = discord.Status.idle)
 
 @status.before_loop
 async def bot_ready():
