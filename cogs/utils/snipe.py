@@ -16,10 +16,6 @@ class snipe(commands.Cog):
   async def on_message_delete(self, message):
     snipe_message_author[message.channel.id] = message.author
     snipe_message_content[message.channel.id] = message.content
-    await asyncio.sleep(30)
-    del snipe_message_author[message.channel.id]
-    del snipe_message_content[message.channel.id]
-
   
   @commands.command()
   async def snipe(self, ctx):
