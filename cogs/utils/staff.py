@@ -74,7 +74,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     # Unlock
     @commands.command(name = "unlock", description = "Unlocks the current channel for @\u200beveryone")
     @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def unlock(self, ctx, channel: discord.TextChannel):
+    async def unlock(self, ctx, channel: discord.TextChannel=None):
         if channel is None:
             await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = None)
         elif channel is not None:
