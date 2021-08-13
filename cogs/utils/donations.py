@@ -256,13 +256,11 @@ class Testing(commands.Cog):
     Add Donations
     '''
     @commands.group(name='add_donations', description='Add donations to a user', aliases=['ad', 'da'], invoke_without_command=True)
-    @commands.has_any_role()
     async def add_donations(self, ctx):
         return await ctx.send('Please specify a category to add donations to.')
 
     # Giveaway
-    @add_donations.group(name='giveaway', invoke_without_command=True)
-    @commands.has_any_role()
+    @add_donations.command(name='giveaway')
     async def giveaway(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -275,8 +273,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     # Heist
-    @add_donations.group(name='heist', invoke_without_command=True)
-    @commands.has_any_role()
+    @add_donations.command(name='heist')
     async def heist(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -289,8 +286,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     # Event
-    @add_donations.group(name='event', invoke_without_command=True)
-    @commands.has_any_role()
+    @add_donations.command(name='event')
     async def event(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -303,8 +299,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     # Special
-    @add_donations.group(name='special', invoke_without_command=True)
-    @commands.has_any_role()
+    @add_donations.command(name='special')
     async def special(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -317,8 +312,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     # Money
-    @add_donations.group(name='money', invoke_without_command=True)
-    @commands.has_any_role()
+    @add_donations.command(name='money')
     async def money(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -334,13 +328,11 @@ class Testing(commands.Cog):
     Remove Donations
     '''
     @commands.group(name='remove_donations', description='Add donations to a user', aliases=['rd', 'dr'], invoke_without_command=True)
-    @commands.has_any_role()
     async def remove_donations(self, ctx):
         return await ctx.send('Please specify a category to add donations to.')
 
     # Giveaway
-    @remove_donations.group(name='giveaway', invoke_without_command=True)
-    @commands.has_any_role()
+    @remove_donations.command(name='giveaway', invoke_without_command=True)
     async def giveaway(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -353,8 +345,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     # Heist
-    @remove_donations.group(name='heist', invoke_without_command=True)
-    @commands.has_any_role()
+    @remove_donations.command(name='heist', invoke_without_command=True)
     async def heist(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -367,8 +358,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     # Event
-    @remove_donations.group(name='event', invoke_without_command=True)
-    @commands.has_any_role()
+    @remove_donations.command(name='event', invoke_without_command=True)
     async def event(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -381,8 +371,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     # Special
-    @remove_donations.group(name='special', invoke_without_command=True)
-    @commands.has_any_role()
+    @remove_donations.command(name='special', invoke_without_command=True)
     async def special(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -395,8 +384,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     # Money
-    @remove_donations.group(name='money', invoke_without_command=True)
-    @commands.has_any_role()
+    @remove_donations.command(name='money', invoke_without_command=True)
     async def money(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
         user_info = await self.get_user_amount(ctx, member)
@@ -412,16 +400,13 @@ class Testing(commands.Cog):
     Set Donations
     '''
     @commands.group(name='set_donations', description='Add donations to a user', aiases=['sd', 'ds'], invoke_without_command=True)
-    @commands.has_any_role()
     async def set_donations(self, ctx):
         return await ctx.send('Please specify a category to add donations to.')
 
     # Giveaway
-    @set_donations.group(name='giveaway', invoke_without_command=True)
-    @commands.has_any_role()
+    @set_donations.command(name='giveaway', invoke_without_command=True)
     async def giveaway(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
-        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
@@ -431,11 +416,9 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     # Heist
-    @set_donations.group(name='heist', invoke_without_command=True)
-    @commands.has_any_role()
+    @set_donations.command(name='heist', invoke_without_command=True)
     async def heist(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
-        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
@@ -445,11 +428,9 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     # Event
-    @set_donations.group(name='event', invoke_without_command=True)
-    @commands.has_any_role()
+    @set_donations.command(name='event', invoke_without_command=True)
     async def event(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
-        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
@@ -459,11 +440,9 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     # Special
-    @set_donations.group(name='special', invoke_without_command=True)
-    @commands.has_any_role()
+    @set_donations.command(name='special', invoke_without_command=True)
     async def special(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
-        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
@@ -473,11 +452,9 @@ class Testing(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     # Money
-    @set_donations.group(name='money', invoke_without_command=True)
-    @commands.has_any_role()
+    @set_donations.command(name='money', invoke_without_command=True)
     async def money(self, ctx, member: discord.Member, amount: str):
         collection = self.db[str(ctx.guild.id)]
-        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
