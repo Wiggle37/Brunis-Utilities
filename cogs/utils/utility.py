@@ -14,9 +14,29 @@ import sqlite3
 from config import *
 from badges import *
 
+snipe_message_author = {}
+snipe_message_content = {}
+
 class Utility(commands.Cog, name='utility', description='Some commands that will be helpful when needed'):
     def __init__(self, bot):
         self.bot = bot
+        self.snipe_message_content = None
+        self.snipe_message_author = None
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        snipe_message_author[message.channel.id] = message.author
+        snipe_message_content[message.channel.id] = message.content
+    
+    @commands.command()
+    async def snipe(self, ctx):
+        channel = ctx.channel
+        try:
+            em = discord.Embed(title = f"Last deleted message in {channel}", description = snipe_message_content[channel.id], color = 0xf5ff88)
+            em.set_footer(text = f"This message was sent by {snipe_message_author[channel.id]}")
+            await ctx.send(embed = em)
+        except:
+            await ctx.send(f"There are no recently deleted messages in {channel.mention}")
 
     def natural_size(self, size_in_bytes: int):
         # turns the number of bytes into readable info
