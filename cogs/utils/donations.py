@@ -255,7 +255,7 @@ class Testing(commands.Cog):
     '''
     Add Donations
     '''
-    @commands.group(name='add_donations', description='Add donations to a user', alises=['ad', 'da'], invoke_without_command=True)
+    @commands.group(name='add_donations', description='Add donations to a user', aliases=['ad', 'da'], invoke_without_command=True)
     @commands.has_any_role()
     async def add_donations(self, ctx):
         return await ctx.send('Please specify a category to add donations to.')
