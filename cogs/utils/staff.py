@@ -64,21 +64,17 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     # Lock
     @commands.command(name = "lock", description = "Locks the current channel for @\u200beveryone")
     @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def lock(self, ctx, channel: discord.TextChannel=None):
-        if channel is None:
-            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
-        elif channel is not None:
-            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
+    async def lock(self, ctx, channel: discord.TextChannel = None):
+        unlocked_channel = channel or ctx.channel
+        await unlocked_channel.set_permissions(ctx.guild.default_role, send_messages = False)
         await ctx.send("Channel locked")
 
     # Unlock
     @commands.command(name = "unlock", description = "Unlocks the current channel for @\u200beveryone")
     @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def unlock(self, ctx, channel: discord.TextChannel=None):
-        if channel is None:
-            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = None)
-        elif channel is not None:
-            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = None)
+    async def unlock(self, ctx, channel: discord.TextChannel = None):
+        locked_channel = channel or ctx.channel
+        await locked_channel.set_permissions(ctx.guild.default_role, send_messages = None)
         await ctx.send("Channel unlocked")
    
 

@@ -269,13 +269,6 @@ class Testing(commands.Cog):
     '''
     Add Donations
     '''
-    @commands.group(name='eee', invoke_without_command=True)
-    async def eee(self, ctx):
-        await ctx.send('e')
-
-    @eee.command(name='eeee')
-    async def eeee(self, ctx, e: str, ee: str):
-        await ctx.send(f'{e}, {ee}')
 
     @commands.group(name='add_donations', description='Add donations to a user', aliases=['ad', 'da'], invoke_without_command=True)
     async def add_donations(self, ctx):
