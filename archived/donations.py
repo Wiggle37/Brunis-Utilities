@@ -1,18 +1,18 @@
 import discord
 from discord.ext import commands
 
+import aiohttp
 import motor
 import motor.motor_asyncio
-import aiosqlite
 from datetime import datetime
 
 from config import *
-from donation_functions import donations
 from buttons import *
 
 class Testing(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.session = aiohttp.ClientSession(loop=bot.loop)
         self.motor_session = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/donations?retryWrites=true&w=majority')
         self.db = self.motor_session.donations
         self.categories = ['giveaway', 'heist', 'event', 'special', 'money']
@@ -20,13 +20,16 @@ class Testing(commands.Cog):
     '''
     Donations
     '''
+    async def get_required_roles(self, ctx, guild):
+        self.db.guild_config.find_one()
+
     async def add_roles(self, ctx, user: discord.Member):
         user_roles_id = [role.id for role in user.roles]
 
         total = await self.get_amount(ctx, user)
 
-        info = self.db.guild_config.find_one({"_id": ctx.guild.id})
-        donors_roles = info["donation_roles"]
+        roles_ = self.db.guild_config.find_one({"_id": ctx.guild.id})
+        donors_roles = roles_["donation_roles"]
 
         roles_added = []
         for amount, role_id in donors_roles.items():
@@ -42,30 +45,23 @@ class Testing(commands.Cog):
 
         if roles_added != []:
             return await ctx.send(f"**{user.name}** now has the role(s): `{', '.join(roles_added)}`! Tysm for donating!")
-
     def beautify_numbers(self, num):
         return "{:,}".format(num)
 
-    async def check_for_user(self, ctx, user: discord.Member=None):
-        async with aiosqlite.connect('dono.db') as dbase:
-            cursor = await dbase.execute(f"SELECT user_id FROM '{ctx.guild.id}' WHERE user_id = '{user.id}'")
-            result = await cursor.fetchone()
+    async def get_user(self, ctx, user: discord.Member):
+        db = self.motor_session.donations
+        collection = db[str(ctx.guild.id)]
 
-            if result is None:
-                await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id) VALUES (?) ON CONFLICT(user_id) DO UPDATE SET user_id = ?;", [user.id, user.id])
+        e = await collection.find_one({"_id": user.id})
+        if e is None:
+            await collection.insert_one({"_id": user.id, "giveaway": 0, "heist": 0, "event": 0, "special": 0, "money": 0})
 
-            await dbase.commit()
+    async def get_user_amount(self, ctx, user: discord.Member):
+        db = self.motor_session.donations
+        collection = db[str(ctx.guild.id)]
+        await self.get_user(ctx, user)
 
-    async def get_user_amount(self, ctx, member: discord.Member):
-        async with aiosqlite.connect('dono.db') as dbase:
-            await self.check_for_user(ctx, member)
-
-            member = member or ctx.author
-
-            cursor = await dbase.execute(f"SELECT total FROM '{ctx.guild.id}' WHERE user_id = '{member.id}'")
-            amount = await cursor.fetchone()
-            await dbase.close()
-            return amount[0]
+        return await collection.find_one({"_id": user.id})
 
     async def get_guild_config(self, ctx, guild):
         collection = self.db['guild_config']
@@ -95,26 +91,16 @@ class Testing(commands.Cog):
     @commands.command()
     @commands.has_guild_permissions(manage_guild=True)
     async def setup(self, ctx):
-        guild = self.db.guild_config.find_one({"_id": str(ctx.guild.id)})
+        db = self.motor_session.donations
+        collections = await self.db.list_collection_names()
 
-        if guild is not None:
+        if str(ctx.guild.id) in collections:
             return await ctx.send('Your server is already setup, there is no need to run this command again')
         
-        await self.db.guild_config.insert_one({"_id": ctx.guild.id, "giveaway_ids": [], "heist_ids": [], "event_ids": [], "special_ids": [], "money_ids": [], "donation_roles": {}})
-        async with aiosqlite.connect('dono.db') as dbase:
-            await dbase.execute(f"""
-                CREATE TABLE IF NOT EXISTS "{ctx.guild.id}" (
-                    "user_id"	INTEGER UNIQUE,
-                    "giveaway"	INTEGER DEFAULT 0,
-                    "heist"	INTEGER DEFAULT 0,
-                    "event"	INTEGER DEFAULT 0,
-                    "money"	INTEGER DEFAULT 0,
-                    "special"	INTEGER DEFAULT 0,
-                    "total"	INTEGER DEFAULT 0
-                );"""
-            )
-            await dbase.commit()
-
+        collection = db[f'{ctx.guild.id}']
+        guild_config = db['guild_config']
+        await guild_config.insert_one({"_id": ctx.guild.id, "giveaway_ids": [], "heist_ids": [], "event_ids": [], "special_ids": [], "money_ids": [], "donation_roles": {}})
+        await collection.insert_one({"_id": ctx.author.id, "giveaway": 0, "heist": 0, "event": 0, "special": 0, "money": 0})
         await ctx.send(f'Guild added to database, to edit who can use commands use `b!donation_config`')
 
     # Donation Config
@@ -122,9 +108,8 @@ class Testing(commands.Cog):
     @commands.has_guild_permissions(manage_guild=True)
     async def donation_config(self, ctx):
         info = await self.get_guild_config(ctx, ctx.guild)
-        guild = self.db.guild_config.find_one({"_id": str(ctx.guild.id)})
-
-        if guild is not None:
+        collections = await self.db.list_collection_names()
+        if str(ctx.guild.id) not in collections:
             return await ctx.send(f'This guild is not currently setup, to setup the guild please run the command `b!setup`')
 
         embed = discord.Embed(
@@ -141,6 +126,7 @@ class Testing(commands.Cog):
         await ctx.send(embed=embed)
 
     '''
+
     @donation_config.group(invoke_without_command=True)
     async def giveaway(self, ctx):
         await ctx.send('Please provide an action to complete either add or remove')
@@ -238,25 +224,25 @@ class Testing(commands.Cog):
         await ctx.send(f'Donation role removed for `{self.beautify_numbers(amount)}`')
     
     # Check Donations
-    @commands.command(name='donations', description='Check your donations for the current server')
+    @commands.command(name='e', description='Check your donations for the current server')
     @commands.has_guild_permissions(send_messages=True)
-    async def donations(self, ctx, member: discord.Member=None):
+    async def dd(self, ctx, member: discord.Member=None):
+        collection = self.db[str(ctx.guild.id)]
         member = member or ctx.author
-        info = await donations.get_amounts(ctx, member)
-        await self.check_for_user(ctx, member)
+        await self.get_user(ctx, member)
+        info = await collection.find_one({"_id": member.id})
 
-        embed = discord.Embed(
-            title=f'{member}\'s Donations',
-            description = (
-                f'\
-                \n**Giveaway:** `⏣{self.beautify_numbers(info[0])}` \
-                \n**Heist:** `⏣{self.beautify_numbers(info[1])}` \
-                \n**Event:** `⏣{self.beautify_numbers(info[2])}` \
-                \n**Special:** `⏣{self.beautify_numbers(info[3])}` \
-                \n**Money:** `${self.beautify_numbers(info[4])}` \
-                \n\n**Total:** `⏣{self.beautify_numbers(info[5])}`'
-            ), 
-            color=discord.Color.dark_purple())
+        embed = discord.Embed(title=f'{member}\'s Donations', color=discord.Color.dark_purple())
+        embed.description = (
+            f'\
+            \nGiveaway: `⏣{info["giveaway"]}` \
+            \nHeist: `⏣{info["heist"]}` \
+            \nEvent: `⏣{info["event"]}` \
+            \nSpecial: `⏣{info["special"]}` \
+            \nMoney: `${info["money"]}`'
+
+        )
+        embed.timestamp = datetime.utcnow()
         embed.set_footer(text='This is a rewrite version of donations all changes are NOT final')
         await ctx.send(embed=embed)
 
@@ -269,71 +255,72 @@ class Testing(commands.Cog):
     '''
     Add Donations
     '''
-    @commands.group(name='eee', invoke_without_command=True)
-    async def eee(self, ctx):
-        await ctx.send('e')
-
-    @eee.command(name='eeee')
-    async def eeee(self, ctx, e: str, ee: str):
-        await ctx.send(f'{e}, {ee}')
-
     @commands.group(name='add_donations', description='Add donations to a user', aliases=['ad', 'da'], invoke_without_command=True)
     async def add_donations(self, ctx):
-        await ctx.send(f'You are missing a required argument for this command')
+        return await ctx.send('Please specify a category to add donations to.')
 
     # Giveaway
-    @add_donations.command(name='giveaway', description='Add donations for the giveaway category')
+    @add_donations.command(name='giveaway')
     async def giveaway(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"giveaway": user_info["giveaway"] + amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     # Heist
     @add_donations.command(name='heist')
     async def heist(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"heist": user_info["heist"] + amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     # Event
     @add_donations.command(name='event')
     async def event(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"event": user_info["event"] + amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     # Special
     @add_donations.command(name='special')
     async def special(self, ctx, member: discord.Member, amount: str):
-        
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"special": user_info["special"] + amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     # Money
     @add_donations.command(name='money')
     async def money(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"money": user_info["money"] + amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
@@ -345,57 +332,67 @@ class Testing(commands.Cog):
         return await ctx.send('Please specify a category to add donations to.')
 
     # Giveaway
-    @remove_donations.command(name='giveaway')
+    @remove_donations.command(name='giveaway', invoke_without_command=True)
     async def giveaway(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"giveaway": user_info["giveaway"] - amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     # Heist
-    @remove_donations.command(name='heist')
+    @remove_donations.command(name='heist', invoke_without_command=True)
     async def heist(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"heist": user_info["heist"] - amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     # Event
-    @remove_donations.command(name='event')
+    @remove_donations.command(name='event', invoke_without_command=True)
     async def event(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"event": user_info["event"] - amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     # Special
-    @remove_donations.command(name='special')
+    @remove_donations.command(name='special', invoke_without_command=True)
     async def special(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"special": user_info["special"] - amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     # Money
-    @remove_donations.command(name='money')
+    @remove_donations.command(name='money', invoke_without_command=True)
     async def money(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
+        user_info = await self.get_user_amount(ctx, member)
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"money": user_info["money"] - amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
@@ -407,57 +404,62 @@ class Testing(commands.Cog):
         return await ctx.send('Please specify a category to add donations to.')
 
     # Giveaway
-    @set_donations.command(name='giveaway')
+    @set_donations.command(name='giveaway', invoke_without_command=True)
     async def giveaway(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"giveaway": amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     # Heist
-    @set_donations.command(name='heist')
+    @set_donations.command(name='heist', invoke_without_command=True)
     async def heist(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"heist": amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     # Event
-    @set_donations.command(name='event')
+    @set_donations.command(name='event', invoke_without_command=True)
     async def event(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"event": amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     # Special
-    @set_donations.command(name='special')
+    @set_donations.command(name='special', invoke_without_command=True)
     async def special(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"special": amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     # Money
-    @set_donations.command(name='money')
+    @set_donations.command(name='money', invoke_without_command=True)
     async def money(self, ctx, member: discord.Member, amount: str):
+        collection = self.db[str(ctx.guild.id)]
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await collection.update_one({"_id": member.id}, {"$set": {f"money": amount}})
 
         await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
