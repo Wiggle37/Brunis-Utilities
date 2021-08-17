@@ -76,7 +76,32 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         locked_channel = channel or ctx.channel
         await locked_channel.set_permissions(ctx.guild.default_role, send_messages = None)
         await ctx.send("Channel unlocked")
-   
+
+    # Ban
+    @commands.command(name='ban', description='Ban someone from the current server')
+    @commands.has_any_role(784527745539375164, 784492058756251669)
+    async def ban(self, ctx, member: discord.Member, *, reason: str=None):
+        if reason is None:
+            reason = f'Banned by: {ctx.author}\nReason: None'
+
+        elif reason is not None:
+            reason = f'Banned by: {ctx.author}\nReason: {reason}'
+
+        try:
+            await member.ban(reason=reason)
+            await ctx.send(f'**{member.name}** was banned')
+        except discord.Forbidden:
+            return await ctx.send('I am not high enough in the role hierarchy to ban this user')
+
+    # Kick
+    @commands.command(name='kick', description='Kick someone from the server')
+    @commands.has_any_role(784527745539375164, 784492058756251669)
+    async def kick(self, ctx, member: discord.Member):
+        try:
+            await member.kick()
+            await ctx.send(f'**{member.name}** was kicked')
+        except discord.Forbidden:
+            return await ctx.send('I am not high enough in the role hierarchy to kick this user')
 
 def setup(bot):
     bot.add_cog(Staff(bot))
