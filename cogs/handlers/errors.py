@@ -80,13 +80,19 @@ class CommandErrorHandler(commands.Cog):
             return await ctx.send(f"You are missing one of the following roles: `{', '.join(role_name)}`")
         if isinstance(error, commands.MissingRole):
             if ctx.author.id in self.bot.owner_ids:
-                return await ctx.reinvoke()
+                try:
+                    return await ctx.reinvoke()
+                except:
+                    raise commands.CommandError
 
             return await ctx.send(f"You are missing the required role to run this command: `{error.missing_role}`")
 
         if isinstance(error, commands.MissingPermissions):
             if ctx.author.id in self.bot.owner_ids:
-                return await ctx.reinvoke()
+                try:
+                    return await ctx.reinvoke()
+                except:
+                    raise commands.CommandError
 
             return await ctx.send(f'You are missing the following permission to run this command: `{error.missing_permissions}`')
 
