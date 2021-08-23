@@ -154,7 +154,7 @@ class Economy(commands.Cog, name='economy', description='The servers economy sys
         await ctx.send(f'Your curent multiplier is: **{float(multi * 100)}%**')
 
     # Balance
-    @commands.command(name='balance', description='Get your current balance in the economy system', aliases=['bal', 'money'])
+    @commands.command(name='balance', description='Get your current balance in the economy system', aliases=['bal'])
     @economysettings.economycheck()
     async def balance(self, ctx, member: discord.Member = None):
         user = member or ctx.author
