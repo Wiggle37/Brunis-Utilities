@@ -270,7 +270,7 @@ class Testing(commands.Cog):
     Add Donations
     '''
 
-    @commands.group(name='add_donations', description='Add donations to a user', aliases=['ad', 'da'], invoke_without_command=True)
+    @commands.group(name='add_donations', description='Add donations to a user', invoke_without_command=True)
     async def add_donations(self, ctx):
         await ctx.send(f'You are missing a required argument for this command')
 
