@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands.errors import BadArgument
 
 import motor
 import motor.motor_asyncio
@@ -9,6 +10,15 @@ from datetime import datetime
 from config import *
 from donation_functions import donations
 from buttons import *
+
+class ValidInteger(commands.Converter):
+    async def convert(self, ctx, argument):
+        try:
+            float(argument.replace("m","").replace("k",""))
+            return int(eval(argument.replace("k","e3").replace("m", "e6")))
+                
+        except ValueError:
+            raise BadArgument
 
 class Testing(commands.Cog):
     def __init__(self, bot):
@@ -200,7 +210,6 @@ class Testing(commands.Cog):
     async def remove(self, ctx, role: discord.Role):
         self.db.guild_config.update_one({"_id": ctx.guild.id}, {"$pull": {"giveaway_ids": role.id}})
         await ctx.send(f'Role `{role.name}` removed for managing money donations')
-
     '''
 
     # Donation Roles
@@ -263,196 +272,70 @@ class Testing(commands.Cog):
 
 
 
-
-
-
-    '''
-    Add Donations
-    '''
-
-    @commands.group(name='add_donations', description='Add donations to a user', invoke_without_command=True)
-    async def add_donations(self, ctx):
-        await ctx.send(f'You are missing a required argument for this command')
-
-    # Giveaway
-    @add_donations.command(name='giveaway', description='Add donations for the giveaway category')
-    async def giveaway(self, ctx, member: discord.Member, amount: str):
+    '''Giveaway Donations'''
+    @commands.group(name='giveaway', description='Add/Remove/Set donations for the giveaway category', invoke_without_command=True)
+    async def _giveaway(self, ctx):
+        return await ctx.send('Please add state a category to add donations to.')
+    
+    @_giveaway.command(name='add', decription='Add donations to the giveaway category')
+    async def _giveaway_add(self, ctx, member: discord.Member, amount: ValidInteger):
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await ctx.send(f'{member} {amount}')
 
-        await ctx.send(embed=self.embed(ctx, member, amount, 0))
+    '''Heist Donations'''
+    @commands.group(name='heist', description='Add/Remove/Set donations for the heist category', invoke_without_command=True)
+    async def _heist(self, ctx):
+        return await ctx.send('Please add state a category to add donations to.')
 
-    # Heist
-    @add_donations.command(name='heist')
-    async def heist(self, ctx, member: discord.Member, amount: str):
+    @_heist.command(name='add', description='Add donations to the heist category')
+    async def _heist_add(self, ctx, member: discord.Member, amount: ValidInteger):
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await ctx.send(f'{member} {amount}')
 
-        await ctx.send(embed=self.embed(ctx, member, amount, 1))
+    '''Event Donations'''
+    @commands.group(name='event', description='Add/Remove/Set donations for the event category', invoke_without_command=True)
+    async def _event(self, ctx):
+        return await ctx.send('Please add state a category to add donations to.')
 
-    # Event
-    @add_donations.command(name='event')
-    async def event(self, ctx, member: discord.Member, amount: str):
+    @_event.command(name='add', description='Add donations to the event category')
+    async def _event_add(self, ctx, member: discord.Member, amount: ValidInteger):
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await ctx.send(f'{member} {amount}')
 
-        await ctx.send(embed=self.embed(ctx, member, amount, 2))
+    '''Special Donations'''
+    @commands.group(name='special', description='Add/Remove/Set donations for the special category', invoke_without_command=True)
+    async def _special(self, ctx):
+        return await ctx.send('Please add state a category to add donations to.')
 
-    # Special
-    @add_donations.command(name='special')
-    async def special(self, ctx, member: discord.Member, amount: str):
-        
+    @_special.command(name='add', description='Add donations to the special category')
+    async def _special_add(self, ctx, member: discord.Member, amount: ValidInteger):
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
+        await ctx.send(f'{member} {amount}')
 
-        await ctx.send(embed=self.embed(ctx, member, amount, 3))
+    '''Money Donations'''
+    @commands.group(name='money', description='Add/Remove/Set donations for the event category', invoke_without_command=True)
+    async def _money(self, ctx):
+        return await ctx.send('Please add state a category to add donations to.')
 
-    # Money
-    @add_donations.command(name='money')
-    async def money(self, ctx, member: discord.Member, amount: str):
+    @_money.command(name='add', description='Add donations to the money category')
+    async def _money_add(self, ctx, member: discord.Member, amount: ValidInteger):
         amount = self.is_valid_int(amount)
         if not amount:
             return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
 
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 4))
-
-    '''
-    Remove Donations
-    '''
-    @commands.group(name='remove_donations', description='Add donations to a user', aliases=['rd', 'dr'], invoke_without_command=True)
-    async def remove_donations(self, ctx):
-        return await ctx.send('Please specify a category to add donations to.')
-
-    # Giveaway
-    @remove_donations.command(name='giveaway')
-    async def giveaway(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 0))
-
-    # Heist
-    @remove_donations.command(name='heist')
-    async def heist(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 1))
-
-    # Event
-    @remove_donations.command(name='event')
-    async def event(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 2))
-
-    # Special
-    @remove_donations.command(name='special')
-    async def special(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 3))
-
-    # Money
-    @remove_donations.command(name='money')
-    async def money(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 4))
-
-    '''
-    Set Donations
-    '''
-    @commands.group(name='set_donations', description='Add donations to a user', aiases=['sd', 'ds'], invoke_without_command=True)
-    async def set_donations(self, ctx):
-        return await ctx.send('Please specify a category to add donations to.')
-
-    # Giveaway
-    @set_donations.command(name='giveaway')
-    async def giveaway(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 0))
-
-    # Heist
-    @set_donations.command(name='heist')
-    async def heist(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 1))
-
-    # Event
-    @set_donations.command(name='event')
-    async def event(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 2))
-
-    # Special
-    @set_donations.command(name='special')
-    async def special(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 3))
-
-    # Money
-    @set_donations.command(name='money')
-    async def money(self, ctx, member: discord.Member, amount: str):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
-        await donations.add(0, member, amount)
-
-        await ctx.send(embed=self.embed(ctx, member, amount, 4))
+        await ctx.send(f'{member} {amount}')
 
 def setup(bot):
     bot.add_cog(Testing(bot))
