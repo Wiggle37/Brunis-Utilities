@@ -1,9 +1,6 @@
 import discord
 from discord.ext import commands
-<<<<<<< Updated upstream
-=======
 from discord.ext.commands.core import Command
->>>>>>> Stashed changes
 
 import motor
 import motor.motor_asyncio
