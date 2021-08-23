@@ -1,15 +1,17 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands.errors import BadArgument
 
 import motor
 import motor.motor_asyncio
 import aiosqlite
-from datetime import datetime
 
 from config import *
 from donation_functions import donations
 from buttons import *
+
+class NotValidInteger(commands.CommandError):
+    async def NotValidInteger(self, ctx, argument):
+        await ctx.send(f'`{argument}` is not a valid integer')
 
 class ValidInteger(commands.Converter):
     async def convert(self, ctx, argument):
@@ -18,7 +20,7 @@ class ValidInteger(commands.Converter):
             return int(eval(argument.replace("k","e3").replace("m", "e6")))
                 
         except ValueError:
-            raise BadArgument
+            raise await NotValidInteger.NotValidInteger(self, ctx, argument)
 
 class Testing(commands.Cog):
     def __init__(self, bot):
@@ -279,10 +281,6 @@ class Testing(commands.Cog):
     
     @_giveaway.command(name='add', decription='Add donations to the giveaway category')
     async def _giveaway_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
         await ctx.send(f'{member} {amount}')
 
     '''Heist Donations'''
@@ -292,10 +290,6 @@ class Testing(commands.Cog):
 
     @_heist.command(name='add', description='Add donations to the heist category')
     async def _heist_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
         await ctx.send(f'{member} {amount}')
 
     '''Event Donations'''
@@ -305,10 +299,6 @@ class Testing(commands.Cog):
 
     @_event.command(name='add', description='Add donations to the event category')
     async def _event_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
         await ctx.send(f'{member} {amount}')
 
     '''Special Donations'''
@@ -318,10 +308,6 @@ class Testing(commands.Cog):
 
     @_special.command(name='add', description='Add donations to the special category')
     async def _special_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
         await ctx.send(f'{member} {amount}')
 
     '''Money Donations'''
@@ -331,10 +317,6 @@ class Testing(commands.Cog):
 
     @_money.command(name='add', description='Add donations to the money category')
     async def _money_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        amount = self.is_valid_int(amount)
-        if not amount:
-            return await ctx.send(f'`{amount}` is not a valid integer, please provide one that is valid')
-
         await ctx.send(f'{member} {amount}')
 
 def setup(bot):
