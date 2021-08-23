@@ -27,11 +27,11 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     @commands.has_guild_permissions(manage_roles=True)
     async def role(self, ctx, member: discord.Member, *, role: discord.Role):
         if role not in member.roles:
-            await member.add_roles(role)
+            await member.add_roles(role, reason=f'Moderator: {ctx.author.id}')
             return await ctx.send(f'`{role.name}` added to **{member.name}**')
 
         elif role in member.roles:
-            await member.remove_roles(role)
+            await member.remove_roles(role, reason=f'Moderator: {ctx.author.id}')
             return await ctx.send(f'`{role.name}` removed from **{member.name}**')
 
     @role.command(name='info', description='Get info on a role')
@@ -83,10 +83,8 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     async def ban(self, ctx, member: discord.Member, *, reason: str=None):
         if reason is None:
             reason = f'Banned by: {ctx.author}\nReason: None'
-
         elif reason is not None:
             reason = f'Banned by: {ctx.author}\nReason: {reason}'
-
         try:
             await member.ban(reason=reason)
             await ctx.send(f'**{member.name}** was banned')
@@ -98,7 +96,7 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     @commands.has_any_role(784527745539375164, 784492058756251669)
     async def kick(self, ctx, member: discord.Member):
         try:
-            await member.kick()
+            await member.kick(reason=f'Moderator: {ctx.author.id}')
             await ctx.send(f'**{member.name}** was kicked')
         except discord.Forbidden:
             return await ctx.send('I am not high enough in the role hierarchy to kick this user')
