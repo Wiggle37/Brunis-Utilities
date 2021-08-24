@@ -396,4 +396,4 @@ class Donations(commands.Cog):
         await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
 def setup(bot):
-    bot.add_cog(Testing(bot))
+    bot.add_cog(Donations(bot))
