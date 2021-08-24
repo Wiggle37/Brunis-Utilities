@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands.core import Command
+from discord.ext.commands.errors import CommandError
 
 import motor
 import motor.motor_asyncio
@@ -11,17 +12,19 @@ from donation_functions import donations
 from buttons import *
 
 class NotValidInteger(commands.CommandError):
-    async def NotValidInteger(self, ctx, argument):
-        await ctx.send(f'`{argument}` is not a valid integer')
+    pass
 
 class ValidInteger(commands.Converter):
     async def convert(self, ctx, argument):
         try:
-            float(argument.replace("m","").replace("k",""))
-            return int(eval(argument.replace("k","e3").replace("m", "e6")))
+            float(argument.replace("m","e6").replace("k","e3"))
+            ret = float(eval(argument.replace("k","e3").replace("m", "e6")))
+            if not ret.is_integer():
+                raise NotValidInteger
+            return int(ret)
                 
         except ValueError:
-            raise await NotValidInteger.NotValidInteger(self, ctx, argument)
+            raise NotValidInteger
 
 class Testing(commands.Cog):
     def __init__(self, bot):
@@ -29,6 +32,17 @@ class Testing(commands.Cog):
         self.motor_session = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/donations?retryWrites=true&w=majority')
         self.db = self.motor_session.donations
         self.categories = ['giveaway', 'heist', 'event', 'special', 'money']
+
+    '''
+    Command Handeler
+    '''
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.erro):
+            return await ctx.send('That is not a valid integer')
+        
+        else:
+            raise commands.CommandError
 
     '''
     Donations
