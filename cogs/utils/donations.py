@@ -277,100 +277,120 @@ class Testing(commands.Cog):
 
     '''Giveaway Donations'''
     @commands.group(name='giveaway', description='Add/Remove/Set donations for the giveaway category', invoke_without_command=True)
+    @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def _giveaway(self, ctx):
         return await ctx.send('Please add state a category to add donations to.')
     
     @_giveaway.command(name='add', decription='Add donations to the giveaway category')
+    @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def _giveaway_add(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.add(ctx, 0, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     @_giveaway.command(name='remove', decription='Remove donations from the giveaway category')
+    @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def _giveaway_remove(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.remove(ctx, 0, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     @_giveaway.command(name='set', decription='Set donations for the giveaway category')
+    @commands.has_any_role(785198646731604008, 784492058756251669, 788738305365114880) # Giveaway Manager, Admin, Co-Owner
     async def _giveaway_set(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.set(ctx, 0, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     '''Heist Donations'''
     @commands.group(name='heist', description='Add/Remove/Set donations for the heist category', invoke_without_command=True)
+    @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manager, Admin, Co-Owner
     async def _heist(self, ctx):
         return await ctx.send('Please add state a category to add donations to.')
 
     @_heist.command(name='add', description='Add donations to the heist category')
+    @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manager, Admin, Co-Owner
     async def _heist_add(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.add(ctx, 1, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     @_heist.command(name='remove', description='Remove donations from the heist category')
+    @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manager, Admin, Co-Owner
     async def _heist_remove(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.remove(ctx, 1, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     @_heist.command(name='set', description='Set donations for the heist category')
+    @commands.has_any_role(785631914010214410, 784492058756251669, 788738305365114880) # Heist Manager, Admin, Co-Owner
     async def _heist_set(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.set(ctx, 1, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     '''Event Donations'''
     @commands.group(name='event', description='Add/Remove/Set donations for the event category', invoke_without_command=True)
+    @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manager, Admin, Co-Owner
     async def _event(self, ctx):
         return await ctx.send('Please add state a category to add donations to.')
 
     @_event.command(name='add', description='Add donations to the event category')
+    @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manager, Admin, Co-Owner
     async def _event_add(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.add(ctx, 2, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     @_event.command(name='remove', description='Remove donations from the event category')
+    @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manager, Admin, Co-Owner
     async def _event_remove(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.remove(ctx, 2, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     @_event.command(name='set', description='Set donations for the event category')
+    @commands.has_any_role(791516116710064159, 784492058756251669, 788738305365114880) # Event Manager, Admin, Co-Owner
     async def _event_set(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.set(ctx, 2, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     '''Special Donations'''
     @commands.group(name='special', description='Add/Remove/Set donations for the special category', invoke_without_command=True)
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Admin, Co-Owner
     async def _special(self, ctx):
         return await ctx.send('Please add state a category to add donations to.')
 
     @_special.command(name='add', description='Add donations to the special category')
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Admin, Co-Owner
     async def _special_add(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.add(ctx, 3, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     @_special.command(name='remove', description='Remove donations from the special category')
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Admin, Co-Owner
     async def _special_remove(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.remove(ctx, 3, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     @_special.command(name='set', description='Set donations for the special category')
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Admin, Co-Owner
     async def _special_set(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.set(ctx, 3, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     '''Money Donations'''
     @commands.group(name='money', description='Add/Remove/Set donations for the event category', invoke_without_command=True)
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def _money(self, ctx):
         return await ctx.send('Please add state a category to add donations to.')
 
     @_money.command(name='add', description='Add donations to the money category')
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def _money_add(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.add(ctx, 4, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
     @_money.command(name='remove', description='Remove donations from the money category')
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def _money_remove(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.remove(ctx, 4, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
     @_money.command(name='set', description='Set donations for the money category')
+    @commands.has_any_role(788738305365114880) #Co-Owner
     async def _money_set(self, ctx, member: discord.Member, amount: ValidInteger):
         await donations.set(ctx, 4, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 4))

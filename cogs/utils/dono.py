@@ -522,7 +522,7 @@ class Dono(commands.Cog, name='donations', description='Tracks the servers donat
     '''
     #Dono Set
     @commands.command(name='sds', description='Set someones special donations')
-    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Mod, Admin, Co-Owner
+    @commands.has_any_role(785198646731604008, 785631914010214410, 791516116710064159, 784527745539375164, 784492058756251669, 788738305365114880) # Giveaway Manager, Heist Manager, Event Manager, Admin, Co-Owner
     async def special_dono_set(self, ctx, member: discord.Member, amount: str=None):
         await self.get_member(ctx, member)
         amount = self.is_valid_int(amount)
