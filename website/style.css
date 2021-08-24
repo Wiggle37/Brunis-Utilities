@@ -7,8 +7,10 @@
   font-size: 50px;
 }
 
-#googleForm {
-  align-items: center;
+.inviteButton {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -25,6 +27,7 @@ body {
 
 
 /* Nav Bar */
+
 .navigation {
   background-color: #333;
   overflow: hidden;
@@ -48,33 +51,4 @@ body {
 .navigation a.active {
   background-color: #4CAF50;
   color: white;
-}
-
-.sitetitle{
-  font-size: 50px;
-  font-family: 'Shadows Into Light', cursive;
-  text-align: center;
-  color: black;
-}
-.para{
-  font-family: verdana;
-  font-size: 30px;
-  text-align: center;
-}
-.centering{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 30%;
-}
-
-.link{
-  font-family: 'Shadows Into Light', cursive;
-  font-size: 35px;
-  text-align: center;
-  color: blue;
-  background-color: #FFFFE0;
-}
-.backdrop{
-  background-color: #FFFACD;
 }
