@@ -38,7 +38,7 @@ class Testing(commands.Cog):
     '''
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.erro):
+        if isinstance(error, NotValidInteger):
             return await ctx.send('That is not a valid integer')
         
         else:
