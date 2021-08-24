@@ -10,21 +10,7 @@ import aiosqlite
 from config import *
 from donation_functions import donations
 from buttons import *
-
-class NotValidInteger(commands.CommandError):
-    pass
-
-class ValidInteger(commands.Converter):
-    async def convert(self, ctx, argument):
-        try:
-            float(argument.replace("m","e6").replace("k","e3"))
-            ret = float(eval(argument.replace("k","e3").replace("m", "e6")))
-            if not ret.is_integer():
-                raise NotValidInteger
-            return int(ret)
-                
-        except ValueError:
-            raise NotValidInteger
+from converters import ValidInteger, NotValidInteger
 
 class Testing(commands.Cog):
     def __init__(self, bot):
@@ -42,7 +28,7 @@ class Testing(commands.Cog):
             return await ctx.send('That is not a valid integer')
         
         else:
-            raise commands.CommandError
+            pass
 
     '''
     Donations
@@ -296,6 +282,15 @@ class Testing(commands.Cog):
     
     @_giveaway.command(name='add', decription='Add donations to the giveaway category')
     async def _giveaway_add(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.add(0, ctx, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 0))
+
+    @_giveaway.command(name='remove', decription='Add donations to the giveaway category')
+    async def _giveaway_remove(self, ctx, member: discord.Member, amount: ValidInteger):
+        await ctx.send(f'{member} {amount}')
+
+    @_giveaway.command(name='set', decription='Add donations to the giveaway category')
+    async def _giveaway_set(self, ctx, member: discord.Member, amount: ValidInteger):
         await ctx.send(f'{member} {amount}')
 
     '''Heist Donations'''

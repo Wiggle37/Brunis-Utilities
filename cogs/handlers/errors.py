@@ -4,6 +4,7 @@ from discord.ext import commands
 import traceback
 
 from config import *
+from converters import NotValidInteger
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
@@ -13,6 +14,10 @@ class CommandErrorHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         error = getattr(error, "original", error)
+
+        # - Other - #
+        if isinstance(error, NotValidInteger):
+            return
 
         # - Check Fail - #
         if isinstance(error, commands.CheckFailure):
