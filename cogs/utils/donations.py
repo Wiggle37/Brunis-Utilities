@@ -12,7 +12,7 @@ from donation_functions import donations
 from buttons import *
 from converters import ValidInteger, NotValidInteger
 
-class Testing(commands.Cog):
+class Donations(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.motor_session = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://mainHost:TStB72SYJGmte1MC@brunis-utilities.okced.mongodb.net/donations?retryWrites=true&w=majority')
