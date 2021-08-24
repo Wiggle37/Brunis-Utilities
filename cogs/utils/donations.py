@@ -282,16 +282,18 @@ class Testing(commands.Cog):
     
     @_giveaway.command(name='add', decription='Add donations to the giveaway category')
     async def _giveaway_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        await donations.add(0, ctx, member, amount)
+        await donations.add(ctx, 0, member, amount)
         await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
-    @_giveaway.command(name='remove', decription='Add donations to the giveaway category')
+    @_giveaway.command(name='remove', decription='Remove donations from the giveaway category')
     async def _giveaway_remove(self, ctx, member: discord.Member, amount: ValidInteger):
-        await ctx.send(f'{member} {amount}')
+        await donations.remove(ctx, 0, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
-    @_giveaway.command(name='set', decription='Add donations to the giveaway category')
+    @_giveaway.command(name='set', decription='Set donations for the giveaway category')
     async def _giveaway_set(self, ctx, member: discord.Member, amount: ValidInteger):
-        await ctx.send(f'{member} {amount}')
+        await donations.set(ctx, 0, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 0))
 
     '''Heist Donations'''
     @commands.group(name='heist', description='Add/Remove/Set donations for the heist category', invoke_without_command=True)
@@ -300,7 +302,18 @@ class Testing(commands.Cog):
 
     @_heist.command(name='add', description='Add donations to the heist category')
     async def _heist_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        await ctx.send(f'{member} {amount}')
+        await donations.add(ctx, 1, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 1))
+
+    @_heist.command(name='remove', description='Remove donations from the heist category')
+    async def _heist_remove(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.remove(ctx, 1, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 1))
+
+    @_heist.command(name='set', description='Set donations for the heist category')
+    async def _heist_set(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.set(ctx, 1, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 1))
 
     '''Event Donations'''
     @commands.group(name='event', description='Add/Remove/Set donations for the event category', invoke_without_command=True)
@@ -309,7 +322,18 @@ class Testing(commands.Cog):
 
     @_event.command(name='add', description='Add donations to the event category')
     async def _event_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        await ctx.send(f'{member} {amount}')
+        await donations.add(ctx, 2, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 2))
+
+    @_event.command(name='remove', description='Remove donations from the event category')
+    async def _event_remove(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.remove(ctx, 2, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 2))
+
+    @_event.command(name='set', description='Set donations for the event category')
+    async def _event_set(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.set(ctx, 2, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 2))
 
     '''Special Donations'''
     @commands.group(name='special', description='Add/Remove/Set donations for the special category', invoke_without_command=True)
@@ -318,7 +342,18 @@ class Testing(commands.Cog):
 
     @_special.command(name='add', description='Add donations to the special category')
     async def _special_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        await ctx.send(f'{member} {amount}')
+        await donations.add(ctx, 3, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 3))
+
+    @_special.command(name='remove', description='Remove donations from the special category')
+    async def _special_remove(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.remove(ctx, 3, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 3))
+
+    @_special.command(name='set', description='Set donations for the special category')
+    async def _special_set(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.set(ctx, 3, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 3))
 
     '''Money Donations'''
     @commands.group(name='money', description='Add/Remove/Set donations for the event category', invoke_without_command=True)
@@ -327,7 +362,18 @@ class Testing(commands.Cog):
 
     @_money.command(name='add', description='Add donations to the money category')
     async def _money_add(self, ctx, member: discord.Member, amount: ValidInteger):
-        await ctx.send(f'{member} {amount}')
+        await donations.add(ctx, 4, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 4))
+
+    @_money.command(name='remove', description='Remove donations from the money category')
+    async def _money_remove(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.remove(ctx, 4, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 4))
+
+    @_money.command(name='set', description='Set donations for the money category')
+    async def _money_set(self, ctx, member: discord.Member, amount: ValidInteger):
+        await donations.set(ctx, 4, member, amount)
+        await ctx.send(embed=self.embed(ctx, member, amount, 4))
 
 def setup(bot):
     bot.add_cog(Testing(bot))

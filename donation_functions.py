@@ -38,11 +38,9 @@ class donations:
             if category not in donations.categories:
                 return
 
-            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = ?;", [member.id, amount, amount])
-            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = gaw + heist + event + special WHERE user_id == '{member.id}'")
-
+            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {donations.categories[category]}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {donations.categories[category]} = ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = giveaway + heist + event + special WHERE user_id == '{member.id}'")
             await dbase.commit()
-            return await donations.get_amount(ctx, member)
 
     # Add Any Dono Amount
     async def add(ctx, category: int, member: discord.Member, amount: int):
@@ -50,11 +48,9 @@ class donations:
             if category not in donations.categories:
                 return
                 
-            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = {category} + ?;", [member.id, amount, amount])
-            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = gaw + heist + event + special WHERE user_id == '{member.id}'")
-
+            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {donations.categories[category]}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {donations.categories[category]} = {donations.categories[category]} + ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = giveaway + heist + event + special WHERE user_id == '{member.id}'")
             await dbase.commit()
-            return await donations.get_amount(ctx, member)
 
     # Remove Any Dono Amount
     async def remove(ctx, category: int, member: discord.Member, amount: int):
@@ -62,11 +58,9 @@ class donations:
             if category not in donations.categories:
                 return
                 
-            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = {category} - ?;", [member.id, amount, amount])
-            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = gaw + heist + event + special WHERE user_id == '{member.id}'")
-
+            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {donations.categories[category]}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {donations.categories[category]} = {donations.categories[category]} - ?;", [member.id, amount, amount])
+            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = giveaway + heist + event + special WHERE user_id == '{member.id}'")
             await dbase.commit()
-            return await donations.get_amount(ctx, member)
 
     # Reset Any Dono Amount
     async def reset(ctx, category: int, member: discord.Member):
@@ -74,8 +68,6 @@ class donations:
             if category not in donations.categories:
                 return
                 
-            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {category}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {category} = 0;", [member.id, 0])
-            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = gaw + heist + event + special WHERE user_id == '{member.id}'")
-
+            await dbase.execute(f"INSERT INTO '{ctx.guild.id}' (user_id, {donations.categories[category]}) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET {donations.categories[category]} = 0;", [member.id, 0])
+            await dbase.execute(f"UPDATE '{ctx.guild.id}' SET total = giveaway + heist + event + special WHERE user_id == '{member.id}'")
             await dbase.commit()
-            return await donations.get_amount(ctx, member)
