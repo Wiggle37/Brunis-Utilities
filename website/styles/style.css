@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+
+/* Reusable Varible For All Titles */
+.titleClass {
+  text-align: center;
+  font-family: cursive;
+  font-size: 75px;
+  color: #fff;
+}
+
+.homePageSection {
+  text-align: center;
+}
+
+
+
+
+
+/* Defaults */
+h1 {
+  color: #fff
+}
+
+body {
+  background-color: #0b110c;
+}
+
+
+
+
+
+/* Rules Box */
+.rulesBox {
+  background: #1a1a1a;
+  border-radius: 10px;
+
+  margin-top: 0px;
+  margin-left: 100px;
+  margin-bottom: 0px;
+  margin-right: 100px;
+}
+
+.rulesBox h3 {
+  font-family: cursive;
+  padding-left: 30px;
+  padding-top: 30px;
+  color: #fff;
+}
+
+.rulesBox h4 {
+  font-family: cursive;
+  padding-left: 30px;
+  padding-top: 3px;
+  color: #fff;
+}
+
+.rulesBox p {
+  font-family: cursive;
+  padding-top: 15px;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  color: #fff;
+}
+
+
+
+
+
+/* Nav Bar */
+
+.navigation {
+  background-color: #333;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.navigation a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 20px 20px;
+  text-decoration: none;
+  font-size: 22px;
+  font-family: 'Shadows Into Light', cursive;
+}
+
+.navigation a:hover {
+  color: #4CAF50;
+}
+
+.navigation a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Footer */
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  text-align: center;
+  overflow: hidden;
+}
+
+.footer a {
+  float: none;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 20px 20px;
+  text-decoration: none;
+  font-size: 22px;
+  font-family: 'Shadows Into Light', cursive;
+}
+
+.footer a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.footer a.active {
+  background-color: #4CAF50;
+  color: white;
+}
