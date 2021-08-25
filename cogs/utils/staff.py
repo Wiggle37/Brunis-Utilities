@@ -12,27 +12,31 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         self.bot = bot
 
     # Dump Role
+    @commands.has_guild_permissions(manage_guild=True)
     @commands.command(name='dump', description='Shows all the members with a specified role')
     async def dump(self, ctx, role: discord.Role):
         msg = ''
         for member in role.members:
-            msg += f'{member.name}({member.id})\n'
+            msg += f'{member}({member.id})\n'
 
         msg_split = [msg[i:i+1900] for i in range(0, len(msg), 1900)]
         for info in msg_split:
-            await ctx.send(f"```py\n{info}```")
+            await ctx.send(f"```{info}```")
 
     # Role
     @commands.group(name='role', description='Add or remove a role from someone', invoke_without_command=True)
     @commands.has_guild_permissions(manage_roles=True)
     async def role(self, ctx, member: discord.Member, *, role: discord.Role):
+        if member.top_role < role:
+            return await ctx.send("You're not higher in the role hierachy than the role you're trying to add")
+        
         if role not in member.roles:
-            await member.add_roles(role, reason=f'Moderator: {ctx.author.id}')
-            return await ctx.send(f'`{role.name}` added to **{member.name}**')
+            await member.add_roles(role, reason=f'Moderator: {ctx.author}({ctx.author.id})')
+            return await ctx.send(f'`{role.name}` added to **{member}**')
 
         elif role in member.roles:
-            await member.remove_roles(role, reason=f'Moderator: {ctx.author.id}')
-            return await ctx.send(f'`{role.name}` removed from **{member.name}**')
+            await member.remove_roles(role, reason=f'Moderator: {ctx.author}({ctx.author.id})')
+            return await ctx.send(f'`{role.name}` removed from **{member}**')
 
     @role.command(name='info', description='Get info on a role')
     async def info(self, ctx, *, role: discord.Role):
@@ -56,7 +60,8 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         if amount > 500:
             return await ctx.send(f"Purge less than 500 messages please")
 
-        await ctx.channel.purge(limit = amount)
+        # add one since the user sent a message to invoke the command
+        await ctx.channel.purge(limit = amount + 1)
 
         purge_embed = discord.Embed(title = "Purged Messages", description = f"{amount} message(s) purged", color = 0x00ff00)
         await ctx.send(embed = purge_embed, delete_after = 5)
@@ -80,14 +85,14 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     # Ban
     @commands.command(name='ban', description='Ban someone from the current server')
     @commands.has_any_role(784527745539375164, 784492058756251669)
-    async def ban(self, ctx, member: discord.Member, *, reason: str=None):
-        if reason is None:
-            reason = f'Banned by: {ctx.author}\nReason: None'
-        elif reason is not None:
-            reason = f'Banned by: {ctx.author}\nReason: {reason}'
+    async def ban(self, ctx, user: discord.User, *, reason: str = None):
+        if ctx.author == user:
+            return await ctx.send("You can't ban yourself")
+        
+        reason = f'Banned by: {ctx.author}({ctx.author.id})\nReason: {reason}'
         try:
-            await member.ban(reason=reason)
-            await ctx.send(f'**{member.name}** was banned')
+            await ctx.guild.ban(user, reason=reason)
+            await ctx.send(f'**{user}** was banned')
         except discord.Forbidden:
             return await ctx.send('I am not high enough in the role hierarchy to ban this user')
 
@@ -95,9 +100,11 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     @commands.command(name='kick', description='Kick someone from the server')
     @commands.has_any_role(784527745539375164, 784492058756251669)
     async def kick(self, ctx, member: discord.Member):
+        if ctx.author == member:
+            return await ctx.send("You can't kick yourself")
         try:
-            await member.kick(reason=f'Moderator: {ctx.author.id}')
-            await ctx.send(f'**{member.name}** was kicked')
+            await member.kick(reason=f'Moderator: {ctx.author}({ctx.author.id})')
+            await ctx.send(f'**{member}** was kicked')
         except discord.Forbidden:
             return await ctx.send('I am not high enough in the role hierarchy to kick this user')
 
