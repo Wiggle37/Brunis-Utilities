@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from typing import Union
 
 import aiosqlite
 import sqlite3
@@ -85,14 +86,18 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     # Ban
     @commands.command(name='ban', description='Ban someone from the current server')
     @commands.has_any_role(784527745539375164, 784492058756251669)
-    async def ban(self, ctx, user: discord.User, *, reason: str = None):
-        if ctx.author == user:
+    async def ban(self, ctx, member: Union[discord.Member, discord.User], *, reason: str = None):
+        # we typehint to a member/user since we can ban people out of the guild
+        if ctx.author == member:
             return await ctx.send("You can't ban yourself")
+        
+        if not isinstance(member, discord.User) and ctx.author.top_role < member.top_role:
+            return await ctx.send("You're lower than that person on the role hierachy")
         
         reason = f'Banned by: {ctx.author}({ctx.author.id})\nReason: {reason}'
         try:
-            await ctx.guild.ban(user, reason=reason)
-            await ctx.send(f'**{user}** was banned')
+            await ctx.guild.ban(member, reason=reason)
+            await ctx.send(f'**{member}** was banned')
         except discord.Forbidden:
             return await ctx.send('I am not high enough in the role hierarchy to ban this user')
 
@@ -102,6 +107,10 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
     async def kick(self, ctx, member: discord.Member):
         if ctx.author == member:
             return await ctx.send("You can't kick yourself")
+        
+        if ctx.author.top_role < member.top_role:
+            return await ctx.send("You're lower than that person on the role hierachy")
+        
         try:
             await member.kick(reason=f'Moderator: {ctx.author}({ctx.author.id})')
             await ctx.send(f'**{member}** was kicked')
