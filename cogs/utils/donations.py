@@ -269,7 +269,6 @@ class Donations(commands.Cog):
                 \n\n**Total:** `⏣{self.beautify_numbers(info[5])}`'
             ), 
             color=discord.Color.dark_purple())
-        embed.set_footer(text='This is a rewrite version of donations all changes are NOT final')
         await ctx.send(embed=embed)
 
 
