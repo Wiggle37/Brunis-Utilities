@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from typing import Union
+from typing import Union, Optional
 
 import aiosqlite
 import sqlite3
@@ -68,19 +68,21 @@ class Staff(commands.Cog, name = "Staff", description = "Commands only staff can
         await ctx.send(embed = purge_embed, delete_after = 5)
 
     # Lock
-    @commands.command(name = "lock", description = "Locks the current channel for @\u200beveryone")
+    @commands.command(name = "lock", description = "Locks a channel for a role or member. Defaults to locking the current channel for @\u200beveryone")
     @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def lock(self, ctx, channel: discord.TextChannel = None):
+    async def lock(self, ctx, channel: Optional[discord.TextChannel] = None, target: Optional[Union[discord.Role, discord.Member]] = None):
         unlocked_channel = channel or ctx.channel
-        await unlocked_channel.set_permissions(ctx.guild.default_role, send_messages = False)
+        target = target or ctx.guild.default_role
+        await unlocked_channel.set_permissions(target, send_messages = False)
         await ctx.send("Channel locked")
 
     # Unlock
-    @commands.command(name = "unlock", description = "Unlocks the current channel for @\u200beveryone")
+    @commands.command(name = "unlock", description = "Unlocks a channel for a role or member. Defaults to unlocking the current channel for @\u200beveryone")
     @commands.has_any_role(784492058756251669, 784527745539375164) # Admin, Mod
-    async def unlock(self, ctx, channel: discord.TextChannel = None):
+    async def unlock(self, ctx, channel: discord.TextChannel = None, target: Optional[Union[discord.Role, discord.Member]] = None):
         locked_channel = channel or ctx.channel
-        await locked_channel.set_permissions(ctx.guild.default_role, send_messages = None)
+        target = target or ctx.guild.default_role
+        await locked_channel.set_permissions(target, send_messages = None)
         await ctx.send("Channel unlocked")
 
     # Ban
