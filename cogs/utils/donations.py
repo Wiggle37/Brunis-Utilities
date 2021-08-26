@@ -248,6 +248,11 @@ class Donations(commands.Cog):
         info = await collection.find_one({"_id": ctx.guild.id})
         await collection.update_one({"_id": ctx.guild.id}, {"$unset": {f"donation_roles.{str(amount)}": info["donation_roles"][str(amount)]}})
         await ctx.send(f'Donation role removed for `{self.beautify_numbers(amount)}`')
+
+
+    '''
+    Done And Final
+    '''
     
     # Check Donations
     @commands.command(name='donations', description='Check your donations for the current server')
