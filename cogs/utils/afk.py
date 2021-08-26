@@ -42,7 +42,7 @@ class Afk(commands.Cog, name='AFK'):
 
         try:
             await ctx.author.edit(nick = '[AFK] ' + ctx.author.display_name)
-        except discord.Forbidden:
+        except:
             pass
 
         # as a precaution
